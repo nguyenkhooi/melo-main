@@ -1,6 +1,6 @@
 
 
-Ur Melo is a light-weight and minimalist music player for Android and IOS. Inspired by [SoundSpice](https://github.com/farshed/SoundSpice-mobile)
+Melo is a light-weight and minimalist music player for Android and IOS. Inspired by [SoundSpice](https://github.com/farshed/SoundSpice-mobile)
 
 [Play Store](https://play.google.com/store/apps/details?id=com.Melo)
 
