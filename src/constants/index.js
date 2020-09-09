@@ -18,7 +18,7 @@ export const settings = {
 	},
 	about: {
 		title: 'About',
-		subtitle: 'Info about SoundSpice'
+		subtitle: 'Info about Melo'
 	},
 	excludeFoldersDialog: {
 		title: 'Folders to skip',
@@ -33,5 +33,5 @@ export const settings = {
 		title: 'Rearrange library tabs',
 		subtitle: 'Change the order of tabs in the library'
 	},
-	share: 'Share SoundSpice'
+	share: 'Share Melo'
 };

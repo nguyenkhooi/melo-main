@@ -15,6 +15,7 @@ import {
 
 import { styledd, ScreenTitle } from "components";
 import { scale, getStatusBarHeight } from "utils";
+import { TracksScreen } from "screens";
 
 function SearchScreen(props) {
   const [searchInput, setInput] = useState("");
@@ -54,6 +55,7 @@ function SearchScreen(props) {
         style={[styles.resultsWrapper, renderMargin]}
       />
     ) : (
+      // <TracksScreen {...props} />
       <PlaceholderWrapper>
         <SearchIcon {...styles.searchIcon} />
         <PlaceholderText>Type something into the search bar</PlaceholderText>

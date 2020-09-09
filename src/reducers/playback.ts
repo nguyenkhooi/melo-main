@@ -1,7 +1,7 @@
 const INITIAL_STATE = {
 	currentTrack: {
 		id: '000',
-		title: 'SoundSpice',
+		title: 'Melo',
 		artist: 'Faisal Arshed',
 		duration: 0,
 		artwork: 'cover'

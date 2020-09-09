@@ -88,7 +88,7 @@ function TracksScreen(props) {
     return (
       <MessageWrapper>
         <Message numberOfLines={2}>
-          {"Oops! SoundSpice couldn't find any music on your device"}
+          {"Oops! Melo couldn't find any music on your device"}
         </Message>
       </MessageWrapper>
     );

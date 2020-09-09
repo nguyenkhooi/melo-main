@@ -7,8 +7,8 @@ export const getStoragePermission = async () => {
       PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
     ],
     {
-      title: "SoundSpice Storage Permission",
-      message: "SoundSpice needs to access your storage",
+      title: "Melo Storage Permission",
+      message: "Melo needs to access your storage",
     }
   );
 
@@ -18,7 +18,7 @@ export const getStoragePermission = async () => {
     null
     // Alert.alert(
     //   "Permission required",
-    //   "Allow SoundSpice to access your storage",
+    //   "Allow Melo to access your storage",
     //   [{ text: "OK", onPress: async () => await getStoragePermission() }],
     //   { cancelable: false }
     // );

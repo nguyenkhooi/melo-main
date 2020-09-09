@@ -1,1 +1,1 @@
-export const repoUrl = 'https://github.com/farshed/SoundSpice-mobile';
+export const repoUrl = 'https://github.com/farshed/Melo-mobile';

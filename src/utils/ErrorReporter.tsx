@@ -12,7 +12,7 @@ export function errorReporter(e) {
 
 function mailError(e) {
 	Linking.openURL(
-		`mailto:faisalarshed28@gmail.com?subject=SoundSpice error log&body=LOG\n\n${JSON.stringify(
+		`mailto:faisalarshed28@gmail.com?subject=Melo error log&body=LOG\n\n${JSON.stringify(
 			e
 		)}`
 	);

@@ -41,14 +41,14 @@ function SettingsScreen(props) {
 
   function onPressReport() {
     Linking.openURL(
-      "mailto:drkhoi16@gmail.com?subject=SoundSpice bug report&body=Device Manufacturer %26 Model: \n\nYour issue: %20"
+      "mailto:drkhoi16@gmail.com?subject=Melo bug report&body=Device Manufacturer %26 Model: \n\nYour issue: %20"
     );
   }
 
   function onPressShare() {
     Share.open({
       message:
-        "Hey! Check out SoundSpice\nhttps://play.google.com/store/apps/details?id=com.Melo",
+        "Hey! Check out Melo\nhttps://play.google.com/store/apps/details?id=com.Melo",
     });
   }
 

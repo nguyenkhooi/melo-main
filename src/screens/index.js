@@ -8,7 +8,3 @@ export { default as FoldersScreen } from "./libraries-screens/FoldersScreen";
 export { default as AlbumsScreen } from "./libraries-screens/AlbumsScreen";
 export { default as ArtistsScreen } from "./libraries-screens/ArtistsScreen";
 export { default as PlaylistsScreen } from "./libraries-screens/PlaylistsScreen";
-// import PlaylistsScreen from "../screens/playlists-screen/PlaylistsScreen";
-// import ArtistsScreen from "../screens/ArtistsScreen";
-// import AlbumsScreen from "../screens/AlbumsScreen";
-// import FoldersScreen from "../screens/FoldersScreen";
