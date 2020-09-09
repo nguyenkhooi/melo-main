@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { View, Animated, Dimensions, StatusBar } from "react-native";
+import {
+  View,
+  Animated,
+  Dimensions,
+  StatusBar,
+  ViewStyle,
+  Text,
+  Button,
+  UIManager,
+  TouchableNativeFeedback,
+  TouchableOpacity,
+} from "react-native";
 import styled from "styled-components/native";
 import TrackPlayer from "react-native-track-player";
 import { connect } from "react-redux";
@@ -8,12 +19,14 @@ import QuickScrollList from "react-native-quick-scroll";
 import { setupPlayer } from "services";
 import RenderActivityIndicator from "components/RenderActivityIndicator";
 import RenderTrack from "components/RenderTrack";
-import OptionsModal from "components/OptionsModal";
+// import OptionsModal from "components/OptionsModal";
 import { flatListItemLayout } from "utils/FlatListLayout";
 import { scanMessage } from "constants";
-import { contrastColor } from "themes/styles";
+import { contrastColor, foregroundColor } from "themes/styles";
 import { ScreenTitle } from "components";
-import { getStatusBarHeight } from "utils";
+import { getStatusBarHeight, scale, getRandomNumber, IS_ANDROID } from "utils";
+
+import { OptionsModal, $$_Player } from "components";
 
 const ScreenHeight = Dimensions.get("window").height;
 const StatusBarHeight = StatusBar.currentHeight;
@@ -26,7 +39,15 @@ const itemHeight = 75;
 function TracksScreen(props) {
   const [scrollY] = useState(new Animated.Value(0));
   const [modal, setModal] = useState({ visible: false, item: {} });
-  const { currentTrack, mediaLoaded, media } = props;
+  const {
+    currentTrack,
+    mediaLoaded,
+    media,
+    shuffle,
+    setShuffle,
+    setPlayback,
+    isPlaying,
+  } = props;
 
   useEffect(() => {
     let unsubscribe = props.navigation.addListener("focus", props.showFooter);
@@ -44,7 +65,7 @@ function TracksScreen(props) {
     currentTrack.id !== "000" ? { marginBottom: 60, flex: 1 } : { flex: 1 };
   const headerHeight = scrollY.interpolate({
     inputRange: [0, 20],
-    outputRange: [20, 0],
+    outputRange: [50, 0],
     extrapolate: "clamp",
   });
 
@@ -55,6 +76,18 @@ function TracksScreen(props) {
           style={{ paddingTop: getStatusBarHeight("safe"), ...renderMargin }}
         >
           <ScreenTitle title={"Your Melo"} />
+          <TouchableOpacity
+            onPress={() => {
+              setShuffle(true);
+              let nextTrack = media[getRandomNumber(0, media.length)];
+              props.setCurrentTrack(nextTrack);
+              setPlayback(true);
+            }}
+          >
+            <ShuffleText style={{ padding: scale(15) }}>
+              Shuffle 'Em All
+            </ShuffleText>
+          </TouchableOpacity>
           <QuickScrollList
             keyExtractor={(asset) => asset.id.toString()}
             data={media}
@@ -76,7 +109,10 @@ function TracksScreen(props) {
             rightOffset={10}
             thumbStyle={styles.thumbStyle}
           />
-          <Animated.View style={[styles.header, { height: headerHeight }]} />
+          <Animated.View
+            style={[styles.header, { height: headerHeight }]}
+          ></Animated.View>
+
           <OptionsModal
             selectedTrack={modal.item}
             isVisible={modal.visible}
@@ -97,11 +133,55 @@ function TracksScreen(props) {
   return <RenderActivityIndicator text={scanMessage} />;
 }
 
+const ShuffleText = styled.Text`
+  font-family: "Circular";
+  font-size: 14px;
+  color: ${foregroundColor};
+`;
+
+// export default function Screen(props) {
+//   const modals = Array.from({ length: 8 }).map(
+//     (_) => React.useRef(null).current
+//   );
+//   const animated = React.useRef(new Animated.Value(0)).current;
+//   return (
+//     <Animated.View
+//       style={{
+//         borderRadius: animated.interpolate({
+//           inputRange: [0, 1],
+//           outputRange: [0, 12],
+//         }),
+//         transform: [
+//           {
+//             scale: animated.interpolate({
+//               inputRange: [0, 1],
+//               outputRange: [1, 0.92],
+//             }),
+//           },
+//         ],
+//         opacity: animated.interpolate({
+//           inputRange: [0, 1],
+//           outputRange: [1, 0.75],
+//         }),
+//       }}
+//     >
+//       <Text onPress={() => modals[6].open(1)}>Press here</Text>
+//       <$$_Player
+//         {...props}
+//         ref={(el) => (modals[6] = el)}
+//         animated={animated}
+//       />
+//     </Animated.View>
+//   );
+// }
+
 function mapStateToProps(state) {
   return {
     currentTrack: state.playback.currentTrack,
     media: state.media.mediaFiles,
     mediaLoaded: state.media.mediaLoaded,
+    shuffle: state.playback.shuffle,
+    isPlaying: state.player.isPlaying,
   };
 }
 
@@ -130,8 +210,10 @@ const styles = {
     right: 0,
     overflow: "hidden",
     justifyContent: "center",
-    alignItems: "flex-end",
-  },
+    paddingTop: getStatusBarHeight("safe"),
+    alignItems: "flex-start",
+    // paddingHorizontal: scale(15),
+  } as ViewStyle,
   thumbStyle: {
     width: 4,
     borderWidth: 0,

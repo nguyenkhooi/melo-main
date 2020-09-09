@@ -96,7 +96,7 @@ const TextWrapper = styled.View`
 `;
 
 const Title = styled.Text`
-  /* font-family: 'CircularBold'; */
+  font-family: "Circular";
   font-size: 18px;
   color: ${contrastColor};
   width: ${PlayerWidth}px;
@@ -104,7 +104,7 @@ const Title = styled.Text`
 `;
 
 const Artist = styled.Text`
-  /* font-family: 'CircularLight'; */
+  font-family: "Circular";
   font-size: 15px;
   margin-top: 4px;
   color: ${contrastTransColor(0.75)};

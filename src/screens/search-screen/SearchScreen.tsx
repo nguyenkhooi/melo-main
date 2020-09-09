@@ -39,13 +39,15 @@ function SearchScreen(props) {
         let searchData = " " + searchInput.toUpperCase();
         return itemData.indexOf(searchData) > -1;
       });
+    } else {
+      return props.media;
     }
   }
 
   function renderSearch() {
     const renderMargin =
       props.currentTrack.id !== "000" ? { marginBottom: 60 } : { flex: 1 };
-    return isInputFocused || searchInput ? (
+    return (
       <FlatList
         data={listFilter()}
         renderItem={({ item }) => (
@@ -54,13 +56,23 @@ function SearchScreen(props) {
         keyExtractor={(asset) => asset.id.toString()}
         style={[styles.resultsWrapper, renderMargin]}
       />
-    ) : (
-      // <TracksScreen {...props} />
-      <PlaceholderWrapper>
-        <SearchIcon {...styles.searchIcon} />
-        <PlaceholderText>Type something into the search bar</PlaceholderText>
-      </PlaceholderWrapper>
     );
+    // return isInputFocused || searchInput ? (
+    //   <FlatList
+    //     data={listFilter()}
+    //     renderItem={({ item }) => (
+    //       <RenderTrack item={item} setOptions={setModal} />
+    //     )}
+    //     keyExtractor={(asset) => asset.id.toString()}
+    //     style={[styles.resultsWrapper, renderMargin]}
+    //   />
+    // ) : (
+    //   // <TracksScreen {...props} />
+    //   <PlaceholderWrapper>
+    //     <SearchIcon {...styles.searchIcon} />
+    //     <PlaceholderText>Type something into the search bar</PlaceholderText>
+    //   </PlaceholderWrapper>
+    // );
   }
 
   return (

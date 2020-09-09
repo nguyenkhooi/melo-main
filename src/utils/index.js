@@ -7,6 +7,8 @@ export * from "./Permissions";
 
 export * from "./helpers";
 
+export * from "./workers/useCombinedRefs";
+
 export function getRandomNumber(min, max) {
   let random = Math.round(Math.random() * (max - min) + min);
   // to make sure max is not inclusive

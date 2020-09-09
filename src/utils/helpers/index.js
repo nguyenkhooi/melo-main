@@ -1,12 +1,12 @@
 //@ts-check
 import { Dimensions, Platform, StatusBar } from "react-native";
-// import { scale, moderateScale, verticalScale } from "react-native-size-matters";
+import { scale, moderateScale, verticalScale } from "react-native-size-matters";
 
 // export * from "react-native-size-matters"
 
-// export { moderateScale as scale, moderateScale, verticalScale };
+export { moderateScale as scale, moderateScale, verticalScale };
 
-export const scale = (value) => value;
+// export const scale = (value) => value;
 
 /**
  * Check if device is iphoneX
