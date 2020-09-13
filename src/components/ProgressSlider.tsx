@@ -51,7 +51,7 @@ class ProgressSlider extends ProgressComponent {
           maximumTrackTintColor={`${theme.contrastTrans}0.3)`}
           thumbTouchSize={styles.thumbSize}
           trackStyle={styles.barStyle}
-          thumbStyle={styles.thumbStyle}
+          thumbStyle={{ ...styles.thumbStyle, backgroundColor: theme.contrast }}
           onValueChange={this.seekTo}
         />
         <TimeWrapper>
@@ -79,7 +79,7 @@ const TimeWrapper = styled.View`
   justify-content: space-between;
   align-items: center;
   width: ${SliderWidth}px;
-  margin-top: -12px;
+  margin-top: -0px;
 `;
 
 const Time = styled.Text`
@@ -102,6 +102,5 @@ const styles = {
   thumbStyle: {
     height: scale(20),
     width: scale(20),
-    backgroundColor: "white",
   } as ViewStyle,
 };

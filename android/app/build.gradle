@@ -96,7 +96,7 @@ apply from: "../../node_modules/react-native/react.gradle"
  * Upload all the APKs to the Play Store and people will download
  * the correct one based on the CPU architecture of their device.
  */
-def enableSeparateBuildPerCPUArchitecture = false
+def enableSeparateBuildPerCPUArchitecture = true
 
 /**
  * Run Proguard to shrink the Java bytecode in release builds.
@@ -141,6 +141,9 @@ android {
         versionName "3.1.4.20"
         multiDexEnabled true
     }
+    dexOptions {
+        javaMaxHeapSize "4g"
+    } 
     splits {
         abi {
             reset()
