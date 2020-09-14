@@ -6,6 +6,7 @@ export * from "./MediaCleaner";
 export * from "./Permissions";
 
 export * from "./helpers";
+export * from "./styles";
 
 export * from "./workers/useCombinedRefs";
 

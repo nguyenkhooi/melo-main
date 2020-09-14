@@ -4,7 +4,7 @@ import { Text } from "react-native";
 import { Provider } from "react-redux";
 import { store, persistor } from "store";
 import { PersistGate } from "redux-persist/integration/react";
-import RootNavigator from "./src/navigation";
+import RootNavigator from "navigation";
 import SplashScreen from "./src/screens/SplashScreen";
 import Toasty from "react-native-toast-message";
 

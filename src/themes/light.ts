@@ -1,11 +1,13 @@
+import { evaLight } from "utils";
+
 export const light = {
-	foreground: '#2B05EE',
-	foreground2: '#2B05EE',
-	background: 'white',
-	elevatedBG: '#F7F8FB',
-	contrast: '#121212',
-	contrastTrans: 'rgba(18, 18, 18, ',
-	fgTrans: 'rgba(63, 81, 181, ',
-	bgTrans: 'rgba(255, 255, 255, ',
-	current: 'light'
+  foreground: evaLight["color-primary-500"],
+  foreground2: evaLight["color-primary-500"],
+  background: evaLight["color-basic-200"],
+  elevatedBG: evaLight["color-basic-300"],
+  contrast: evaLight["color-basic-700"],
+  contrastTrans: evaLight["color-basic-transparent-600"],
+  fgTrans: "rgba(63, 81, 181, ",
+  bgTrans: evaLight["color-basic-transparent-100"],
+  current: "light",
 };
