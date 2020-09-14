@@ -2,7 +2,7 @@ const INITIAL_STATE = {
 	currentTrack: {
 		id: '000',
 		title: 'Melo',
-		artist: 'Faisal Arshed',
+		artist: 'Khoi Tran',
 		duration: 0,
 		artwork: 'cover'
 	},

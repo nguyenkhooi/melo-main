@@ -22,7 +22,8 @@ import {
   PanGestureHandler,
   State as GestureState,
 } from "react-native-gesture-handler";
-import Animated from "react-native-reanimated";
+import Animated, { Extrapolate, interpolate } from "react-native-reanimated";
+import { getBottomSpace } from "utils";
 const {
   event,
   cond,
@@ -105,17 +106,17 @@ function PlayerFooter(props) {
 
   const onPanEvent = event([
     {
-      nativeEvent: ({ translationY }) =>
+      nativeEvent: ({ translationX }) =>
         block([
           cond(eq(gestureState, GestureState.ACTIVE), [
             // Update our translate animated value as the user pans
             // console.log("heyy"),
-            set(animState.position, translationY),
+            set(animState.position, translationX),
           ]),
           // If swipe distance exceeds threshold, delete item
           cond(
             //   eq(gestureState, GestureState.),
-            lessThan(translationY, swipeThreshold),
+            greaterThan(translationX, swipeThreshold),
             call([animState.position], () => {
               //   Alert.alert("great");
               navigation.navigate("player");
@@ -124,40 +125,48 @@ function PlayerFooter(props) {
         ]),
     },
   ]);
-  return renderFooter && currentTrack.id !== "000" ? (
-    <PanGestureHandler
-      minDeltaX={10}
-      onGestureEvent={onPanEvent}
-      onHandlerStateChange={onHandlerStateChange}
-    >
-      <Animated.View
-        style={{
-          flex: 1,
-          height: animState.position,
-          transform: [{ translateY: animState.position }],
-        }}
-      >
-        <Animated.Code>
-          {() =>
-            block([
-              // If the clock is running, increment position in next tick by calling spring()
-              cond(clockRunning(clock), [
-                spring(clock, animState, animConfig),
-                // Stop and reset clock when spring is complete
-                cond(animState.finished, [
-                  stopClock(clock),
 
-                  set(animState.finished, 0),
+  const _height = interpolate(animState.position, {
+    inputRange: [0, 20],
+    outputRange: [60, 100],
+    extrapolate: Extrapolate.CLAMP,
+  });
+  // return renderFooter && currentTrack.id !== "000" ? (
+  return 1 == 1 && renderFooter ? (
+    <MainWrapper>
+      <PanGestureHandler
+        minDeltaX={10}
+        onGestureEvent={onPanEvent}
+        onHandlerStateChange={onHandlerStateChange}
+      >
+        <Animated.View
+          style={{
+            // flex: 1,
+            transform: [{ translateY: animState.position }],
+          }}
+        >
+          <Animated.Code>
+            {() =>
+              block([
+                // If the clock is running, increment position in next tick by calling spring()
+                cond(clockRunning(clock), [
+                  spring(clock, animState, animConfig),
+                  // Stop and reset clock when spring is complete
+                  cond(animState.finished, [
+                    stopClock(clock),
+
+                    set(animState.finished, 0),
+                  ]),
                 ]),
-              ]),
-            ])
-          }
-        </Animated.Code>
-        <View style={{ height: 100 }}>
-          <Title numberOfLines={1}>{currentTrack.title || "unknown"}</Title>
-        </View>
-      </Animated.View>
-    </PanGestureHandler>
+              ])
+            }
+          </Animated.Code>
+          <View>
+            <Title numberOfLines={1}>{currentTrack.title || "unknown"}</Title>
+          </View>
+        </Animated.View>
+      </PanGestureHandler>
+    </MainWrapper>
   ) : null;
 }
 
@@ -176,7 +185,7 @@ const MainWrapper = styled.View`
   position: absolute;
   left: 0px;
   right: 0px;
-  bottom: 50px;
+  bottom: ${getBottomSpace() + 50};
   flex-direction: row;
   align-items: center;
   padding-left: 15px;
