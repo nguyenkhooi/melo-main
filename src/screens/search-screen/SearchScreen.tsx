@@ -54,6 +54,17 @@ function SearchScreen(props) {
         renderItem={({ item }) => (
           <RenderTrack item={item} setOptions={setModal} />
         )}
+        // ListHeaderComponent={() => (
+        //   <SearchWrapper onPress={() => inputRef.current.focus()}>
+        //     <SearchInput
+        //       ref={inputRef}
+        //       value={searchInput}
+        //       setSearchInput={setInput}
+        //       onFocus={() => setInputFocus(true)}
+        //       onBlur={() => setInputFocus(false)}
+        //     />
+        //   </SearchWrapper>
+        // )}
         keyExtractor={(asset) => asset.id.toString()}
         style={[styles.resultsWrapper, renderMargin]}
       />
@@ -143,7 +154,7 @@ const PlaceholderWrapper = styled.View`
 `;
 
 const PlaceholderText = styled.Text`
-font-family: ${CIRCULAR_BOLD};
+  font-family: ${CIRCULAR_BOLD};
   font-weight: bold;
   font-size: 16px;
   margin-bottom: 100px;

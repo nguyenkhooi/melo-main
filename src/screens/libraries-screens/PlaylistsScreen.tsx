@@ -111,5 +111,5 @@ const playlistIcon = {
 const optionsIcon = {
   name: "ellipsis-v",
   type: "fa5",
-  size: 25,
+  size: 20,
 };

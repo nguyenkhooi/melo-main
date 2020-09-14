@@ -25,7 +25,9 @@ function ListItem(props) {
           <Title style={props.titleStyle} numberOfLines={1}>
             {props.title}
           </Title>
-          {props.subtitle && <SubTitle>{props.subtitle}</SubTitle>}
+          {props.subtitle && (
+            <SubTitle numberOfLines={2}>{props.subtitle}</SubTitle>
+          )}
         </TextWrapper>
         <RightWrapper>{props.rightElement && props.rightElement}</RightWrapper>
       </Wrapper>
