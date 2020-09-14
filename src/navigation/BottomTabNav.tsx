@@ -30,7 +30,7 @@ function BottomTabNav(props) {
           return (
             <Icon
               name="music"
-              type="feather"
+              type="fa5"
               size={focused ? 26 : 23}
               color={color}
             />
@@ -39,7 +39,7 @@ function BottomTabNav(props) {
           return (
             <Icon
               name="search"
-              type="feather"
+              type="fa5"
               size={focused ? 26 : 23}
               color={color}
             />
@@ -48,7 +48,7 @@ function BottomTabNav(props) {
           return (
             <Icon
               name="archive"
-              type="feather"
+              type="fa5"
               size={focused ? 26 : 23}
               color={color}
             />
@@ -56,8 +56,8 @@ function BottomTabNav(props) {
         case "Settings":
           return (
             <Icon
-              name="settings"
-              type="feather"
+              name="cog"
+              type="fa5"
               size={focused ? 26 : 23}
               color={color}
             />

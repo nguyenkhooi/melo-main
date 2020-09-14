@@ -6,7 +6,7 @@ import * as actions from "actions";
 import CreatePlaylistButton from "components/CreatePlaylistButton";
 import ListItem from "components/ListItem";
 import InputDialog from "components/InputDialog";
-import Icon from "components/Icon";
+import Icon, { PROPS_Icon } from "components/Icon";
 import PlaylistOptions from "components/PlaylistOptions";
 import RenderToast from "components/RenderToast";
 import { contrastTransColor } from "themes";
@@ -99,16 +99,17 @@ export default connect(mapStateToProps, actions)(PlaylistsScreen);
 
 const StyledIcon = styled(Icon)`
   color: ${contrastTransColor(0.75)};
+  padding-horizontal: 5
 `;
 
 const playlistIcon = {
-  name: "headphones",
-  type: "feather",
+  name: "star",
+  type: "fa5",
   size: 26,
-};
+} as PROPS_Icon;
 
 const optionsIcon = {
-  name: "more-vertical",
-  type: "feather",
+  name: "ellipsis-v",
+  type: "fa5",
   size: 25,
 };

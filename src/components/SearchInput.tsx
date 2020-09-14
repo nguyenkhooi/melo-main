@@ -2,7 +2,11 @@ import React from "react";
 import { Dimensions } from "react-native";
 import styled, { withTheme } from "styled-components/native";
 import Icon from "./Icon";
-import { contrastColor, contrastTransColor } from "../themes/styles";
+import {
+  contrastColor,
+  contrastTransColor,
+  bgTransColor,
+} from "../themes/styles";
 import { CIRCULAR } from "assets";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
@@ -17,7 +21,7 @@ function SearchInput(props) {
         allowFontScaling={false}
         clearButtonMode="while-editing"
         selectionColor={`${theme.fgTrans}0.75)`}
-        placeholderTextColor={`${theme.contrastTrans}0.7)`}
+        placeholderTextColor={`${theme.contrastTrans}0.9)`}
         autoCorrect={false}
         returnKeyType="search"
         value={value}
@@ -35,7 +39,7 @@ const Wrapper = styled.View`
   height: 48px;
   width: ${SCREEN_WIDTH - 30}px;
   border-radius: 25px;
-  background-color: ${contrastTransColor(0.15)};
+  background-color: ${bgTransColor(0.6)};
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
@@ -59,6 +63,6 @@ const StyledIcon = styled(Icon)`
 
 const searchIcon = {
   name: "search",
-  type: "feather",
+  type: "fa5",
   size: 24,
 };

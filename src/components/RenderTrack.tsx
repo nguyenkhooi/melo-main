@@ -99,7 +99,7 @@ const StyledIcon = styled(Icon)`
 `;
 
 const optionsIcon = {
-  name: "more-vertical",
-  type: "feather",
+  name: "ellipsis-v",
+  type: "fa5",
   size: 25,
 };

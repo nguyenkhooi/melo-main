@@ -10,7 +10,7 @@ import Share from "react-native-share";
 import ConfirmDialog from "components/ConfirmDialog";
 import InputDialog from "components/InputDialog";
 import ListItem from "components/ListItem";
-import { ScreenTitle } from "components";
+import { PROPS_Icon, ScreenTitle } from "components";
 // import ListItem from "../components/ListItem";
 // import InputDialog from "../components/InputDialog";
 // import ConfirmDialog from "../components/ConfirmDialog";
@@ -148,42 +148,42 @@ export default connect(mapStateToProps, actions)(withTheme(SettingsScreen));
 const icons = {
   darkMode: {
     name: "moon",
-    type: "feather",
-    size: 28,
-  },
+    type: "fa5",
+    size: 26,
+  } as PROPS_Icon,
   scan: {
-    name: "folder-search-outline",
-    type: "material-community",
-    size: 28,
-  },
+    name: "folder-minus",
+    type: "fa5",
+    size: 26,
+  } as PROPS_Icon,
   delete: {
-    name: "trash-2",
-    type: "feather",
-    size: 28,
-  },
+    name: "trash",
+    type: "fa5",
+    size: 26,
+  } as PROPS_Icon,
   musicFile: {
     name: "rocket",
     type: "simple-line-icon",
     size: 26,
-  },
+  } as PROPS_Icon,
   rearrange: {
-    name: "menu",
-    type: "feather",
+    name: "bars",
+    type: "fa5",
     size: 26,
-  },
+  } as PROPS_Icon,
   about: {
-    name: "infocirlceo",
-    type: "antdesign",
+    name: "info-circle",
+    type: "fa5",
     size: 26,
-  },
+  } as PROPS_Icon,
   bug: {
     name: "bug",
-    type: "entypo",
+    type: "fa5",
     size: 26,
-  },
+  } as PROPS_Icon,
   share: {
-    name: "share-2",
-    type: "feather",
+    name: "share-alt",
+    type: "fa5",
     size: 26,
-  },
+  } as PROPS_Icon,
 };

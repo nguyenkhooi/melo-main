@@ -1,7 +1,6 @@
 import * as React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { Feather as Icon } from "@expo/vector-icons";
-
+import { Icon } from "components";
 import { Track } from "./Model";
 
 interface TrackProps {
@@ -20,7 +19,7 @@ export default ({ track, artist, index }: TrackProps) => (
       <Text style={styles.artist}>{track.artist || artist}</Text>
     </View>
     <View style={styles.cell}>
-      <Icon name="more-horizontal" color="#b2b3b4" size={24} />
+      <Icon name="more-horizontal" type="fa5" color="#b2b3b4" size={24} />
     </View>
   </View>
 );

@@ -1,7 +1,7 @@
 import React from "react";
 import { TouchableNativeFeedback, Dimensions, View } from "react-native";
 import styled, { withTheme } from "styled-components/native";
-import { elevatedBGColor, contrastColor } from "themes";
+import { elevatedBGColor, contrastColor, foregroundColor } from "themes";
 import { DEVICE_WIDTH } from "utils";
 import Icon from "./Icon";
 import { styledd } from "components";
@@ -45,7 +45,7 @@ const Wrapper = styled.View`
 `;
 
 const AddIcon = styled(Icon)`
-  color: ${contrastColor};
+  color: ${foregroundColor};
   margin-right: 28px;
   margin-top: 1px;
 `;
@@ -54,11 +54,11 @@ const Text = styled.Text`
   /* font-family: 'CircularLight'; */
   font-size: 14px;
   margin-right: 25px;
-  color: ${contrastColor};
+  color: ${foregroundColor};
 `;
 
 const addIcon = {
-  name: "playlist-add",
-  type: "material",
+  name: "plus",
+  type: "fa5",
   size: 19,
 };

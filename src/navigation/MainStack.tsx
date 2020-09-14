@@ -3,7 +3,9 @@ import { withTheme } from "styled-components/native";
 import {
   createStackNavigator,
   TransitionPresets,
+  HeaderBackButton,
 } from "@react-navigation/stack";
+import { View } from "react-native";
 import BottomTabNav from "./BottomTabNav";
 // import AddToPlaylist from '../screens/AddToPlayList';
 import AboutScreen from "../screens/AboutScreen";
@@ -11,13 +13,14 @@ import ShowPlaylistScreen from "../screens/ShowPlaylistScreen";
 import ShowContentScreen from "../screens/ShowContentScreen";
 import TabOrder from "../screens/TabOrder";
 import Icon from "../components/Icon";
-import { CIRCULAR } from "assets";
+import { CIRCULAR, CIRCULAR_BOLD } from "assets";
+import { foregroundColor } from "themes";
 
 const durationSpec = { config: { duration: 200 } };
 
 function MainStack(props) {
   const Stack = createStackNavigator();
-  const { background, contrast } = props.theme;
+  const { background, contrast, foreground } = props.theme;
 
   const screenOptions = {
     ...TransitionPresets.ScaleFromCenterAndroid,
@@ -28,18 +31,30 @@ function MainStack(props) {
     headerStyle: {
       elevation: 0,
       backgroundColor: background,
+      borderWidth: 0,
     },
     headerTitleStyle: {
-      fontFamily: CIRCULAR,
-      fontWeight: "400",
+      fontFamily: CIRCULAR_BOLD,
       fontSize: 18,
       color: contrast,
       marginLeft: 30,
       marginRight: 30,
     },
+
     headerTitleAlign: "center",
-    headerBackImage: () => (
-      <Icon name="chevron-left" type="feather" color={contrast} size={26} />
+    headerLeft: (props) => (
+      // <View style={{ paddingHorizontal: 10 }}>
+      //   <Icon name="angle-left" type="fa5" color={contrast} size={28} />
+      // </View>
+      <HeaderBackButton
+        {...props}
+        style={{}}
+        tintColor={foreground}
+        labelStyle={{ color: "transparent" }}
+        // onPress={() => {
+        //   // Do something
+        // }}
+      />
     ),
   };
 
@@ -67,7 +82,11 @@ function MainStack(props) {
         component={ShowContentScreen}
         options={headerTitle}
       />
-      <Stack.Screen name="tab-order" component={TabOrder} options={noHeader} />
+      <Stack.Screen
+        name="tab-order"
+        component={TabOrder}
+        options={{ title: "Arrange Order" }}
+      />
       <Stack.Screen
         name="about"
         component={AboutScreen}
