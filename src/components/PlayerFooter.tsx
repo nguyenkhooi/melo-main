@@ -52,7 +52,7 @@ function PlayerFooter(props) {
     renderFooter,
     currentTrack,
     theme,
-    swipeThreshold = 0.4,
+    swipeThreshold = 0.6,
   } = props;
   const { position, duration } = useTrackPlayerProgress(100);
 
@@ -106,17 +106,16 @@ function PlayerFooter(props) {
 
   const onPanEvent = event([
     {
-      nativeEvent: ({ translationX }) =>
+      nativeEvent: ({ translationY }) =>
         block([
           cond(eq(gestureState, GestureState.ACTIVE), [
             // Update our translate animated value as the user pans
             // console.log("heyy"),
-            set(animState.position, translationX),
+            set(animState.position, translationY),
           ]),
-          // If swipe distance exceeds threshold, delete item
+          // If swipe distance exceeds threshold, open player screen
           cond(
-            //   eq(gestureState, GestureState.),
-            greaterThan(translationX, swipeThreshold),
+            lessThan(translationY, -100),
             call([animState.position], () => {
               //   Alert.alert("great");
               navigation.navigate("player");
@@ -127,22 +126,31 @@ function PlayerFooter(props) {
   ]);
 
   const _height = interpolate(animState.position, {
-    inputRange: [0, 20],
-    outputRange: [60, 100],
+    inputRange: [-100, 0, 100],
+    outputRange: [20, 0, 20],
     extrapolate: Extrapolate.CLAMP,
   });
-  // return renderFooter && currentTrack.id !== "000" ? (
-  return 1 == 1 && renderFooter ? (
+
+  const _opacity = interpolate(animState.position, {
+    inputRange: [-100, 0, 100],
+    outputRange: [0, 1, 0.2],
+    extrapolate: Extrapolate.CLAMP,
+  });
+  return renderFooter && currentTrack.id !== "000" ? (
+    //   return 1 == 1 && renderFooter ? (
     <MainWrapper>
       <PanGestureHandler
-        minDeltaX={10}
+        // activeOffsetY={-10}
         onGestureEvent={onPanEvent}
         onHandlerStateChange={onHandlerStateChange}
       >
         <Animated.View
           style={{
             // flex: 1,
-            transform: [{ translateY: animState.position }],
+            width: "100%",
+            backgroundColor: theme.elevatedBG,
+            transform: [{ translateY: _height }],
+            opacity: _opacity,
           }}
         >
           <Animated.Code>
@@ -161,9 +169,32 @@ function PlayerFooter(props) {
               ])
             }
           </Animated.Code>
-          <View>
-            <Title numberOfLines={1}>{currentTrack.title || "unknown"}</Title>
-          </View>
+          <TouchableWithoutFeedback
+            onPress={() => navigation.navigate("player")}
+          >
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Thumbnail source={coverSrc} />
+              <TextWrapper>
+                <Title numberOfLines={1}>
+                  {currentTrack.title || "unknown"}
+                </Title>
+                <Artist numberOfLines={1}>
+                  {currentTrack.artist || "unknown"}
+                </Artist>
+              </TextWrapper>
+              {isPlaying ? (
+                <StyledIcon {...icons.pauseIcon} onPress={togglePlayback} />
+              ) : (
+                <StyledIcon {...icons.playIcon} onPress={togglePlayback} />
+              )}
+              <ProgressWrapper>
+                <Progress
+                  progress={isNaN(progress) ? 0 : +progress.toFixed(3)}
+                  color={theme.foreground}
+                />
+              </ProgressWrapper>
+            </View>
+          </TouchableWithoutFeedback>
         </Animated.View>
       </PanGestureHandler>
     </MainWrapper>
@@ -188,14 +219,13 @@ const MainWrapper = styled.View`
   bottom: ${getBottomSpace() + 50};
   flex-direction: row;
   align-items: center;
-  padding-left: 15px;
-  background-color: ${elevatedBGColor};
 `;
 
 const Thumbnail = styled.Image`
   height: 42px;
   width: 42px;
   border-radius: 21px;
+  margin-left: 15px
 `;
 
 const TextWrapper = styled.View`
@@ -248,3 +278,166 @@ const icons = {
     size: 24,
   },
 };
+
+/** WITH SPRING */
+// import React, { Component } from "react";
+// import { StyleSheet, View, NativeModules, Text } from "react-native";
+// import { PanGestureHandler, State } from "react-native-gesture-handler";
+
+// import Animated, { interpolate } from "react-native-reanimated";
+
+// const { UIManager } = NativeModules;
+
+// const {
+//   event,
+//   Value,
+//   Clock,
+//   lessThan,
+//   greaterThan,
+//   divide,
+//   diff,
+//   abs,
+//   startClock,
+//   stopClock,
+//   cond,
+//   add,
+//   sub,
+//   multiply,
+//   eq,
+//   set,
+// } = Animated;
+
+// /**
+//  * itrn fn to mimic spring physics
+//  * @param dt
+//  * @param position
+//  * @param velocity
+//  * @param anchor
+//  * @param mass
+//  * @param tension
+//  */
+// function spring(dt, position, velocity, anchor, mass = 1, tension = 300) {
+//   const dist = sub(position, anchor);
+//   const acc = divide(multiply(-1, tension, dist), mass);
+//   return set(velocity, add(velocity, multiply(dt, acc)));
+// }
+
+// /**
+//  * itrn fn to mimic the damping physics
+//  * @param dt
+//  * @param velocity
+//  * @param mass
+//  * @param damping
+//  */
+// function damping(dt, velocity, mass = 1, damping = 30) {
+//   const acc = divide(multiply(-1, damping, velocity), mass);
+//   return set(velocity, add(velocity, multiply(dt, acc)));
+// }
+
+// function interaction(gestureTranslation, gestureState, callback?) {
+//   const dragging = new Value(0);
+//   const start = new Value(0);
+//   const position = new Value(0);
+//   const anchor = new Value(0);
+//   const velocity = new Value(0);
+
+//   const clock = new Clock();
+//   const dt = divide(diff(clock), 1000);
+//   return cond(
+//     greaterThan(0, gestureTranslation),
+//     cond(eq(gestureState, State.ACTIVE), [
+//       cond(dragging, 0, [set(dragging, 1), set(start, position)]),
+
+//       set(anchor, add(start, gestureTranslation)),
+
+//       // spring attached to pan gesture "anchor"
+//       spring(dt, position, velocity, anchor),
+//       damping(dt, velocity),
+
+//       // spring attached to the center position (0)
+//       spring(dt, position, velocity, 0),
+//       damping(dt, velocity),
+
+//       set(position, add(position, multiply(velocity, dt))),
+//     ]),
+
+//     [
+//       set(dragging, 0),
+//       startClock(clock),
+//       spring(dt, position, velocity, 0),
+//       damping(dt, velocity),
+//       set(position, add(position, multiply(velocity, dt))),
+//     ]
+//   );
+// }
+
+// function Box() {
+//   let gestureX = new Value(0);
+//   let gestureY = new Value(0);
+//   let state = new Value(-1);
+
+//   const _onGestureEvent = event([
+//     {
+//       nativeEvent: {
+//         translationX: gestureX,
+//         translationY: gestureY,
+//         state: state,
+//       },
+//     },
+//   ]);
+//   const _transX = interaction(gestureX, state);
+//   const _transY = interaction(gestureY, state);
+//   const _height = interpolate(_transY, {
+//     inputRange: [-10, 0, 10],
+//     outputRange: [60, 30, 30],
+//   });
+//   return (
+//     <PanGestureHandler
+//       onGestureEvent={_onGestureEvent}
+//       onHandlerStateChange={_onGestureEvent}
+//     >
+//       <Animated.View
+//         style={[
+//           styles.box,
+//           {
+//             height: _height,
+//             // transform: [
+//             //   // { translateX: _transX },
+//             //   { translateY: _transY },
+//             // ],
+//           },
+//         ]}
+//       >
+//         <Text>Hello</Text>
+//       </Animated.View>
+//     </PanGestureHandler>
+//   );
+// }
+
+// export default class Example extends Component {
+//   render() {
+//     return (
+//       <View style={styles.container}>
+//         <Box />
+//       </View>
+//     );
+//   }
+// }
+
+// const BOX_SIZE = 100;
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: "center",
+//     alignItems: "center",
+//     backgroundColor: "#F5FCFF",
+//   },
+//   box: {
+//     width: "100%",
+//     height: BOX_SIZE,
+//     alignSelf: "center",
+//     backgroundColor: "teal",
+//     margin: BOX_SIZE / 2,
+//   },
+// });

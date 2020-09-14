@@ -4,7 +4,7 @@ import * as actions from "actions";
 import Dialog from "react-native-dialog";
 import styled, { withTheme } from "styled-components/native";
 import { foregroundColor } from "themes";
-import { evaLight } from "utils";
+import { evaLight, IS_ANDROID } from "utils";
 
 function InputDialog(props) {
   const {
@@ -39,9 +39,11 @@ function InputDialog(props) {
       backdropColor="black"
       onBackButtonPress={onCancel}
       onBackdropPress={onCancel}
-      contentStyle={{ backgroundColor: "black" }}
+      contentStyle={{ backgroundColor: evaLight["color-basic-300"] }}
     >
-      <Dialog.Title style={{ color: evaLight["color-basic-800"] }}>
+      <Dialog.Title
+        style={{ color: evaLight["color-basic-800"], fontWeight: "600" }}
+      >
         {title}
       </Dialog.Title>
       {description && (
@@ -81,5 +83,6 @@ export default connect(null, actions)(withTheme(InputDialog));
 
 const DialogInput = styled(Dialog.Input)`
   color: ${evaLight["color-basic-800"]};
-  border-bottom-color: ${foregroundColor};
+  border-bottom-color: ${IS_ANDROID ? foregroundColor : null};
+  border-bottom-width: 1px;
 `;

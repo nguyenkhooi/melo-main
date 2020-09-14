@@ -7,6 +7,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import RootNavigator from "navigation";
 import SplashScreen from "./src/screens/SplashScreen";
 import Toasty from "react-native-toast-message";
+// import { Toasty } from "components";
 
 export default function App() {
   const [timePassed, setTimePassed] = useState(false);

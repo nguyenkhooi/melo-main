@@ -31,7 +31,7 @@ function BottomTabNav(props) {
             <Icon
               name="music"
               type="fa5"
-              size={focused ? 26 : 23}
+              size={focused ? 24 : 21}
               color={color}
             />
           );
@@ -40,7 +40,7 @@ function BottomTabNav(props) {
             <Icon
               name="search"
               type="fa5"
-              size={focused ? 26 : 23}
+              size={focused ? 24 : 21}
               color={color}
             />
           );
@@ -49,7 +49,7 @@ function BottomTabNav(props) {
             <Icon
               name="archive"
               type="fa5"
-              size={focused ? 26 : 23}
+              size={focused ? 24 : 21}
               color={color}
             />
           );
@@ -58,7 +58,7 @@ function BottomTabNav(props) {
             <Icon
               name="cog"
               type="fa5"
-              size={focused ? 26 : 23}
+              size={focused ? 24 : 21}
               color={color}
             />
           );
