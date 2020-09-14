@@ -7,6 +7,7 @@ import NetInfo from "@react-native-community/netinfo";
 import { connect } from "react-redux";
 import * as actions from "actions";
 import RenderToast from "./RenderToast";
+import { PRODUCT_SANS } from "assets";
 
 function OptionsMenu(props) {
   const menuRef = useRef(null);
@@ -69,7 +70,7 @@ export default connect(mapStateToProps, actions)(OptionsMenu);
 
 const styles = {
   menuItemText: {
-    // fontFamily: 'ProductSans',
+    fontFamily: PRODUCT_SANS,
     fontSize: 16,
     color: "black",
   },

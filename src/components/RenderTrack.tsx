@@ -10,6 +10,7 @@ import {
   contrastTransColor,
 } from "../themes/styles";
 const placeholder = require("../../assets/placeholder.jpg");
+import { CIRCULAR } from "assets";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
@@ -78,7 +79,7 @@ const TextWrapper = styled.View`
 `;
 
 const Title = styled.Text`
-  font-family: "Circular";
+  font-family: ${CIRCULAR};
   font-size: 14px;
   width: ${SCREEN_WIDTH / 2}px;
   color: ${(props) =>

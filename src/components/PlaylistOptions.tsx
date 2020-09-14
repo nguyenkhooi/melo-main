@@ -10,6 +10,7 @@ import ConfirmDialog from "./ConfirmDialog";
 import RenderToast from "./RenderToast";
 import { elevatedBGColor, contrastColor } from "../themes/styles";
 import { getBottomSpace } from "utils";
+import { CIRCULAR } from "assets";
 
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 const SCREEN_WIDTH = Dimensions.get("window").width;
@@ -122,7 +123,7 @@ const TextWrapper = styled.View`
 `;
 
 const ModalTitle = styled.Text`
-  /* Circular'; */
+  font-family: ${CIRCULAR};
   font-size: 15px;
   text-align: center;
   color: ${contrastColor};

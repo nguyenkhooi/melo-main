@@ -16,6 +16,7 @@ import {
 import { styledd, ScreenTitle } from "components";
 import { scale, getStatusBarHeight } from "utils";
 import { TracksScreen } from "screens";
+import { CIRCULAR_BOLD } from "assets";
 
 function SearchScreen(props) {
   const [searchInput, setInput] = useState("");
@@ -124,7 +125,7 @@ const TitleWrapper = styledd(View)({
 });
 
 const Title = styled.Text`
-  font-family: "Circular Std";
+  font-family: ${CIRCULAR_BOLD};
   font-weight: bold;
   font-size: 26px;
   color: ${contrastColor};
@@ -142,7 +143,7 @@ const PlaceholderWrapper = styled.View`
 `;
 
 const PlaceholderText = styled.Text`
-  font-family: "Circular Std";
+font-family: ${CIRCULAR_BOLD};
   font-weight: bold;
   font-size: 16px;
   margin-bottom: 100px;

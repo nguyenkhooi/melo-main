@@ -25,6 +25,7 @@ import { scanMessage } from "constants";
 import { contrastColor, foregroundColor } from "themes/styles";
 import { ScreenTitle } from "components";
 import { getStatusBarHeight, scale, getRandomNumber, IS_ANDROID } from "utils";
+import { CIRCULAR } from "assets";
 
 import { OptionsModal, $$_Player } from "components";
 
@@ -134,7 +135,7 @@ function TracksScreen(props) {
 }
 
 const ShuffleText = styled.Text`
-  font-family: "Circular";
+  font-family: ${CIRCULAR};
   font-size: 14px;
   color: ${foregroundColor};
 `;
@@ -194,7 +195,7 @@ const MessageWrapper = styled.View`
 `;
 
 const Message = styled.Text`
-  /* font-family: 'Circular'; */
+  font-family: ${CIRCULAR};
   font-size: 16px;
   color: ${contrastColor};
   margin: 0 55px 0 55px;

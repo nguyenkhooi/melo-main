@@ -2,6 +2,7 @@ import React from "react";
 import { View } from "react-native";
 import styled from "styled-components/native";
 import { contrastColor } from "themes/styles";
+import { CIRCULAR } from "assets";
 
 import { styledd } from "components";
 import { scale } from "utils";
@@ -21,7 +22,7 @@ const TitleWrapper = styledd(View)({
 });
 
 const Title = styled.Text`
-  font-family: "Circular";
+  font-family: ${CIRCULAR};
   font-weight: bold;
   font-size: 26px;
   color: ${contrastColor};

@@ -13,6 +13,7 @@ import {
   AlbumsScreen,
   FoldersScreen,
 } from "screens";
+import { CIRCULAR } from "assets";
 
 const screenProps = {
   playlists: { component: PlaylistsScreen, options: { title: "Playlists" } },
@@ -30,7 +31,7 @@ function TopMaterialTabNav(props) {
     tabStyle: { width: 92 } as ViewStyle,
     scrollEnabled: true,
     labelStyle: {
-      fontFamily: 'Circular',
+      fontFamily: CIRCULAR,
       fontSize: 16,
       textTransform: "capitalize",
     } as TextStyle,

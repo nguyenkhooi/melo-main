@@ -15,6 +15,7 @@ import {
   contrastTransColor,
   contrastColor,
 } from "themes";
+import { CIRCULAR } from "assets";
 
 const PlayerWidth = Dimensions.get("window").width * 0.82;
 
@@ -79,7 +80,7 @@ const Header = styled.View`
 `;
 
 const HeaderText = styled.Text`
-  font-family: "Circular";
+  font-family: ${CIRCULAR};
   font-size: 15px;
   color: ${contrastTransColor(0.75)};
 `;
@@ -96,7 +97,7 @@ const TextWrapper = styled.View`
 `;
 
 const Title = styled.Text`
-  font-family: "Circular";
+  font-family: ${CIRCULAR};
   font-size: 18px;
   color: ${contrastColor};
   width: ${PlayerWidth}px;
@@ -104,7 +105,7 @@ const Title = styled.Text`
 `;
 
 const Artist = styled.Text`
-  font-family: "Circular";
+  font-family: ${CIRCULAR};
   font-size: 15px;
   margin-top: 4px;
   color: ${contrastTransColor(0.75)};

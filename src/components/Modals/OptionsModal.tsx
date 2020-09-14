@@ -12,6 +12,7 @@ import ConfirmDialog from "../ConfirmDialog";
 import RenderToast from "../RenderToast";
 import { elevatedBGColor, contrastColor } from "themes";
 import { DEVICE_HEIGHT, DEVICE_WIDTH } from "utils";
+import { CIRCULAR } from "assets";
 
 function OptionsModal(props) {
   const [isDialogVisible, setDialogVisible] = useState(false);
@@ -153,7 +154,7 @@ const TextWrapper = styled.View`
 `;
 
 const ModalTitle = styled.Text`
-  /* font-family: 'Circular'; */
+  font-family: ${CIRCULAR};
   font-size: 14px;
   text-align: center;
   color: ${contrastColor};

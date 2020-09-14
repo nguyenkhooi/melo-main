@@ -1,7 +1,8 @@
+//@ts-check
 import React, { useState, useEffect } from "react";
 import { Text } from "react-native";
 import { Provider } from "react-redux";
-import { store, persistor } from "./src/store";
+import { store, persistor } from "store";
 import { PersistGate } from "redux-persist/integration/react";
 import RootNavigator from "./src/navigation";
 import SplashScreen from "./src/screens/SplashScreen";
@@ -13,8 +14,8 @@ export default function App() {
   useEffect(() => {
     setTimeout(() => setTimePassed(true), 750);
     store.dispatch({ type: "set_playback", payload: false }); // To make sure currentTrack is paused at startup
-    if (Text.defaultProps == null) Text.defaultProps = {};
-    Text.defaultProps.allowFontScaling = false;
+    // if (Text.defaultProps == null) Text.defaultProps = {};
+    // Text.defaultProps.allowFontScaling = false;
     console.disableYellowBox = true;
   });
 
