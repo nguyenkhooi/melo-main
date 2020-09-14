@@ -1,72 +1,85 @@
-import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
-import * as actions from '../actions';
-import Dialog from 'react-native-dialog';
-import styled, { withTheme } from 'styled-components/native';
-import { contrastColor, foregroundColor, foreground2Color } from '../themes/styles';
-import { PRODUCT_SANS } from "assets";
+import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
+import * as actions from "actions";
+import Dialog from "react-native-dialog";
+import styled, { withTheme } from "styled-components/native";
+import { foregroundColor } from "themes";
+import { evaLight } from "utils";
 
 function InputDialog(props) {
-	const { isVisible, name, inputPlaceholder, saveButtonTitle, title, description, theme } = props;
-	const [input, setInput] = useState('');
+  const {
+    isVisible,
+    name,
+    inputPlaceholder,
+    saveButtonTitle,
+    title,
+    description,
+    theme,
+  } = props;
+  const [input, setInput] = useState("");
 
-	useEffect(() => {
-		if (isVisible && name) setInput(name);
-		return () => setInput('');
-	}, [isVisible]);
+  useEffect(() => {
+    if (isVisible && name) setInput(name);
+    return () => setInput("");
+  }, [isVisible]);
 
-	function onSave() {
-		props.onPressSave(input.trim());
-	}
+  function onSave() {
+    props.onPressSave(input.trim());
+  }
 
-	function onCancel() {
-		props.onPressCancel();
-	}
+  function onCancel() {
+    props.onPressCancel();
+  }
 
-	const { contrast, foreground, elevatedBG } = theme;
+  const { contrast, foreground } = theme;
 
-	return (
-		<Dialog.Container
-			visible={isVisible}
-			backdropColor="black"
-			onBackButtonPress={onCancel}
-			onBackdropPress={onCancel}
-			contentStyle={{ backgroundColor: elevatedBG }}>
-			<DialogTitle>{title}</DialogTitle>
-			{description ? <DialogDescription>{description}</DialogDescription> : null}
-			<DialogInput
-				placeholder={inputPlaceholder}
-				placeholderTextColor={contrast}
-				autoCorrect={false}
-				onChangeText={(val) => setInput(val)}
-				selectionColor={foreground}
-				value={input}
-				autoFocus
-			/>
-			<Dialog.Button label="Cancel" color={contrast} onPress={onCancel} />
-			<Dialog.Button label={saveButtonTitle} color={foreground} onPress={onSave} />
-		</Dialog.Container>
-	);
+  return (
+    <Dialog.Container
+      visible={isVisible}
+      backdropColor="black"
+      onBackButtonPress={onCancel}
+      onBackdropPress={onCancel}
+      contentStyle={{ backgroundColor: "black" }}
+    >
+      <Dialog.Title style={{ color: evaLight["color-basic-800"] }}>
+        {title}
+      </Dialog.Title>
+      {description && (
+        <Dialog.Description style={{ color: evaLight["color-basic-800"] }}>
+          {description}
+        </Dialog.Description>
+      )}
+
+      {/* <DialogTitle>{title}</DialogTitle>
+      {description ? (
+        <DialogDescription>{description}</DialogDescription>
+      ) : null} */}
+      <DialogInput
+        placeholder={inputPlaceholder}
+        placeholderTextColor={evaLight["color-basic-600"]}
+        autoCorrect={false}
+        onChangeText={(val) => setInput(val)}
+        selectionColor={foreground}
+        value={input}
+        autoFocus
+      />
+      <Dialog.Button
+        label="Cancel"
+        color={evaLight["color-basic-600"]}
+        onPress={onCancel}
+      />
+      <Dialog.Button
+        label={saveButtonTitle}
+        color={foreground}
+        onPress={onSave}
+      />
+    </Dialog.Container>
+  );
 }
 
 export default connect(null, actions)(withTheme(InputDialog));
 
-const DialogTitle = styled(Dialog.Title)`
-	font-family: ${PRODUCT_SANS};
-	margin-left: 10px;
-	color: ${foreground2Color};
-`;
-
-const DialogDescription = styled(Dialog.Description)`
-	font-family: ${PRODUCT_SANS};
-	margin-left: 10px;
-	margin-right: 10px;
-	color: ${contrastColor};
-`;
-
 const DialogInput = styled(Dialog.Input)`
-	color: ${contrastColor};
-	font-family: ${PRODUCT_SANS};
-	border-bottom-width: 1px;
-	border-bottom-color: ${foregroundColor};
+  color: ${evaLight["color-basic-800"]};
+  border-bottom-color: ${foregroundColor};
 `;

@@ -3,7 +3,7 @@ import { Dimensions } from "react-native";
 import styled from "styled-components/native";
 import { connect } from "react-redux";
 import Modal from "react-native-modal";
-import * as actions from "../actions";
+import * as actions from "actions";
 import ListItem from "./ListItem";
 import InputDialog from "./InputDialog";
 import ConfirmDialog from "./ConfirmDialog";
@@ -112,8 +112,8 @@ const ModalContentWrapper = styled.View`
   justify-content: space-evenly;
   padding-bottom: ${getBottomSpace("safe")};
   margin-bottom: -20px;
-  border-top-left-radius: 30px;
-  border-top-right-radius: 30px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 `;
 
 const TextWrapper = styled.View`

@@ -3,7 +3,7 @@ import { View, ScrollView, Dimensions } from "react-native";
 import styled from "styled-components/native";
 import { connect } from "react-redux";
 import RenderActivityIndicator from "../components/RenderActivityIndicator";
-import * as actions from "../actions";
+import * as actions from "actions";
 import { contrastColor, contrastTransColor } from "../themes/styles";
 import { CIRCULAR } from "assets";
 

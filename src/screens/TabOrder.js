@@ -3,7 +3,7 @@ import { View } from "react-native";
 import styled from "styled-components/native";
 import DraggableFlatList from "react-native-draggable-flatlist";
 import { connect } from "react-redux";
-import * as actions from "../actions";
+import * as actions from "actions";
 import ListItem from "../components/ListItem";
 import { contrastColor } from "../themes/styles";
 import { PRODUCT_SANS_BOLD } from "assets";

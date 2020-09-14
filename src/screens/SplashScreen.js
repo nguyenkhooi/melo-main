@@ -1,11 +1,12 @@
 import React from "react";
 import { StatusBar } from "react-native";
 import styled from "styled-components/native";
+import { colors, evaLight } from "utils";
 
 function SplashScreen() {
   return (
     <Wrapper>
-      <StatusBar backgroundColor="#5e17eb" animated />
+      <StatusBar backgroundColor={colors.foreground} animated />
       <Logo source={require("../../assets/logo.png")} />
     </Wrapper>
   );

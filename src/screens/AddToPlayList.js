@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { ScrollView } from "react-native";
 import styled from "styled-components/native";
 import { connect } from "react-redux";
-import * as actions from "../actions";
+import * as actions from "actions";
 import ListItem from "../components/ListItem";
 import RenderToast from "../components/RenderToast";
 import { contrastColor } from "../themes/styles";

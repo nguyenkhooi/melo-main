@@ -2,7 +2,7 @@ import React from "react";
 import { Dimensions, Text } from "react-native";
 import styled from "styled-components/native";
 import { connect } from "react-redux";
-import * as actions from "../actions";
+import * as actions from "actions";
 import Icon from "./Icon";
 import {
   contrastColor,

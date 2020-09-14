@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Share from "react-native-share";
 import Modal from "react-native-modal";
-import * as actions from "../actions";
+import * as actions from "actions";
 import ListItem from "./ListItem";
 import InputDialog from "./InputDialog";
 import ConfirmDialog from "./ConfirmDialog";
@@ -145,8 +145,8 @@ const ModalContentWrapper = styled.View`
   elevation: 5;
   justify-content: space-evenly;
   margin-bottom: -20px;
-  border-top-left-radius: 30px;
-  border-top-right-radius: 30px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 `;
 
 const TextWrapper = styled.View`

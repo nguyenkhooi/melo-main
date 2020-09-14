@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, FlatList } from "react-native";
 import styled from "styled-components/native";
 import { connect } from "react-redux";
-import * as actions from "../actions";
+import * as actions from "actions";
 import RenderTrack from "../components/RenderTrack";
 import OptionsModal from "../components/OptionsModal";
 import { flatListItemLayout } from "../utils/FlatListLayout";

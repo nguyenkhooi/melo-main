@@ -2,7 +2,7 @@ import React from "react";
 import { Dimensions, ViewStyle } from "react-native";
 import styled, { withTheme } from "styled-components/native";
 import { connect } from "react-redux";
-import * as actions from "../actions";
+import * as actions from "actions";
 import TrackPlayer, { ProgressComponent } from "react-native-track-player";
 import Slider from "react-native-slider";
 import { contrastTransColor } from "themes";

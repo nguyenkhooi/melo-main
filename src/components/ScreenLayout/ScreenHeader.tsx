@@ -24,6 +24,6 @@ const TitleWrapper = styledd(View)({
 const Title = styled.Text`
   font-family: ${CIRCULAR};
   font-weight: bold;
-  font-size: 26px;
+  font-size: 30px;
   color: ${contrastColor};
 `;
