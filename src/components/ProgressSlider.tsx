@@ -1,12 +1,12 @@
+import * as actions from "actions";
+import { PRODUCT_SANS } from "assets";
 import React from "react";
 import { Dimensions, ViewStyle } from "react-native";
-import styled, { withTheme } from "styled-components/native";
-import { connect } from "react-redux";
-import * as actions from "actions";
-import TrackPlayer, { ProgressComponent } from "react-native-track-player";
 import Slider from "react-native-slider";
+import TrackPlayer, { ProgressComponent } from "react-native-track-player";
+import { connect } from "react-redux";
+import styled, { withTheme } from "styled-components/native";
 import { contrastTransColor } from "themes";
-import { PRODUCT_SANS } from "assets";
 import { scale } from "utils";
 
 const ScreenWidth = Dimensions.get("window").width;
