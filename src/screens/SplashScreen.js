@@ -1,13 +1,14 @@
+import { img } from "assets";
 import React from "react";
 import { StatusBar } from "react-native";
 import styled from "styled-components/native";
-import { colors, evaLight } from "utils";
+import { colors } from "utils";
 
 function SplashScreen() {
   return (
     <Wrapper>
-      <StatusBar backgroundColor={colors.foreground} animated />
-      <Logo source={require("../../assets/logo.png")} />
+      <StatusBar backgroundColor={colors.background} animated />
+      <Logo source={img.meloLogo} />
     </Wrapper>
   );
 }
@@ -18,7 +19,7 @@ const Wrapper = styled.View`
   flex: 1;
   justify-content: center;
   align-items: center;
-  background-color: #5e17eb;
+  background-color: ${colors.background};
 `;
 
 const Logo = styled.Image`
