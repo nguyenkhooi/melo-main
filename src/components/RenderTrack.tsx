@@ -1,16 +1,15 @@
-import React from "react";
-import { Dimensions, Text } from "react-native";
-import styled from "styled-components/native";
-import { connect } from "react-redux";
 import * as actions from "actions";
-import Icon from "./Icon";
+import { CIRCULAR, img } from "assets";
+import React from "react";
+import { Dimensions } from "react-native";
+import { connect } from "react-redux";
+import styled from "styled-components/native";
 import {
   contrastColor,
-  foregroundColor,
   contrastTransColor,
+  foregroundColor
 } from "../themes/styles";
-const placeholder = require("../../assets/placeholder.jpg");
-import { CIRCULAR } from "assets";
+import Icon from "./Icon";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
@@ -22,7 +21,7 @@ const RenderTrack = React.memo(
       if (item.id !== currentTrack.id) setCurrentTrack(item);
     }
 
-    const coverSrc = item.artwork ? { uri: item.artwork } : placeholder;
+    const coverSrc = item.artwork ? { uri: item.artwork } : img.placeholder;
     return (
       <Touchable onPress={onTrackPress} activeOpacity={0.4}>
         <Thumbnail source={coverSrc} />

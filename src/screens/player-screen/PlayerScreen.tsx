@@ -1,21 +1,21 @@
-import React, { useEffect } from "react";
-import { Dimensions } from "react-native";
-import styled, { withTheme } from "styled-components/native";
-import LinearGradient from "react-native-linear-gradient";
-import { connect } from "react-redux";
 import * as actions from "actions";
-import ProgressSlider from "components/ProgressSlider";
-import PlaybackControl from "components/PlaybackControl";
+import { CIRCULAR } from "assets";
 import CoverArt from "components/CoverArt";
 import Icon from "components/Icon";
 import OptionsMenu from "components/OptionsMenu";
+import PlaybackControl from "components/PlaybackControl";
+import ProgressSlider from "components/ProgressSlider";
+import React, { useEffect } from "react";
+import { Dimensions, ImageBackground } from "react-native";
+import LinearGradient from "react-native-linear-gradient";
+import { connect } from "react-redux";
+import styled, { withTheme } from "styled-components/native";
 import {
   backgroundColor,
   bgTransColor,
-  contrastTransColor,
   contrastColor,
+  contrastTransColor
 } from "themes";
-import { CIRCULAR } from "assets";
 
 const PlayerWidth = Dimensions.get("window").width * 0.82;
 
@@ -27,7 +27,11 @@ function PlayerScreen(props) {
   }, [navigation]);
 
   return (
-    <Background source={{ uri: currentTrack.artwork }} blurRadius={40}>
+    <ImageBackground
+      source={{ uri: theme.current == "light" ? "" : currentTrack.artwork }}
+      blurRadius={40}
+      style={{ width: "100%", height: "100%" }}
+    >
       <Gradient colors={[`${theme.bgTrans}0.35)`, `${theme.bgTrans}0.8)`]}>
         <Header>
           <StyledIcon {...icons.collapse} onPress={navigation.goBack} />
@@ -47,7 +51,7 @@ function PlayerScreen(props) {
           <PlaybackControl />
         </Wrapper>
       </Gradient>
-    </Background>
+    </ImageBackground>
   );
 }
 
