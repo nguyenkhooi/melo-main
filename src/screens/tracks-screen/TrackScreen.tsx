@@ -1,33 +1,27 @@
-import React, { useState, useEffect } from "react";
+import * as actions from "actions";
+import { CIRCULAR } from "assets";
+import { OptionsModal, ScreenTitle } from "components";
+import RenderActivityIndicator from "components/RenderActivityIndicator";
+import RenderTrack from "components/RenderTrack";
+import { scanMessage } from "constants";
+import React, { useEffect, useState } from "react";
 import {
-  View,
   Animated,
   Dimensions,
   StatusBar,
-  ViewStyle,
-  Text,
-  Button,
-  UIManager,
-  TouchableNativeFeedback,
   TouchableOpacity,
+  View,
+  ViewStyle
 } from "react-native";
-import styled from "styled-components/native";
+import QuickScrollList from "react-native-quick-scroll";
 import TrackPlayer from "react-native-track-player";
 import { connect } from "react-redux";
-import * as actions from "actions";
-import QuickScrollList from "react-native-quick-scroll";
 import { setupPlayer } from "services";
-import RenderActivityIndicator from "components/RenderActivityIndicator";
-import RenderTrack from "components/RenderTrack";
+import styled from "styled-components/native";
+import { contrastColor, foregroundColor } from "themes/styles";
+import { getRandomNumber, getStatusBarHeight, scale } from "utils";
 // import OptionsModal from "components/OptionsModal";
 import { flatListItemLayout } from "utils/FlatListLayout";
-import { scanMessage } from "constants";
-import { contrastColor, foregroundColor } from "themes/styles";
-import { ScreenTitle } from "components";
-import { getStatusBarHeight, scale, getRandomNumber, IS_ANDROID } from "utils";
-import { CIRCULAR } from "assets";
-
-import { OptionsModal, $$_Player } from "components";
 
 const ScreenHeight = Dimensions.get("window").height;
 const StatusBarHeight = StatusBar.currentHeight;
@@ -54,6 +48,25 @@ function TracksScreen(props) {
     let unsubscribe = props.navigation.addListener("focus", props.showFooter);
     return unsubscribe;
   }, [props.navigation]);
+  const [_podcasts, setPodcast] = React.useState(null);
+  useEffect(function getPodcastResult() {
+    fetch(
+      "https://listen-api.listennotes.com/api/v2/search?q=star%20wars&sort_by_date=0&type=episode&offset=0&len_min=10&len_max=30&genre_ids=68%2C82&published_before=1580172454000&published_after=0&only_in=title%2Cdescription&language=English&safe_mode=0",
+      {
+        method: "GET",
+        headers: {
+          "X-ListenAPI-Key": "d7f9fea7ad1c47499a5130cf3ae447d4",
+        },
+      }
+    )
+      .then((result) => result.json())
+      .then((json) => {
+        console.log("RSULT>>>>>>>", json);
+        setPodcast(json);
+      })
+      .catch((error) => console.warn(error));
+    // .finally();
+  }, []);
 
   useEffect(() => {
     props.getMedia();
@@ -132,6 +145,11 @@ function TracksScreen(props) {
   }
 
   return <RenderActivityIndicator text={scanMessage} />;
+  // return (
+  //   <ShuffleText style={{ paddingTop: scale(100) }}>
+  //     {JSON.stringify(_podcasts)}
+  //   </ShuffleText>
+  // );
 }
 
 const ShuffleText = styled.Text`

@@ -1,12 +1,11 @@
 //@ts-check
-import React, { useState, useEffect } from "react";
-import { Text } from "react-native";
-import { Provider } from "react-redux";
-import { store, persistor } from "store";
-import { PersistGate } from "redux-persist/integration/react";
 import RootNavigator from "navigation";
-import SplashScreen from "./src/screens/SplashScreen";
+import React, { useEffect, useState } from "react";
 import Toasty from "react-native-toast-message";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistor, store } from "store";
+import SplashScreen from "./src/screens/SplashScreen";
 // import { Toasty } from "components";
 
 export default function App() {
