@@ -21,6 +21,6 @@ export async function setupPlayer() {
       TrackPlayer.CAPABILITY_SKIP_TO_PREVIOUS,
     ],
     /** @see https://github.com/react-native-kit/react-native-track-player/blob/dev/docs/API.md#playback-service */
-    icon: resolveAssetSource(img.meloMinicon),
+    icon: resolveAssetSource(img.meloWhite),
   });
 }

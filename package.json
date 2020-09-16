@@ -9,7 +9,7 @@
     "rc-start": "npm start -- --reset-cache",
     "build-android": "cd android && gradlew assembleRelease",
     "rename": "react-native-rename",
-    "icon": "npx app-icon generate -i ./assets/publishing/logo.png"
+    "icon": "npx app-icon generate -i ./assets/images/app-logo.png"
   },
   "author": {
     "name": "Khoi Tran",
