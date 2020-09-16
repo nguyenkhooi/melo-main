@@ -1,29 +1,20 @@
-import React from "react";
-import {
-  Dimensions,
-  TouchableWithoutFeedback,
-  Alert,
-  View,
-} from "react-native";
-import styled, { withTheme } from "styled-components/native";
-import { connect } from "react-redux";
-import * as actions from "../actions";
-import { useTrackPlayerProgress } from "react-native-track-player/lib/hooks";
-import * as navigation from "../navigation/NavigationService";
-import ProgressBar from "./ProgressBar";
-import Icon from "./Icon";
-import {
-  contrastColor,
-  elevatedBGColor,
-  contrastTransColor,
-} from "../themes/styles";
 import { CIRCULAR_BOLD, CIRCULAR_LIGHT } from "assets";
+import React from "react";
+import { Dimensions, TouchableWithoutFeedback, View } from "react-native";
 import {
   PanGestureHandler,
-  State as GestureState,
+  State as GestureState
 } from "react-native-gesture-handler";
 import Animated, { Extrapolate, interpolate } from "react-native-reanimated";
-import { getBottomSpace } from "utils";
+import { useTrackPlayerProgress } from "react-native-track-player/lib/hooks";
+import { connect } from "react-redux";
+import styled, { withTheme } from "styled-components/native";
+import { getBottomSpace, getRandomNumber } from "utils";
+import * as actions from "../actions";
+import * as navigation from "../navigation/NavigationService";
+import { contrastColor, contrastTransColor } from "../themes/styles";
+import Icon from "./Icon";
+import ProgressBar from "./ProgressBar";
 const {
   event,
   cond,
@@ -53,6 +44,9 @@ function PlayerFooter(props) {
     currentTrack,
     theme,
     swipeThreshold = 0.6,
+    media,
+    loop,
+    shuffle,
   } = props;
   const { position, duration } = useTrackPlayerProgress(100);
 
@@ -136,6 +130,15 @@ function PlayerFooter(props) {
     outputRange: [0, 1, 0.2],
     extrapolate: Extrapolate.CLAMP,
   });
+
+  function skipForward() {
+    let nextTrack = shuffle
+      ? media[getRandomNumber(0, media.length)]
+      : currentTrack.index === media.length - 1
+      ? media[0]
+      : media[currentTrack.index + 1];
+    props.setCurrentTrack(nextTrack);
+  }
   return renderFooter && currentTrack.id !== "000" ? (
     //   return 1 == 1 && renderFooter ? (
     <MainWrapper>
@@ -187,6 +190,7 @@ function PlayerFooter(props) {
               ) : (
                 <StyledIcon {...icons.playIcon} onPress={togglePlayback} />
               )}
+              <StyledIcon {...icons.nextIcon} onPress={skipForward} />
               <ProgressWrapper>
                 <Progress
                   progress={isNaN(progress) ? 0 : +progress.toFixed(3)}
@@ -206,6 +210,10 @@ function mapStateToProps(state) {
     renderFooter: state.footer.footerVisible,
     currentTrack: state.playback.currentTrack,
     isPlaying: state.player.isPlaying,
+
+    media: state.media.mediaFiles,
+    loop: state.playback.loop,
+    shuffle: state.playback.shuffle,
   };
 }
 
@@ -216,7 +224,7 @@ const MainWrapper = styled.View`
   position: absolute;
   left: 0px;
   right: 0px;
-  bottom: ${getBottomSpace() + 50};
+  bottom: ${getBottomSpace() + 48};
   flex-direction: row;
   align-items: center;
 `;
@@ -225,7 +233,7 @@ const Thumbnail = styled.Image`
   height: 42px;
   width: 42px;
   border-radius: 21px;
-  margin-left: 15px
+  margin-left: 15px;
 `;
 
 const TextWrapper = styled.View`
@@ -268,14 +276,19 @@ const Progress = styled(ProgressBar)`
 
 const icons = {
   playIcon: {
-    name: "play-arrow",
-    type: "material",
-    size: 24,
+    name: "play",
+    type: "fa5",
+    size: 20,
   },
   pauseIcon: {
     name: "pause",
-    type: "material",
-    size: 24,
+    type: "fa5",
+    size: 20,
+  },
+  nextIcon: {
+    name: "forward",
+    type: "fa5",
+    size: 20,
   },
 };
 
