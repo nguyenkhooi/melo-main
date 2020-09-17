@@ -1,14 +1,12 @@
 //@ts-check
-export * from "./StyledComponents";
-export { default as Icon } from "./Icon";
-export { PROPS_Icon } from "./Icon";
-
-export { default as OptionsModal } from "./Modals/OptionsModal";
-
-export * from "./ScreenLayout/ScreenHeader";
+export { default as Icon, PROPS_Icon } from "./Icon";
 export * from "./Modals/$$_Player";
+export { default as OptionsModal } from "./Modals/OptionsModal";
+export * from "./RenderToast";
+export * from "./ScreenLayout/ScreenHeader";
+export * from "./StyledComponents";
 
-export { default as Toasty } from "./Generals/Toasty/Toasty";
+
 
 
 /**

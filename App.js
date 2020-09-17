@@ -1,7 +1,7 @@
 //@ts-check
+import { Toast } from "components";
 import RootNavigator from "navigation";
 import React, { useEffect, useState } from "react";
-import Toasty from "react-native-toast-message";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistor, store } from "store";
@@ -29,7 +29,7 @@ export default function App() {
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor}>{renderApp}</PersistGate>
-      <Toasty ref={(ref) => Toasty.setRef(ref)} />
+      <Toast ref={(ref) => Toast.setRef(ref)} />
     </Provider>
   );
 }
