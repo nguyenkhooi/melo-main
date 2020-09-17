@@ -1,22 +1,21 @@
+import { CIRCULAR } from "assets";
+import { styledd } from "components";
 import React from "react";
 import { View } from "react-native";
 import styled from "styled-components/native";
 import { contrastColor } from "themes/styles";
-import { CIRCULAR } from "assets";
-
-import { styledd } from "components";
 import { scale } from "utils";
 
 export function ScreenTitle(props) {
   const { title = "Search" } = props;
   return (
-    <TitleWrapper>
+    <TitleCTNR>
       <Title>{title}</Title>
-    </TitleWrapper>
+    </TitleCTNR>
   );
 }
 
-const TitleWrapper = styledd(View)({
+const TitleCTNR = styledd(View)({
   alignItems: "flex-start",
   paddingLeft: scale(15),
 });

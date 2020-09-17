@@ -1,20 +1,17 @@
-import React from "react";
-import { withTheme } from "styled-components/native";
 import {
   createStackNavigator,
-  TransitionPresets,
-  HeaderBackButton,
+
+  HeaderBackButton, TransitionPresets
 } from "@react-navigation/stack";
-import { View } from "react-native";
-import BottomTabNav from "./BottomTabNav";
+import { CIRCULAR_BOLD } from "assets";
+import React from "react";
+import { TabArrangementScreen } from "screens";
+import { withTheme } from "styled-components/native";
 // import AddToPlaylist from '../screens/AddToPlayList';
 import AboutScreen from "../screens/AboutScreen";
-import ShowPlaylistScreen from "../screens/ShowPlaylistScreen";
 import ShowContentScreen from "../screens/ShowContentScreen";
-import TabOrder from "../screens/TabOrder";
-import Icon from "../components/Icon";
-import { CIRCULAR, CIRCULAR_BOLD } from "assets";
-import { foregroundColor } from "themes";
+import ShowPlaylistScreen from "../screens/ShowPlaylistScreen";
+import BottomTabNav from "./BottomTabNav";
 
 const durationSpec = { config: { duration: 200 } };
 
@@ -84,7 +81,7 @@ function MainStack(props) {
       />
       <Stack.Screen
         name="tab-order"
-        component={TabOrder}
+        component={TabArrangementScreen}
         options={{ title: "Arrange Order" }}
       />
       <Stack.Screen

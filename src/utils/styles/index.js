@@ -1,4 +1,6 @@
+export * from "./colorator";
 export * from "./colors";
-export * from "./spacing";
-export * from "./eva-light";
 export * from "./eva-dark";
+export * from "./eva-light";
+export * from "./spacing";
+

@@ -1,16 +1,16 @@
-import { settings } from "constants";
-import { clearCache, getStatusBarHeight } from "utils";
-
-import React, { useState, useEffect } from "react";
-import { ScrollView, Switch, Linking } from "react-native";
-import { withTheme } from "styled-components/native";
-import { connect } from "react-redux";
 import * as actions from "actions";
-import Share from "react-native-share";
+import { PROPS_Icon, ScreenTitle } from "components";
 import ConfirmDialog from "components/ConfirmDialog";
 import InputDialog from "components/InputDialog";
 import ListItem from "components/ListItem";
-import { PROPS_Icon, ScreenTitle } from "components";
+import { settings } from "constants";
+import React, { useEffect, useState } from "react";
+import { Linking, ScrollView, Switch } from "react-native";
+import Share from "react-native-share";
+import { connect } from "react-redux";
+import { withTheme } from "styled-components/native";
+import { clearCache, getStatusBarHeight } from "utils";
+
 // import ListItem from "../components/ListItem";
 // import InputDialog from "../components/InputDialog";
 // import ConfirmDialog from "../components/ConfirmDialog";
@@ -113,7 +113,7 @@ function SettingsScreen(props) {
         subtitle={settings.about.subtitle}
       />
 
-      <InputDialog
+      <SkipFoldersDialog
         isVisible={isInputVisible}
         onPressSave={onInputSave}
         onPressCancel={() => setInputVisible(false)}
@@ -136,6 +136,9 @@ function SettingsScreen(props) {
     </ScrollView>
   );
 }
+
+const SkipFoldersDialog = InputDialog;
+const ClearCacheDialog = ConfirmDialog;
 
 function mapStateToProps({ settings }) {
   return {

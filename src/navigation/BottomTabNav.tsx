@@ -1,11 +1,11 @@
-import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Icon } from "components";
+import React from "react";
+import { ViewStyle } from "react-native";
+import { SearchScreen, SettingsScreen, TracksScreen } from "screens";
 import { withTheme } from "styled-components/native";
 import TopMaterialTabNav from "./TopMaterialTabNav";
-import { Icon } from "components";
-import { ViewStyle } from "react-native";
 
-import { SearchScreen, SettingsScreen, TracksScreen } from "screens";
 
 function BottomTabNav(props) {
   const BottomTabs = createBottomTabNavigator();

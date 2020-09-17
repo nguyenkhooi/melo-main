@@ -1,19 +1,17 @@
-import React from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { withTheme } from "styled-components/native";
-import { connect } from "react-redux";
-
-import { getStatusBarHeight } from "utils";
-import { TextStyle, ViewStyle, View } from "react-native";
-import { ScreenTitle } from "components";
-
-import {
-  PlaylistsScreen,
-  ArtistsScreen,
-  AlbumsScreen,
-  FoldersScreen,
-} from "screens";
 import { CIRCULAR } from "assets";
+import { ScreenTitle } from "components";
+import React from "react";
+import { TextStyle, View, ViewStyle } from "react-native";
+import { connect } from "react-redux";
+import {
+  AlbumsScreen,
+  ArtistsScreen,
+  FoldersScreen,
+  PlaylistsScreen
+} from "screens";
+import { withTheme } from "styled-components/native";
+import { getStatusBarHeight } from "utils";
 
 const screenProps = {
   playlists: { component: PlaylistsScreen, options: { title: "Playlists" } },

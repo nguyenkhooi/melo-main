@@ -1,16 +1,16 @@
-import React from "react";
-import { TouchableWithoutFeedback, Dimensions } from "react-native";
-import styled from "styled-components/native";
-import { connect } from "react-redux";
 import * as actions from "actions";
-import Icon from "./Icon";
-import RenderToast from "./RenderToast";
-import { getRandomNumber } from "../utils";
+import React from "react";
+import { Dimensions, TouchableWithoutFeedback, View } from "react-native";
+import { connect } from "react-redux";
+import styled from "styled-components/native";
 import {
   contrastColor,
   contrastTransColor,
-  foregroundColor,
+  foregroundColor
 } from "../themes/styles";
+import { getRandomNumber, scale } from "../utils";
+import Icon from "./Icon";
+import { styledd } from "./StyledComponents";
 
 const WrapperWidth = Dimensions.get("window").width * 0.82;
 
@@ -36,47 +36,45 @@ function PlaybackControl(props) {
   }
 
   function onShufflePress() {
-    RenderToast(`Shuffle: ${shuffle ? "Off" : "On"}`);
     props.setShuffle(!shuffle);
   }
 
   function onLoopPress() {
-    RenderToast(`Loop ${loop ? "all tracks" : "this track"}`);
     props.setLoop(!loop);
   }
 
   return (
-    <MainWrapper>
+    <MainCTNR>
       <TouchableWithoutFeedback onPress={onShufflePress}>
-        <IconWrapper>
+        <IconCTNR>
           {shuffle ? (
             <TransIcon {...icons.shuffle} />
           ) : (
             <DisabledIcon {...icons.shuffle} />
           )}
-        </IconWrapper>
+        </IconCTNR>
       </TouchableWithoutFeedback>
       <StyledIcon {...icons.skipBackward} onPress={skipBackward} />
       <TouchableWithoutFeedback onPress={() => props.setPlayback(!isPlaying)}>
-        <PlayWrapper>
+        <PlayCTNR>
           {isPlaying ? (
             <StyledIcon {...icons.pause} />
           ) : (
             <StyledIcon {...icons.play} />
           )}
-        </PlayWrapper>
+        </PlayCTNR>
       </TouchableWithoutFeedback>
       <StyledIcon {...icons.skipForward} onPress={skipForward} />
       <TouchableWithoutFeedback onPress={onLoopPress}>
-        <IconWrapper>
+        <IconCTNR>
           {loop ? (
             <TransIcon {...icons.loopOne} />
           ) : (
             <TransIcon {...icons.loop} />
           )}
-        </IconWrapper>
+        </IconCTNR>
       </TouchableWithoutFeedback>
-    </MainWrapper>
+    </MainCTNR>
   );
 }
 
@@ -92,22 +90,18 @@ function mapStateToProps(state) {
 
 export default connect(mapStateToProps, actions)(PlaybackControl);
 
-const MainWrapper = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  width: ${WrapperWidth + 10}px;
-`;
-
-const PlayWrapper = styled.View`
-  justify-content: center;
-  align-items: center;
-  border-width: 3px;
-  border-radius: 30px;
-  width: 60px;
-  height: 60px;
-  border-color: ${contrastColor};
-`;
+const MainCTNR = styledd(View)({
+  flexDirection: "row",
+  justifyContent: "space-between",
+  alignItems: "center",
+  width: WrapperWidth + 10,
+});
+const PlayCTNR = styledd(View)({
+  justifyContent: "center",
+  alignItems: "center",
+  borderRadius: 30,
+  borderColor: "white",
+});
 
 const StyledIcon = styled(Icon)`
   color: ${contrastColor};
@@ -122,48 +116,48 @@ const DisabledIcon = styled(Icon)`
   color: ${contrastTransColor(0.35)};
 `;
 
-const IconWrapper = styled.View`
-  height: 28px;
-  width: 28px;
-  border-radius: 14px;
-  justify-content: center;
-  align-items: center;
-`;
+const IconCTNR = styledd(View)({
+  height: scale(28),
+  width: scale(28),
+  borderRadius: scale(14),
+  justifyContent: "center",
+  alignItems: "center",
+});
 
 const icons = {
   play: {
     name: "play-arrow",
     type: "material",
-    size: 32,
+    size: scale(32),
   },
   pause: {
     name: "pause",
     type: "material",
-    size: 32,
+    size: scale(32),
   },
   skipForward: {
-    name: "step-forward",
-    type: "fontisto",
-    size: 20,
+    name: "forward",
+    type: "fa5",
+    size: scale(20),
   },
   skipBackward: {
-    name: "step-backwrad",
-    type: "fontisto",
-    size: 20,
+    name: "backward",
+    type: "fa5",
+    size: scale(20),
   },
   loop: {
     name: "repeat",
     type: "material",
-    size: 22,
+    size: scale(22),
   },
   loopOne: {
     name: "repeat-one",
     type: "material",
-    size: 22,
+    size: scale(22),
   },
   shuffle: {
     name: "shuffle",
-    type: "feather",
-    size: 17,
+    type: "material",
+    size: scale(20),
   },
 };

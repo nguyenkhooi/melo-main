@@ -4,10 +4,8 @@ import { store } from "store";
 import {
   checkStoragePermissions,
   cleanupMedia,
-  errorReporter, getStoragePermission,
-
-
-
+  errorReporter,
+  getStoragePermission,
   IS_ANDROID
 } from "utils";
 
