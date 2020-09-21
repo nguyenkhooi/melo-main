@@ -7,7 +7,7 @@ export const dark = {
   elevatedBG: evaDark["color-basic-800"],
   contrast: evaDark["color-basic-300"],
   contrastTrans: evaDark["color-basic-transparent-600"],
-  fgTrans: "rgba(30, 215, 96, ",
+  fgTrans: evaDark["color-primary-transparent-500"],
   bgTrans: "rgba(18, 18, 18, ",
   current: "dark",
 };

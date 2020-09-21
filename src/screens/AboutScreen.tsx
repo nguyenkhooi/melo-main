@@ -1,11 +1,13 @@
-import React, { useEffect } from "react";
-import { TouchableOpacity, Linking } from "react-native";
-import styled from "styled-components/native";
-import { connect } from "react-redux";
 import * as actions from "actions";
+import { PRODUCT_SANS, PRODUCT_SANS_BOLD } from "assets";
 import { repoUrl } from "constants/urls";
+import React, { useEffect } from "react";
+import { Linking, TouchableOpacity } from "react-native";
+import { connect } from "react-redux";
+import styled from "styled-components/native";
 import { contrastColor, contrastTransColor, foregroundColor } from "themes";
-import { PRODUCT_SANS, PRODUCT_SANS_BOLD, PRODUCT_SANS_LIGHT } from "assets";
+import { version } from "../../package.json";
+
 
 function AboutScreen(props) {
   useEffect(() => {
@@ -15,8 +17,8 @@ function AboutScreen(props) {
 
   return (
     <Wrapper>
-      <Heading>Sóng Nhạc</Heading>
-      <DetailTrans>Version 3.1.4.20</DetailTrans>
+      <Heading>Melo</Heading>
+      <DetailTrans>Version {version}</DetailTrans>
       <Heading>Developed by</Heading>
       <DetailTrans>Khoi Tran</DetailTrans>
       <Detail>Source code available under MIT License at</Detail>

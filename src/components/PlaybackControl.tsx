@@ -10,7 +10,7 @@ import {
 } from "../themes/styles";
 import { getRandomNumber, scale } from "../utils";
 import Icon from "./Icon";
-import { styledd } from "./StyledComponents";
+import { sstyled } from "./StyledComponents";
 
 const WrapperWidth = Dimensions.get("window").width * 0.82;
 
@@ -90,13 +90,13 @@ function mapStateToProps(state) {
 
 export default connect(mapStateToProps, actions)(PlaybackControl);
 
-const MainCTNR = styledd(View)({
+const MainCTNR = sstyled(View)({
   flexDirection: "row",
   justifyContent: "space-between",
   alignItems: "center",
   width: WrapperWidth + 10,
 });
-const PlayCTNR = styledd(View)({
+const PlayCTNR = sstyled(View)({
   justifyContent: "center",
   alignItems: "center",
   borderRadius: 30,
@@ -116,7 +116,7 @@ const DisabledIcon = styled(Icon)`
   color: ${contrastTransColor(0.35)};
 `;
 
-const IconCTNR = styledd(View)({
+const IconCTNR = sstyled(View)({
   height: scale(28),
   width: scale(28),
   borderRadius: scale(14),

@@ -4,7 +4,7 @@ import styled, { withTheme } from "styled-components/native";
 import { elevatedBGColor, contrastColor, foregroundColor } from "themes";
 import { DEVICE_WIDTH } from "utils";
 import Icon from "./Icon";
-import { styledd } from "components";
+import { sstyled } from "components";
 // import { contrastColor, elevatedBGColor } from '../themes/styles';
 
 function CreatePlaylistButton(props) {
@@ -20,7 +20,7 @@ function CreatePlaylistButton(props) {
 
 export default withTheme(CreatePlaylistButton);
 
-const Wrapperss = styledd(View)({
+const Wrapperss = sstyled(View)({
   flexDirection: "row",
   justifyContent: "center",
   alignItems: "center",

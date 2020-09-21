@@ -1,15 +1,16 @@
 {
   "name": "Melo",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "private": true,
   "scripts": {
-    "android": "cd android && gradlew clean && cd .. && react-native run-android --port 80113",
+    "android": "cd android && gradlew clean && cd .. && react-native run-android --port 8013",
     "ios": "react-native run-ios",
     "start": "react-native start",
     "rc-start": "npm start -- --reset-cache",
     "build-android": "cd android && gradlew assembleRelease",
     "rename": "react-native-rename",
-    "icon": "npx app-icon generate -i ./assets/images/app-logo.png"
+    "icon": "npx app-icon generate -i ./assets/images/app-logo.png",
+    "adb": "adb reverse tcp:9090 tcp:9090 && adb reverse tcp:3000 tcp:3000 && adb reverse tcp:9001 tcp:9001 && adb reverse tcp:8081 tcp:8081"
   },
   "author": {
     "name": "Khoi Tran",

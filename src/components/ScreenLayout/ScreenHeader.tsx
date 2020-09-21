@@ -1,5 +1,5 @@
 import { CIRCULAR } from "assets";
-import { styledd } from "components";
+import { sstyled } from "components";
 import React from "react";
 import { View } from "react-native";
 import styled from "styled-components/native";
@@ -15,7 +15,7 @@ export function ScreenTitle(props) {
   );
 }
 
-const TitleCTNR = styledd(View)({
+const TitleCTNR = sstyled(View)({
   alignItems: "flex-start",
   paddingLeft: scale(15),
 });

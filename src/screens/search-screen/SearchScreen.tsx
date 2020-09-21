@@ -13,7 +13,7 @@ import {
   contrastTransColor,
 } from "themes/styles";
 
-import { styledd, ScreenTitle } from "components";
+import { sstyled, ScreenTitle } from "components";
 import { scale, getStatusBarHeight } from "utils";
 import { TracksScreen } from "screens";
 import { CIRCULAR_BOLD } from "assets";
@@ -130,7 +130,7 @@ const Wrapper = styled.View`
 //   align-items: center;
 // `;
 
-const TitleWrapper = styledd(View)({
+const TitleWrapper = sstyled(View)({
   alignItems: "flex-start",
   paddingLeft: scale(15),
 });

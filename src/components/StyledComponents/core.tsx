@@ -1,16 +1,15 @@
-import React, { Component } from "react";
-import { withTheme } from "styled-components";
+import React from "react";
 
 /**
  * @example
- * const RoundedButton = withStyle(Button)({
+ * const RoundedButton = sstyled(Button)({
     marginTop: 8,
     borderRadius: 10,
     borderWidth: 0
     });
  * @param WrappedComponent 
  */
-export function styledd<Component extends React.ElementType>(
+export function sstyled<Component extends React.ElementType>(
   WrappedComponent: Component
 ) {
   return (
