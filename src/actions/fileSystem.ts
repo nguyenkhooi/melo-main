@@ -22,7 +22,12 @@ export const renameTrack = (track, newName) => async (dispatch) => {
     pathArr[pathArr.length - 1] = `${newName}.${extension}`;
     let newPath = pathArr.join("/");
     let exists = await RNFetchBlob.fs.exists(newPath);
-    if (exists) return RenderToast("A file with the same name already exists");
+    if (exists)
+      return RenderToast({
+        title: "Error",
+        message: "A file with the same name already exists",
+        type: "error",
+      });
     await RNFetchBlob.fs.mv(track.url, newPath);
     await RNFetchBlob.fs.scanFile([{ path: newPath, mime }]);
     await RNFetchBlob.fs.scanFile([{ path: track.url, mime }]);

@@ -1,6 +1,7 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { CIRCULAR } from "assets";
 import { ScreenTitle } from "components";
+import R from "ramda";
 import React from "react";
 import { TextStyle, View, ViewStyle } from "react-native";
 import { connect } from "react-redux";
@@ -8,10 +9,10 @@ import {
   AlbumsScreen,
   ArtistsScreen,
   FoldersScreen,
-  PlaylistsScreen
+  PlaylistsScreen,
 } from "screens";
 import { withTheme } from "styled-components/native";
-import { getStatusBarHeight } from "utils";
+import { getStatusBarHeight, KeyOf } from "utils";
 
 const screenProps = {
   playlists: { component: PlaylistsScreen, options: { title: "Playlists" } },
@@ -20,7 +21,13 @@ const screenProps = {
   folders: { component: FoldersScreen, options: { title: "Folders" } },
 };
 
-function TopMaterialTabNav(props) {
+const SCR_KEYS = R.keys(screenProps);
+export type enum_TopTab = KeyOf<typeof screenProps>;
+
+function TopMaterialTabNav(props: {
+  theme: { foreground: any; background: any; contrast: any };
+  tabOrder: enum_TopTab[];
+}) {
   const TopTabs = createMaterialTopTabNavigator();
   const { foreground, background, contrast } = props.theme;
   const tabBarOptions = {

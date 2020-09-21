@@ -7,6 +7,7 @@ export * from "./Permissions";
 
 export * from "./helpers";
 export * from "./styles";
+export * from "./typings";
 
 export * from "./workers/useCombinedRefs";
 

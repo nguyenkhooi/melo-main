@@ -32,9 +32,18 @@ function PlaylistsScreen(props) {
         props.createPlaylist(playlistName);
         setModal(false);
       } else {
-        RenderToast("A playlist with the same name already exists");
+        RenderToast({
+          title: "Hold up",
+          message: "A playlist with the same name already exists",
+          type: "info",
+        });
       }
-    } else RenderToast("Playlists cannot be untitled");
+    } else
+      RenderToast({
+        title: "Try again",
+        message: "Playlists cannot be untitled",
+        type: "error",
+      });
   }
 
   function onListItemPress(title, content) {
@@ -99,7 +108,7 @@ export default connect(mapStateToProps, actions)(PlaylistsScreen);
 
 const StyledIcon = styled(Icon)`
   color: ${contrastTransColor(0.75)};
-  padding-horizontal: 5
+  padding-horizontal: 5;
 `;
 
 const playlistIcon = {

@@ -45,7 +45,11 @@ function OptionsModal(props) {
       if (index === -1) {
         props.renameTrack(selectedTrack, newName);
       } else {
-        return RenderToast('Title should not contain "/"');
+        return RenderToast({
+          title: "Error",
+          message: 'Title should not contain "/"',
+          type: "error",
+        });
       }
     }
     setRenameModal(false);

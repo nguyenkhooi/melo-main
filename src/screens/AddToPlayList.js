@@ -17,7 +17,11 @@ function AddToPlayList(props) {
 
   function addSong(playlistTitle, song) {
     props.addToPlaylist(playlistTitle, song);
-    RenderToast("Track was added to playlist");
+    RenderToast({
+      title: "Great",
+      message: "Track was added to playlist",
+      type: "success",
+    });
     navigation.goBack();
   }
 
@@ -27,7 +31,11 @@ function AddToPlayList(props) {
       (file) => file.id === song.id
     );
     if (filtered.length > 0)
-      RenderToast("This track is already in this playlist");
+      RenderToast({
+        title: "Hold up",
+        message: "This track is already in this playlist",
+        type: "info",
+      });
     else addSong(playlistName, song);
   }
 

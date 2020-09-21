@@ -11,7 +11,7 @@ import { connect } from "react-redux";
 import styled, { withTheme } from "styled-components/native";
 import { getBottomSpace, getRandomNumber } from "utils";
 import * as actions from "../actions";
-import * as navigation from "../navigation/NavigationService";
+import * as navigation from "../navigation/navigation-service";
 import { contrastColor, contrastTransColor } from "../themes/styles";
 import Icon from "./Icon";
 import ProgressBar from "./ProgressBar";

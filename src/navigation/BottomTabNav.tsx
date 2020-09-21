@@ -1,14 +1,25 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Icon } from "components";
+import R from "ramda";
 import React from "react";
 import { ViewStyle } from "react-native";
 import { SearchScreen, SettingsScreen, TracksScreen } from "screens";
 import { withTheme } from "styled-components/native";
+import { KeyOf } from "utils";
 import TopMaterialTabNav from "./TopMaterialTabNav";
 
+const stackProps = {
+  Tracks: { component: TracksScreen },
+  Search: { component: SearchScreen },
+  Library: { component: TopMaterialTabNav },
+  Settings: { component: SettingsScreen },
+};
+
+const SCR_KEYS = R.keys(stackProps);
+const BottomTabs = createBottomTabNavigator<typeof stackProps>();
+export type enum_BottomStack = KeyOf<typeof stackProps>;
 
 function BottomTabNav(props) {
-  const BottomTabs = createBottomTabNavigator();
   const { foreground, contrastTrans, elevatedBG } = props.theme;
   const tabBarOptions = {
     showLabel: false,
@@ -73,7 +84,16 @@ function BottomTabNav(props) {
       tabBarOptions={tabBarOptions}
       lazy={false}
     >
-      <BottomTabs.Screen
+      {SCR_KEYS.map((scr) => (
+        <BottomTabs.Screen
+          name={scr}
+          {...stackProps[scr]}
+          options={{
+            tabBarIcon: iconProvider(scr),
+          }}
+        />
+      ))}
+      {/* <BottomTabs.Screen
         name="Tracks"
         component={TracksScreen}
         options={{
@@ -94,7 +114,7 @@ function BottomTabNav(props) {
         name="Settings"
         component={SettingsScreen}
         options={{ tabBarIcon: iconProvider("Settings") }}
-      />
+      /> */}
     </BottomTabs.Navigator>
   );
 }

@@ -1,15 +1,26 @@
 import Toasty from "react-native-toast-message";
 
-export default function RenderToast(
-  message: string,
-  title: string,
-  type: "success" | "error" | "info" = "success",
-  position: "top" | "bottom",
-  visibilityTime: number = 2000,
-  autoHide: boolean = true,
-  topOffset: number = 30,
-  bottomOffset: number = 40
-) {
+interface dToast {
+  title: string;
+  message: string;
+  type?: "success" | "error" | "info";
+  position?: "top" | "bottom";
+  visibilityTime?: number;
+  autoHide?: boolean;
+  topOffset?: number;
+  bottomOffset?: number;
+}
+export default function RenderToast(props: dToast) {
+  const {
+    message,
+    title,
+    type = "success",
+    position = "bottom",
+    visibilityTime = 2000,
+    autoHide = true,
+    topOffset = 30,
+    bottomOffset = 40,
+  } = props;
   Toasty.show({
     text1: title,
     text2: message,

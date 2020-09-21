@@ -30,7 +30,12 @@ function OptionsMenu(props) {
     } else if (isConnected) {
       props.resetLyrics();
       navigation.navigate("lyrics");
-    } else RenderToast("No internet connection");
+    } else
+      RenderToast({
+        title: "Error",
+        message: "No internet connection",
+        type: "error",
+      });
   }
 
   function onShare() {

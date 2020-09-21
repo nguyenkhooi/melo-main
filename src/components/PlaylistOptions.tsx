@@ -31,8 +31,18 @@ function PlaylistOptions(props) {
         props.renamePlaylist(selectedPlaylist, playlistName);
         setRenameModal(false);
         props.onPressCancel();
-      } else RenderToast("A playlist with the same name already exists");
-    } else RenderToast("Playlists cannot be untitled");
+      } else
+        RenderToast({
+          title: "Error",
+          message: "A playlist with the same name already exists",
+          type: "error",
+        });
+    } else
+      RenderToast({
+        title: "Error",
+        message: "Playlists cannot be untitled",
+        type: "error",
+      });
   }
 
   function onDeleteConfirm() {

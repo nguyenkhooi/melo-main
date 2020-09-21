@@ -1,11 +1,17 @@
 //@ts-check
-import RootNavigator from "navigation";
+import { NavigationContainerRef } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import Toasty from "react-native-toast-message";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistor, store } from "store";
 import SplashScreen from "./src/screens/SplashScreen";
+import RootNavigator, {
+  canExit,
+  setRootNavigation,
+  useBackButtonHandler,
+  useNavigationPersistence,
+} from "navigation";
 // import { Toasty } from "components";
 
 export default function App() {
@@ -19,9 +25,25 @@ export default function App() {
     console.disableYellowBox = true;
   });
 
+  // @ts-ignore
+  const navigationRef = React.useRef<NavigationContainerRef>();
+
+  setRootNavigation(navigationRef);
+  useBackButtonHandler(navigationRef, canExit);
+  const {
+    initialNavigationState,
+    onNavigationStateChange,
+  } = useNavigationPersistence();
+
   function renderApp(isReady) {
     if (isReady && timePassed) {
-      return <RootNavigator />;
+      return (
+        <RootNavigator
+          ref={navigationRef}
+          initialState={initialNavigationState}
+          onStateChange={onNavigationStateChange}
+        />
+      );
     }
     return <SplashScreen />;
   }
