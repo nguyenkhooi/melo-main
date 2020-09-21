@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, FlatList } from "react-native";
+import { View, FlatList, Button } from "react-native";
 import styled from "styled-components/native";
 import { connect } from "react-redux";
 import * as actions from "actions";
@@ -12,6 +12,7 @@ import { CIRCULAR } from "assets";
 function ShowPlaylistScreen(props) {
   const [modal, setModal] = useState({ visible: false, item: {} });
 
+  const { shuffle, currentList, setCurrentList } = props;
   useEffect(() => {
     let unsubscribe = props.navigation.addListener("focus", props.hideFooter);
     return unsubscribe;
@@ -20,6 +21,12 @@ function ShowPlaylistScreen(props) {
   let listData = props.route.params.content;
   return listData.length > 0 ? (
     <View style={{ flex: 1 }}>
+      <Button
+        onPress={() => {
+          setCurrentList(listData, shuffle);
+        }}
+        title={"Play"}
+      />
       <FlatList
         data={listData}
         keyExtractor={(asset) => asset.id.toString()}
@@ -42,7 +49,17 @@ function ShowPlaylistScreen(props) {
   );
 }
 
-export default connect(null, actions)(ShowPlaylistScreen);
+function mapStateToProps(state) {
+  return {
+    currentList: state.playback.currentList,
+    isPlaying: state.player.isPlaying,
+    loop: state.playback.loop,
+    shuffle: state.playback.shuffle,
+    nowPlaying: state.media.nowPlaying,
+  };
+}
+
+export default connect(mapStateToProps, actions)(ShowPlaylistScreen);
 
 const EmptyWrapper = styled.View`
   flex: 1;

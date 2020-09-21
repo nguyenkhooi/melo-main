@@ -42,7 +42,7 @@ export function cleanupMedia(media) {
     (val) => !foldersToSkip.includes(getFolder(val.path).toLowerCase())
   );
   for (let i = 0; i < mediaFiles.length; i++) {
-    console.log("media prre: ", mediaFiles[0]);
+    // console.log("media prre: ", mediaFiles[0]);
     if (mediaFiles[i].title) {
       folderName = getFolder(mediaFiles[i].path);
       newMedia.push({

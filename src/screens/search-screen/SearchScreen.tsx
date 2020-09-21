@@ -123,7 +123,7 @@ export default connect(mapStateToProps, actions)(SearchScreen);
 const Wrapper = styled.View`
   flex: 1;
   background-color: ${backgroundColor};
-  padding-top: ${getStatusBarHeight("safe")};
+  padding-top: ${getStatusBarHeight("safe")}px;
 `;
 
 // const TitleWrapper = styled.View`

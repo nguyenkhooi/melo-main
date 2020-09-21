@@ -5,17 +5,40 @@ import {
 } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
 import { BackHandler } from "react-native";
-import { enum_BottomStack } from "./BottomTabNav";
-import { enum_TopTab } from "./TopMaterialTabNav";
+import { enum_HomeBottomTab } from "./home.navigator";
+import { enum_LibrariesTopTab } from "./libraries.navigator";
+import { enum_MainStack } from "./main.navigator";
+import { enum_PrimaryStack } from "./primary.navigator";
 
-type navigationRoute = enum_BottomStack | enum_TopTab;
+type navigationRoute =
+  | enum_MainStack
+  | enum_HomeBottomTab
+  | enum_LibrariesTopTab
+  | enum_PrimaryStack;
+
+export const navigationRef = React.createRef<NavigationContainerRef>();
+
+/**
+ * Out-of-context navigate()
+ * Use for component not wrapped in a navigation container
+ *  @example
+ * See PlayerFooter<>
+ * @param name
+ * @param params
+ */
+export function navigate(name: navigationRoute, params?) {
+  !!navigationRef &&
+    !!navigationRef.current &&
+    navigationRef.current.navigate(name, params);
+}
 
 /**
    * Setup navigation-service
    * 
    * @example
    * import {
-	  AppNavigator,
+    AppNavigator,
+    navigationRef,
 	  canExit,
 	  setRootNavigation,
 	  useBackButtonHandler,
@@ -23,15 +46,21 @@ type navigationRoute = enum_BottomStack | enum_TopTab;
 	} from "screens";
 	
 	function App() {
-	  [...]
-	  const navigationRef = React.useRef<NavigationContainerRef>();
-  
+	  [...]  
 	  setRootNavigation(navigationRef);
 	  useBackButtonHandler(navigationRef, canExit);
 	  const {
 		initialNavigationState,
 		onNavigationStateChange,
-	  } = useNavigationPersistence();
+    } = useNavigationPersistence();
+    
+    return (
+      <AppNavigator
+        ref={navigationRef}
+        initialState={initialNavigationState}
+        onStateChange={onNavigationStateChange}
+      />
+    )
 	  [...]
 	}
    */
@@ -143,7 +172,7 @@ export function useNavigationPersistence(
 
     if (previousRouteName !== currentRouteName) {
       // track screens.
-      __DEV__ && console.info("🗺️ Current route: ", currentRouteName);
+      console.info("🗺️ Current route: ", currentRouteName);
     }
 
     // Save the current route name for later comparision
@@ -178,7 +207,7 @@ export function useNavigationPersistence(
  *
  * `canExit` is used in ./app/app.tsx in the `useBackButtonHandler` hook.
  */
-const exitRoutes: navigationRoute[] = ["About"];
+const exitRoutes: navigationRoute[] = ["search-scr"];
 export const canExit = (routeName: navigationRoute) =>
   exitRoutes.includes(routeName);
 
@@ -187,10 +216,10 @@ export const canExit = (routeName: navigationRoute) =>
  */
 export const nConfig = {
   durationSpec: {
-    config: { duration: 1000 },
+    config: { duration: 200 },
   },
   noHeader: { headerShown: false },
-  headerTitle: ({ route, param, key }) => ({ title: route.params[param][key] }),
+  headerTitle: ({ route }) => ({ title: route.params.title }),
   noTitle: {
     headerTitleStyle: {
       fontSize: 0,

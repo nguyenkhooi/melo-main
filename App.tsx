@@ -8,6 +8,7 @@ import { persistor, store } from "store";
 import SplashScreen from "./src/screens/SplashScreen";
 import RootNavigator, {
   canExit,
+  navigationRef,
   setRootNavigation,
   useBackButtonHandler,
   useNavigationPersistence,
@@ -24,9 +25,6 @@ export default function App() {
     // Text.defaultProps.allowFontScaling = false;
     console.disableYellowBox = true;
   });
-
-  // @ts-ignore
-  const navigationRef = React.useRef<NavigationContainerRef>();
 
   setRootNavigation(navigationRef);
   useBackButtonHandler(navigationRef, canExit);

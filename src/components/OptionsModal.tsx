@@ -31,7 +31,7 @@ function OptionsModal(props) {
 
   function onAddToPlaylist() {
     props.onPressCancel();
-    navigation.navigate("addToPlaylist", { song: selectedTrack });
+    navigation.navigate("addToPlaylist-scr", { song: selectedTrack });
   }
 
   function onRemoveFromPlaylist() {

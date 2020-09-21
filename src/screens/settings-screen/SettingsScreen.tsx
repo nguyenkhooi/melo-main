@@ -89,7 +89,7 @@ function SettingsScreen(props) {
       <ListItem
         iconProps={icons.rearrange}
         title={settings.changeOrder.title}
-        onPress={() => props.navigation.navigate("tab-order")}
+        onPress={() => props.navigation.navigate("tab-order-scr")}
         subtitle={settings.changeOrder.subtitle}
       />
 
@@ -109,7 +109,7 @@ function SettingsScreen(props) {
       <ListItem
         iconProps={icons.about}
         title={settings.about.title}
-        onPress={() => props.navigation.navigate("about")}
+        onPress={() => props.navigation.navigate("about-scr")}
         subtitle={settings.about.subtitle}
       />
 

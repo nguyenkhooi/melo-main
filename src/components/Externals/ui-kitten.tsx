@@ -8,5 +8,5 @@ import * as UIKT from "@ui-kitten/components";
  * @description Customized UI Kitten components befonre export it as <Kitten.[]>
  */
 
-const Kit = { ...UIKT };
-export default Kit;
+export const Kitt = { ...UIKT };
+// export default Kitt;

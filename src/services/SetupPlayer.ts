@@ -12,6 +12,7 @@ export async function setupPlayer() {
       TrackPlayer.CAPABILITY_PAUSE,
       TrackPlayer.CAPABILITY_SKIP_TO_NEXT,
       TrackPlayer.CAPABILITY_SKIP_TO_PREVIOUS,
+      TrackPlayer.CAPABILITY_PLAY_FROM_SEARCH,
       // TrackPlayer.CAPABILITY_JUMP_FORWARD
     ],
     compactCapabilities: [

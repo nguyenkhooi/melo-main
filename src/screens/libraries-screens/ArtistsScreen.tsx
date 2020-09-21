@@ -13,7 +13,7 @@ function ArtistsScreen(props) {
   }, [props.navigation]);
 
   function onArtistPress(title, content) {
-    props.navigation.navigate("content", { title, content });
+    props.navigation.navigate("content-scr", { title, content });
   }
 
   function renderArtists({ item, index }) {

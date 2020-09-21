@@ -8,7 +8,7 @@ import {
 import { ThemeProvider } from "styled-components/native";
 import { connect } from "react-redux";
 import * as actions from "actions";
-import RootStack from "./RootStack";
+import PrimaryStack from "./primary.navigator";
 import PlayerFooter from "components/PlayerFooter";
 import * as themes from "themes";
 
@@ -31,15 +31,21 @@ export const RootNavigator = React.forwardRef<
     },
   };
   return (
-    <NavigationContainer ref={ref} {...props} theme={wrapperColor}>
+    <NavigationContainer
+      ref={ref}
+      // {...props}
+      onStateChange={props.onStateChange}
+      initialState={props.initialState}
+      theme={wrapperColor}
+    >
       <ThemeProvider theme={themes[theme]}>
         <StatusBar
           barStyle={statusBarContent}
           backgroundColor={color}
           animated
         />
-        <RootStack />
-        <PlayerFooter />
+        <PrimaryStack />
+        <PlayerFooter navigationRef={ref} />
       </ThemeProvider>
     </NavigationContainer>
   );

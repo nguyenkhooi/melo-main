@@ -47,7 +47,7 @@ function PlaylistsScreen(props) {
   }
 
   function onListItemPress(title, content) {
-    props.navigation.navigate("playlist", { title, content });
+    props.navigation.navigate("playlist-scr", { title, content });
   }
 
   function onOptionsPress(name) {
@@ -108,7 +108,7 @@ export default connect(mapStateToProps, actions)(PlaylistsScreen);
 
 const StyledIcon = styled(Icon)`
   color: ${contrastTransColor(0.75)};
-  padding-horizontal: 5;
+  padding-horizontal: 5px;
 `;
 
 const playlistIcon = {

@@ -14,21 +14,24 @@ import {
 import { withTheme } from "styled-components/native";
 import { getStatusBarHeight, KeyOf } from "utils";
 
-const screenProps = {
-  playlists: { component: PlaylistsScreen, options: { title: "Playlists" } },
-  artists: { component: ArtistsScreen, options: { title: "Artists" } },
-  albums: { component: AlbumsScreen, options: { title: "Albums" } },
-  folders: { component: FoldersScreen, options: { title: "Folders" } },
+const stackOptions = {
+  "playlists-scr": {
+    component: PlaylistsScreen,
+    options: { title: "Playlists" },
+  },
+  "artists-scr": { component: ArtistsScreen, options: { title: "Artists" } },
+  "albums-scr": { component: AlbumsScreen, options: { title: "Albums" } },
+  "folders-scr": { component: FoldersScreen, options: { title: "Folders" } },
 };
 
-const SCR_KEYS = R.keys(screenProps);
-export type enum_TopTab = KeyOf<typeof screenProps>;
+const SCR_KEYS = R.keys(stackOptions);
+export type enum_LibrariesTopTab = KeyOf<typeof stackOptions>;
 
-function TopMaterialTabNav(props: {
+function LibrariesTopTab(props: {
   theme: { foreground: any; background: any; contrast: any };
-  tabOrder: enum_TopTab[];
+  tabOrder: enum_LibrariesTopTab[];
 }) {
-  const TopTabs = createMaterialTopTabNavigator();
+  const TopTabs = createMaterialTopTabNavigator<typeof stackOptions>();
   const { foreground, background, contrast } = props.theme;
   const tabBarOptions = {
     activeTintColor: contrast,
@@ -58,7 +61,7 @@ function TopMaterialTabNav(props: {
       <ScreenTitle title="Libraries" />
       <TopTabs.Navigator tabBarOptions={tabBarOptions}>
         {props.tabOrder.map((tab) => (
-          <TopTabs.Screen name={tab} {...screenProps[tab]} key={tab} />
+          <TopTabs.Screen name={tab} {...stackOptions[tab]} key={tab} />
         ))}
       </TopTabs.Navigator>
     </View>
@@ -69,4 +72,4 @@ function mapStateToProps(state) {
   return { tabOrder: state.settings.topTabs };
 }
 
-export default connect(mapStateToProps, null)(withTheme(TopMaterialTabNav));
+export default connect(mapStateToProps, null)(withTheme(LibrariesTopTab));

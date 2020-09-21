@@ -1,7 +1,14 @@
+import { enum_LibrariesTopTab } from "navigation/libraries.navigator";
+
 const INITIAL_STATE = {
   foldersToSkip: ["whatsapp audio"],
   theme: "light",
-  topTabs: ["playlists", "artists", "albums", "folders"],
+  topTabs: [
+    "playlists-scr",
+    "artists-scr",
+    "albums-scr",
+    "folders-scr",
+  ] as enum_LibrariesTopTab[],
 };
 
 export default function (state = INITIAL_STATE, action) {

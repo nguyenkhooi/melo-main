@@ -6,7 +6,7 @@ import styled from "styled-components/native";
 import {
   contrastColor,
   contrastTransColor,
-  foregroundColor
+  foregroundColor,
 } from "../themes/styles";
 import { getRandomNumber, scale } from "../utils";
 import Icon from "./Icon";
@@ -15,25 +15,42 @@ import { sstyled } from "./StyledComponents";
 const WrapperWidth = Dimensions.get("window").width * 0.82;
 
 function PlaybackControl(props) {
-  const { media, currentTrack, isPlaying, loop, shuffle } = props;
+  const { media, currentTrack, isPlaying, loop, shuffle, currentList } = props;
 
   function skipForward() {
     let nextTrack = shuffle
-      ? media[getRandomNumber(0, media.length)]
-      : currentTrack.index === media.length - 1
-      ? media[0]
-      : media[currentTrack.index + 1];
+      ? currentList[getRandomNumber(0, currentList.length)]
+      : currentTrack.index === currentList.length - 1
+      ? currentList[0]
+      : currentList[currentTrack.index + 1];
     props.setCurrentTrack(nextTrack);
   }
 
   function skipBackward() {
     let nextTrack = shuffle
-      ? media[getRandomNumber(0, media.length)]
+      ? currentList[getRandomNumber(0, currentList.length)]
       : currentTrack.index === 0
-      ? media[media.length - 1]
-      : media[currentTrack.index - 1];
+      ? currentList[currentList.length - 1]
+      : currentList[currentTrack.index - 1];
     props.setCurrentTrack(nextTrack);
   }
+  // function skipForward() {
+  //   let nextTrack = shuffle
+  //     ? media[getRandomNumber(0, media.length)]
+  //     : currentTrack.index === media.length - 1
+  //     ? media[0]
+  //     : media[currentTrack.index + 1];
+  //   props.setCurrentTrack(nextTrack);
+  // }
+
+  // function skipBackward() {
+  //   let nextTrack = shuffle
+  //     ? media[getRandomNumber(0, media.length)]
+  //     : currentTrack.index === 0
+  //     ? media[media.length - 1]
+  //     : media[currentTrack.index - 1];
+  //   props.setCurrentTrack(nextTrack);
+  // }
 
   function onShufflePress() {
     props.setShuffle(!shuffle);
@@ -81,6 +98,7 @@ function PlaybackControl(props) {
 function mapStateToProps(state) {
   return {
     media: state.media.mediaFiles,
+    currentList: state.playback.currentList,
     currentTrack: state.playback.currentTrack,
     isPlaying: state.player.isPlaying,
     loop: state.playback.loop,

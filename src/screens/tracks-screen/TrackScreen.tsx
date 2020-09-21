@@ -4,6 +4,7 @@ import { OptionsModal, ScreenTitle } from "components";
 import RenderActivityIndicator from "components/RenderActivityIndicator";
 import RenderTrack from "components/RenderTrack";
 import { scanMessage } from "constants";
+import { navigate, Navigation } from "navigation";
 import React, { useEffect, useState } from "react";
 import {
   Animated,
@@ -11,7 +12,7 @@ import {
   StatusBar,
   TouchableOpacity,
   View,
-  ViewStyle
+  ViewStyle,
 } from "react-native";
 import QuickScrollList from "react-native-quick-scroll";
 import TrackPlayer from "react-native-track-player";
@@ -35,13 +36,14 @@ function TracksScreen(props) {
   const [scrollY] = useState(new Animated.Value(0));
   const [modal, setModal] = useState({ visible: false, item: {} });
   const {
+    navigation,
     currentTrack,
-    mediaLoaded,
+    currentList,
     media,
     shuffle,
     setShuffle,
     setPlayback,
-    isPlaying,
+    setCurrentList,
   } = props;
 
   useEffect(() => {
@@ -61,7 +63,7 @@ function TracksScreen(props) {
     )
       .then((result) => result.json())
       .then((json) => {
-        console.log("RSULT>>>>>>>", json);
+        // console.log("RSULT>>>>>>>", json);
         setPodcast(json);
       })
       .catch((error) => console.warn(error));
@@ -93,11 +95,9 @@ function TracksScreen(props) {
         >
           <ScreenTitle title={"Your Melo"} />
           <TouchableOpacity
-            onPress={() => {
+            onPress={async () => {
               setShuffle(true);
-              let nextTrack = media[getRandomNumber(0, media.length)];
-              props.setCurrentTrack(nextTrack);
-              setPlayback(true);
+              await setCurrentList(media, shuffle);
             }}
           >
             <ShuffleText style={{ padding: scale(15) }}>
@@ -241,6 +241,7 @@ const ShuffleText = styled.Text`
 function mapStateToProps(state) {
   return {
     currentTrack: state.playback.currentTrack,
+    currentList: state.playback.currentList,
     media: state.media.mediaFiles,
     mediaLoaded: state.media.mediaLoaded,
     shuffle: state.playback.shuffle,

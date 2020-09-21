@@ -6,20 +6,20 @@ import { ViewStyle } from "react-native";
 import { SearchScreen, SettingsScreen, TracksScreen } from "screens";
 import { withTheme } from "styled-components/native";
 import { KeyOf } from "utils";
-import TopMaterialTabNav from "./TopMaterialTabNav";
+import TopMaterialTabNav from "./libraries.navigator";
 
-const stackProps = {
-  Tracks: { component: TracksScreen },
-  Search: { component: SearchScreen },
-  Library: { component: TopMaterialTabNav },
-  Settings: { component: SettingsScreen },
+const stackOptions = {
+  "tracks-scr": { component: TracksScreen },
+  "search-scr": { component: SearchScreen },
+  "libraries-scr": { component: TopMaterialTabNav },
+  "settings-scr": { component: SettingsScreen },
 };
 
-const SCR_KEYS = R.keys(stackProps);
-const BottomTabs = createBottomTabNavigator<typeof stackProps>();
-export type enum_BottomStack = KeyOf<typeof stackProps>;
+const SCR_KEYS = R.keys(stackOptions);
+const BottomTabs = createBottomTabNavigator<typeof stackOptions>();
+export type enum_HomeBottomTab = KeyOf<typeof stackOptions>;
 
-function BottomTabNav(props) {
+function HomeBottomTab(props) {
   const { foreground, contrastTrans, elevatedBG } = props.theme;
   const tabBarOptions = {
     showLabel: false,
@@ -34,10 +34,10 @@ function BottomTabNav(props) {
     allowFontScaling: false,
   };
 
-  function iconProvider(route) {
+  function iconProvider(route: enum_HomeBottomTab) {
     return ({ focused, color }) => {
       switch (route) {
-        case "Tracks":
+        case "tracks-scr":
           return (
             <Icon
               name="music"
@@ -46,7 +46,7 @@ function BottomTabNav(props) {
               color={color}
             />
           );
-        case "Search":
+        case "search-scr":
           return (
             <Icon
               name="search"
@@ -55,7 +55,7 @@ function BottomTabNav(props) {
               color={color}
             />
           );
-        case "Library":
+        case "libraries-scr":
           return (
             <Icon
               name="archive"
@@ -64,7 +64,7 @@ function BottomTabNav(props) {
               color={color}
             />
           );
-        case "Settings":
+        case "settings-scr":
           return (
             <Icon
               name="cog"
@@ -79,7 +79,7 @@ function BottomTabNav(props) {
 
   return (
     <BottomTabs.Navigator
-      initialRouteName="Tracks"
+      initialRouteName="tracks-scr"
       backBehavior="initialRoute"
       tabBarOptions={tabBarOptions}
       lazy={false}
@@ -87,36 +87,14 @@ function BottomTabNav(props) {
       {SCR_KEYS.map((scr) => (
         <BottomTabs.Screen
           name={scr}
-          {...stackProps[scr]}
+          {...stackOptions[scr]}
           options={{
             tabBarIcon: iconProvider(scr),
           }}
         />
       ))}
-      {/* <BottomTabs.Screen
-        name="Tracks"
-        component={TracksScreen}
-        options={{
-          tabBarIcon: iconProvider("Tracks"),
-        }}
-      />
-      <BottomTabs.Screen
-        name="Search"
-        component={SearchScreen}
-        options={{ tabBarIcon: iconProvider("Search") }}
-      />
-      <BottomTabs.Screen
-        name="Library"
-        component={TopMaterialTabNav}
-        options={{ tabBarIcon: iconProvider("Library") }}
-      />
-      <BottomTabs.Screen
-        name="Settings"
-        component={SettingsScreen}
-        options={{ tabBarIcon: iconProvider("Settings") }}
-      /> */}
     </BottomTabs.Navigator>
   );
 }
 
-export default withTheme(BottomTabNav);
+export default withTheme(HomeBottomTab);

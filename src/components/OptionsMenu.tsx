@@ -15,7 +15,7 @@ function OptionsMenu(props) {
 
   function onAddToPlaylist() {
     menuRef.current.hide();
-    navigation.navigate("addToPlaylist", { song: props.currentItem });
+    navigation.navigate("addToPlaylist-scr", { song: props.currentItem });
   }
 
   async function onSeeLyrics() {
@@ -26,10 +26,10 @@ function OptionsMenu(props) {
       currentItem.title === currentLyrics.title &&
       currentItem.artist === currentLyrics.artist
     ) {
-      navigation.navigate("lyrics");
+      navigation.navigate("lyrics-scr");
     } else if (isConnected) {
       props.resetLyrics();
-      navigation.navigate("lyrics");
+      navigation.navigate("lyrics-scr");
     } else
       RenderToast({
         title: "Error",

@@ -120,7 +120,7 @@ const ModalContentWrapper = styled.View`
   background-color: ${elevatedBGColor};
   elevation: 5;
   justify-content: space-evenly;
-  padding-bottom: ${getBottomSpace("safe")};
+  padding-bottom: ${getBottomSpace("safe")}px;
   margin-bottom: -20px;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;

@@ -12,7 +12,7 @@ function FoldersScreen(props) {
   }, [props.navigation]);
 
   function onListItemPress(title, content) {
-    props.navigation.navigate("content", { title, content });
+    props.navigation.navigate("content-scr", { title, content });
   }
 
   function renderFolders() {

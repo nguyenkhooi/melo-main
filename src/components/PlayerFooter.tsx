@@ -1,9 +1,11 @@
+import { useNavigation } from "@react-navigation/native";
 import { CIRCULAR_BOLD, CIRCULAR_LIGHT } from "assets";
+import { navigate, Navigation } from "navigation";
 import React from "react";
 import { Dimensions, TouchableWithoutFeedback, View } from "react-native";
 import {
   PanGestureHandler,
-  State as GestureState
+  State as GestureState,
 } from "react-native-gesture-handler";
 import Animated, { Extrapolate, interpolate } from "react-native-reanimated";
 import { useTrackPlayerProgress } from "react-native-track-player/lib/hooks";
@@ -11,7 +13,6 @@ import { connect } from "react-redux";
 import styled, { withTheme } from "styled-components/native";
 import { getBottomSpace, getRandomNumber } from "utils";
 import * as actions from "../actions";
-import * as navigation from "../navigation/navigation-service";
 import { contrastColor, contrastTransColor } from "../themes/styles";
 import Icon from "./Icon";
 import ProgressBar from "./ProgressBar";
@@ -42,6 +43,7 @@ function PlayerFooter(props) {
     isPlaying,
     renderFooter,
     currentTrack,
+    currentList,
     theme,
     swipeThreshold = 0.6,
     media,
@@ -49,7 +51,7 @@ function PlayerFooter(props) {
     shuffle,
   } = props;
   const { position, duration } = useTrackPlayerProgress(100);
-
+  // const navigation = useNavigation();
   function togglePlayback() {
     props.setPlayback(!isPlaying);
   }
@@ -112,7 +114,7 @@ function PlayerFooter(props) {
             lessThan(translationY, -100),
             call([animState.position], () => {
               //   Alert.alert("great");
-              navigation.navigate("player");
+              navigate("player-scr");
             })
           ),
         ]),
@@ -133,10 +135,10 @@ function PlayerFooter(props) {
 
   function skipForward() {
     let nextTrack = shuffle
-      ? media[getRandomNumber(0, media.length)]
-      : currentTrack.index === media.length - 1
-      ? media[0]
-      : media[currentTrack.index + 1];
+      ? currentList[getRandomNumber(0, currentList.length)]
+      : currentTrack.index === currentList.length - 1
+      ? currentList[0]
+      : currentList[currentTrack.index + 1];
     props.setCurrentTrack(nextTrack);
   }
   return renderFooter && currentTrack.id !== "000" ? (
@@ -172,9 +174,7 @@ function PlayerFooter(props) {
               ])
             }
           </Animated.Code>
-          <TouchableWithoutFeedback
-            onPress={() => navigation.navigate("player")}
-          >
+          <TouchableWithoutFeedback onPress={() => navigate("player-scr")}>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Thumbnail source={coverSrc} />
               <TextWrapper>
@@ -209,6 +209,7 @@ function mapStateToProps(state) {
   return {
     renderFooter: state.footer.footerVisible,
     currentTrack: state.playback.currentTrack,
+    currentList: state.playback.currentList,
     isPlaying: state.player.isPlaying,
 
     media: state.media.mediaFiles,
@@ -224,7 +225,7 @@ const MainWrapper = styled.View`
   position: absolute;
   left: 0px;
   right: 0px;
-  bottom: ${getBottomSpace() + 48};
+  bottom: ${getBottomSpace() + 48}px;
   flex-direction: row;
   align-items: center;
 `;

@@ -6,7 +6,7 @@ import {
   cleanupMedia,
   errorReporter,
   getStoragePermission,
-  IS_ANDROID
+  IS_ANDROID,
 } from "utils";
 
 // import MusicFiles from 'react-native-get-music-files-v3dev-test';
@@ -48,13 +48,16 @@ export const getMedia = () => async (dispatch) => {
     if (media.mediaLoaded) {
       let media = await getMediaWithCovers();
       dispatch({ type: "get_media_success", payload: media });
+      dispatch({ type: "current_list", payload: media });
     } else {
       let results = await MusicFiles.getAll(options);
       /** Temporary set __MEDIA for ios since it doesn't have local db */
       let media = IS_ANDROID ? cleanupMedia(results) : __MEDIA;
       dispatch({ type: "get_media_success", payload: media });
+      dispatch({ type: "current_list", payload: media });
       let mediaWithCovers = await getMediaWithCovers();
       dispatch({ type: "get_media_success", payload: mediaWithCovers });
+      dispatch({ type: "current_list", payload: mediaWithCovers });
     }
   } catch (e) {
     errorReporter(e);

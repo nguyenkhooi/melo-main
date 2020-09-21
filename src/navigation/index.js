@@ -6,7 +6,7 @@ import { ThemeProvider } from "styled-components/native";
 import { connect } from "react-redux";
 import * as actions from "actions";
 import { navigationRef } from "./navigation-service";
-import RootStack from "./RootStack";
+import PrimaryStack from "./primary.navigator";
 import PlayerFooter from "components/PlayerFooter";
 import * as themes from "themes";
 
@@ -27,7 +27,7 @@ function RootNavigator(props) {
           backgroundColor={color}
           animated
         />
-        <RootStack />
+        <PrimaryStack />
         <PlayerFooter />
       </ThemeProvider>
     </NavigationContainer>
@@ -41,4 +41,8 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, actions)(RootNavigator);
+/**
+ * NOTE Currently deprecate due to useless "out-of-context" use for Navigation()
+ */
+export { default as AppNavigation } from "./root.navigator";
 export * from "./navigation-service";

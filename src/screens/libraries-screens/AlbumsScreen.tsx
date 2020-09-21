@@ -14,7 +14,7 @@ function AlbumsScreen(props) {
   }, [props.navigation]);
 
   function onAlbumPress(title, content) {
-    props.navigation.navigate("content", { title, content });
+    props.navigation.navigate("content-scr", { title, content });
   }
 
   function renderAlbums({ item, index }) {
