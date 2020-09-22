@@ -1,6 +1,5 @@
 import MusicFiles from "react-native-get-music-files";
 import RNFetchBlob from "rn-fetch-blob";
-import { store } from "store";
 import {
   checkStoragePermissions,
   cleanupMedia,
@@ -8,24 +7,6 @@ import {
   getStoragePermission,
   IS_ANDROID
 } from "utils";
-
-// import MusicFiles from 'react-native-get-music-files-v3dev-test';
-
-// const options = {
-//   cover: false,
-//   batchSize: 0,
-//   batchNumber: 0,
-//   sortBy: "TITLE",
-//   sortOrder: "ASC",
-// };
-
-// export const getMedia = () => async (dispatch) => {
-// 	let granted = await checkStoragePermissions();
-// 	if (!granted) await getStoragePermission();
-// 	let { results } = await MusicFiles.getAll(options);
-// 	let media = cleanMedia(results);
-// 	dispatch({ type: 'get_media_success', payload: media });
-// };
 
 const options = {
   cover: false,
@@ -39,32 +20,33 @@ const options = {
   duration: true,
   blured: false,
 };
-
-export const getMedia = () => async (dispatch) => {
-  try {
-    let granted = await checkStoragePermissions();
-    if (!granted) await getStoragePermission();
-    let { media } = store.getState();
-    if (media.mediaLoaded) {
-      let media = await getMediaWithCovers();
-      dispatch({ type: "get_media_success", payload: media });
-      // dispatch({ type: "current_list", payload: media });
-    } else {
-      let results = await MusicFiles.getAll(options);
-      /** Temporary set __MEDIA for ios since it doesn't have local db */
-      let media = IS_ANDROID ? cleanupMedia(results) : __MEDIA;
-      dispatch({ type: "get_media_success", payload: media });
-      // dispatch({ type: "current_list", payload: media });
-      let mediaWithCovers = await getMediaWithCovers();
-      dispatch({ type: "get_media_success", payload: mediaWithCovers });
-      // dispatch({ type: "current_list", payload: mediaWithCovers });
+export function getMedia(isMediaLoaded: boolean) {
+  return new Promise(async (resolve, reject) => {
+    console.log("getting");
+    try {
+      let granted = await checkStoragePermissions();
+      if (!granted) await getStoragePermission();
+      if (1 == 2) {
+        let media = await getMediaWithCovers();
+        console.log("getting t");
+        resolve({ type: "get_media_success", payload: media });
+        // resolve({ type: "current_list", payload: media });
+      } else {
+        console.log("getting f");
+        let results = await MusicFiles.getAll(options);
+        /** Temporary set __MEDIA for ios since it doesn't have local db */
+        let media = IS_ANDROID ? cleanupMedia(results) : __MEDIA;
+        resolve({ type: "get_media_success", payload: media });
+        let mediaWithCovers = await getMediaWithCovers();
+        resolve({ type: "get_media_success", payload: mediaWithCovers });
+      }
+    } catch (e) {
+      errorReporter(e);
     }
-  } catch (e) {
-    errorReporter(e);
-  }
-};
+  });
+}
 
-const getMediaWithCovers = async () => {
+async function getMediaWithCovers() {
   const coverFolder = RNFetchBlob.fs.dirs.DocumentDir + "/.melo";
   let results = await MusicFiles.getAll({
     ...options,
@@ -72,7 +54,7 @@ const getMediaWithCovers = async () => {
     coverFolder,
   });
   return cleanupMedia(results);
-};
+}
 
 const __MEDIA = [
   {

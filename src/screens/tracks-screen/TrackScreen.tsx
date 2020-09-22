@@ -4,7 +4,8 @@ import { OptionsModal, ScreenTitle } from "components";
 import RenderActivityIndicator from "components/RenderActivityIndicator";
 import RenderTrack from "components/RenderTrack";
 import { scanMessage } from "constants";
-import { navigate, Navigation } from "navigation";
+import { useStores } from "engines";
+import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import {
   Animated,
@@ -12,7 +13,7 @@ import {
   StatusBar,
   TouchableOpacity,
   View,
-  ViewStyle,
+  ViewStyle
 } from "react-native";
 import QuickScrollList from "react-native-quick-scroll";
 import TrackPlayer from "react-native-track-player";
@@ -20,7 +21,7 @@ import { connect } from "react-redux";
 import { setupPlayer } from "services";
 import styled from "styled-components/native";
 import { contrastColor, foregroundColor } from "themes/styles";
-import { getRandomNumber, getStatusBarHeight, scale } from "utils";
+import { getStatusBarHeight, scale } from "utils";
 // import OptionsModal from "components/OptionsModal";
 import { flatListItemLayout } from "utils/FlatListLayout";
 
@@ -70,6 +71,14 @@ function TracksScreen(props) {
     // .finally();
   }, []);
 
+  const {
+    mediaStore: { g_fetchTracks, g_tracks },
+  } = useStores();
+
+  React.useEffect(function fetchTracks() {
+    g_fetchTracks();
+  }, []);
+
   useEffect(() => {
     props.getMedia();
     setupPlayer().then(
@@ -96,8 +105,9 @@ function TracksScreen(props) {
           <ScreenTitle title={"Your Melo"} />
           <TouchableOpacity
             onPress={async () => {
-              setShuffle(true);
-              await setCurrentList(media, shuffle);
+              g_fetchTracks();
+              // setShuffle(true);
+              // await setCurrentList(media, shuffle);
             }}
           >
             <ShuffleText style={{ padding: scale(15) }}>
@@ -106,49 +116,7 @@ function TracksScreen(props) {
           </TouchableOpacity>
           <QuickScrollList
             keyExtractor={(asset) => asset.id.toString()}
-            data={media}
-            // data={[
-            //   {
-            //     id: "1111",
-            //     url:
-            //       "https://drive.google.com/uc?export=download&id=1AjPwylDJgR8DOnmJWeRgZzjsohi-7ekj",
-            //     title: "Longing",
-            //     artist: "David Chavez",
-            //     artwork:
-            //       "https://cms-assets.tutsplus.com/uploads/users/114/posts/34296/image/Final-image.jpg",
-            //     duration: 143,
-            //   },
-            //   {
-            //     id: "2222",
-            //     url:
-            //       "https://drive.google.com/uc?export=download&id=1VM9_umeyzJn0v1pRzR1BSm9y3IhZ3c0E",
-            //     title: "Soul Searching (Demo)",
-            //     artist: "David Chavez",
-            //     artwork:
-            //       "https://images-na.ssl-images-amazon.com/images/I/717VbeZb0bL._AC_SL1500_.jpg",
-            //     duration: 77,
-            //   },
-            //   {
-            //     id: "3333",
-            //     url:
-            //       "https://drive.google.com/uc?export=download&id=1bmvPOy2IVbkUROgm0dqiZry_miiL4OqI",
-            //     title: "Lullaby (Demo)",
-            //     artist: "David Chavez",
-            //     artwork:
-            //       "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/59dd3a65996579.5b073c5b3628d.gif",
-            //     duration: 71,
-            //   },
-            //   {
-            //     id: "4444",
-            //     url:
-            //       "https://drive.google.com/uc?export=download&id=1V-c_WmanMA9i5BwfkmTs-605BQDsfyzC",
-            //     title: "Rhythm City (Demo)",
-            //     artist: "David Chavez",
-            //     artwork:
-            //       "https://www.digitalmusicnews.com/wp-content/uploads/2020/04/DaBaby-Blame-It-On-Baby.jpg",
-            //     duration: 106,
-            //   },
-            // ]}
+            data={g_tracks}
             renderItem={({ item }) => (
               <RenderTrack item={item} setOptions={setModal} />
             )}
@@ -249,7 +217,7 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, actions)(TracksScreen);
+export default connect(mapStateToProps, actions)(observer(TracksScreen));
 
 const MessageWrapper = styled.View`
   flex: 1;
