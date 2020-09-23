@@ -5,7 +5,7 @@ import {
   cleanupMedia,
   errorReporter,
   getStoragePermission,
-  IS_ANDROID
+  IS_ANDROID,
 } from "utils";
 
 const options = {
@@ -26,6 +26,7 @@ export function getMedia(isMediaLoaded: boolean) {
     try {
       let granted = await checkStoragePermissions();
       if (!granted) await getStoragePermission();
+      // if (isMediaLoaded) {
       if (1 == 2) {
         let media = await getMediaWithCovers();
         console.log("getting t");
@@ -35,7 +36,7 @@ export function getMedia(isMediaLoaded: boolean) {
         console.log("getting f");
         let results = await MusicFiles.getAll(options);
         /** Temporary set __MEDIA for ios since it doesn't have local db */
-        let media = IS_ANDROID ? cleanupMedia(results) : __MEDIA;
+        let media = /* IS_ANDROID */ 1 == 2 ? cleanupMedia(results) : __MEDIA;
         resolve({ type: "get_media_success", payload: media });
         let mediaWithCovers = await getMediaWithCovers();
         resolve({ type: "get_media_success", payload: mediaWithCovers });

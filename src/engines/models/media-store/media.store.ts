@@ -1,36 +1,33 @@
 // @ts-check
 
-import { flow, getParent, types } from "mobx-state-tree";
-import { getMedia } from "../../functions/media-functions";
+import { Instance, SnapshotIn, types } from "mobx-state-tree";
 import { DOC_Track } from "./track-doc/track.doc";
+import { TracksActions } from "./actions/tracks.actions";
+import { PlaybackActions } from "./actions/playback.actions";
+
+export function MediaModel() {
+  return types.model("Media Model", {
+    /** Array of device's tracks */
+    g_tracks: types.array(DOC_Track),
+
+    /** Are tracks loaded? */
+    g_areTracksLoaded: types.maybeNull(types.boolean),
+
+    /** Current track playing */
+    g_currentTrack: types.maybeNull(DOC_Track),
+  });
+}
 
 export function MediaStore() {
-  return types
-    .model("Media Store", {
-      g_tracks: types.array(DOC_Track),
-      g_isTracksLoaded: types.maybeNull(types.boolean),
-    })
-    .views((self) => ({
-      get mediaFiles() {
-        return getParent(self);
-      },
-    }))
-    .actions((self) => ({
-      g_fetchTracks: flow(function* () {
-        console.log("fetching...");
-        try {
-          const r = yield getMedia(self.g_isTracksLoaded);
-          const tracks = r.payload;
-          self.g_tracks = tracks;
-          console.log("teacks: ", tracks.length);
-        } catch (error) {
-          console.warn("err", error);
-        }
-        // console.log("tracks: ", tracks.length);
-        // const __trackDoc = DOC_Track.create({ id: "____" });
-        // for (var i = 0; i < tracks.length; i++) {
-        //   self.g_tracks.put(tracks[i]);
-        // }
-      }),
-    }));
+  return types.compose(TracksActions(), PlaybackActions());
 }
+
+/**
+ * The MediaStore instance.
+ */
+export interface dMediaStore extends Instance<typeof MediaStore> {}
+
+/**
+ * The data of a MediaStore.
+ */
+export type dMediaStoreSnapshot = SnapshotIn<typeof MediaStore>;

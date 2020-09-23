@@ -13,7 +13,7 @@ import {
   StatusBar,
   TouchableOpacity,
   View,
-  ViewStyle
+  ViewStyle,
 } from "react-native";
 import QuickScrollList from "react-native-quick-scroll";
 import TrackPlayer from "react-native-track-player";
@@ -72,7 +72,7 @@ function TracksScreen(props) {
   }, []);
 
   const {
-    mediaStore: { g_fetchTracks, g_tracks },
+    mediaStore: { g_fetchTracks, g_areTracksLoaded, g_tracks },
   } = useStores();
 
   React.useEffect(function fetchTracks() {
@@ -94,8 +94,8 @@ function TracksScreen(props) {
     extrapolate: "clamp",
   });
 
-  // if (mediaLoaded) {
-  //   if (media.length > 0) {
+  // if (g_areTracksLoaded) {
+  //   if (g_tracks.length > 0) {
   if (1 == 1) {
     if (1 == 1) {
       return (
@@ -111,7 +111,7 @@ function TracksScreen(props) {
             }}
           >
             <ShuffleText style={{ padding: scale(15) }}>
-              Shuffle 'Em All
+              Shuffle 'Em Alll
             </ShuffleText>
           </TouchableOpacity>
           <QuickScrollList
@@ -135,9 +135,6 @@ function TracksScreen(props) {
             rightOffset={10}
             thumbStyle={styles.thumbStyle}
           />
-          <Animated.View
-            style={[styles.header, { height: headerHeight }]}
-          ></Animated.View>
 
           <OptionsModal
             selectedTrack={modal.item}
