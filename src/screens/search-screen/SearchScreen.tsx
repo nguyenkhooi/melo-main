@@ -1,22 +1,21 @@
-import React, { useState, useEffect, useRef } from "react";
-import { View, FlatList } from "react-native";
-import styled from "styled-components/native";
-import { connect } from "react-redux";
 import * as actions from "actions";
-import SearchInput from "components/SearchInput";
-import Icon from "components/Icon";
-import RenderTrack from "components/RenderTrack";
-import OptionsModal from "components/OptionsModal";
-import {
-  contrastColor,
-  backgroundColor,
-  contrastTransColor,
-} from "themes/styles";
-
-import { sstyled, ScreenTitle } from "components";
-import { scale, getStatusBarHeight } from "utils";
-import { TracksScreen } from "screens";
 import { CIRCULAR_BOLD } from "assets";
+import { ScreenTitle } from "components";
+import Icon from "components/Icon";
+import OptionsModal from "components/OptionsModal";
+import RenderTrack from "components/RenderTrack";
+import SearchInput from "components/SearchInput";
+import React, { useEffect, useRef, useState } from "react";
+import { FlatList, View } from "react-native";
+import { connect } from "react-redux";
+import styled from "styled-components/native";
+import {
+  backgroundColor, contrastColor,
+
+  contrastTransColor
+} from "themes/styles";
+import { getStatusBarHeight } from "utils";
+
 
 function SearchScreen(props) {
   const [searchInput, setInput] = useState("");
@@ -130,10 +129,12 @@ const Wrapper = styled.View`
 //   align-items: center;
 // `;
 
-const TitleWrapper = sstyled(View)({
-  alignItems: "flex-start",
-  paddingLeft: scale(15),
-});
+
+
+// const TitleWrapper = sstyled(View)({
+//   alignItems: "flex-start",
+//   paddingLeft: scale(15),
+// });
 
 const Title = styled.Text`
   font-family: ${CIRCULAR_BOLD};

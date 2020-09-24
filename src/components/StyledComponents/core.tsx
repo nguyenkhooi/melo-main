@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Props } from "react";
 
 /**
  * @example
@@ -9,16 +9,14 @@ import React from "react";
     });
  * @param WrappedComponent 
  */
-export function sstyled<Component extends React.ElementType>(
-  WrappedComponent: Component
-) {
+const sstyledOG = (WrappedComponent: React.ElementType) => {
   return (
     style:
       | React.ComponentProps<Component>["style"]
       | ((
           props: React.ComponentProps<Component> & Props
         ) => React.ComponentProps<Component>["style"])
-  ): React.FC<React.ComponentProps<Component> & Props> => {
+  ) => {
     return (props) => {
       return React.createElement(WrappedComponent, {
         ...props,
@@ -29,4 +27,22 @@ export function sstyled<Component extends React.ElementType>(
       });
     };
   };
+};
+
+export function sstyled<Component extends React.ElementType>(
+  WrappedComponent: Component,
+  style:
+    | React.ComponentProps<Component>["style"]
+    | ((
+        props: React.ComponentProps<Component> & Props
+      ) => React.ComponentProps<Component>["style"])
+) {
+  return (props: React.ComponentProps<Component>) =>
+    React.createElement(WrappedComponent, {
+      ...props,
+      style: {
+        ...(typeof style === "function" ? style(props) : style),
+        ...props.style,
+      },
+    });
 }

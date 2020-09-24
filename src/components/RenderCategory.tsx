@@ -1,23 +1,21 @@
+import { CIRCULAR, img } from "assets";
 import React from "react";
-import { View, Dimensions, TouchableNativeFeedback } from "react-native";
+import { Dimensions, TouchableNativeFeedback, View } from "react-native";
 import styled from "styled-components/native";
 import {
-  elevatedBGColor,
   contrastColor,
-  contrastTransColor,
+  contrastTransColor, elevatedBGColor
 } from "../themes/styles";
-import { CIRCULAR } from "assets";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const itemWidth = SCREEN_WIDTH / 2 - 25;
 const itemHeight = itemWidth + itemWidth / 8;
-const placeholder = require("../../assets/placeholder.jpg");
 
 function RenderCategory(props) {
   const itemMargin =
     props.index % 2 === 0 ? { marginLeft: 18, marginRight: 14 } : {};
   itemMargin.marginTop = 20;
-  const imageSource = props.image ? { uri: props.image } : placeholder;
+  const imageSource = props.image ? { uri: props.image } : img.placeholder;
   const subText = `${props.numOfTracks} ${
     props.numOfTracks > 1 ? "tracks" : "track"
   }`;

@@ -6,11 +6,10 @@ import styled from "styled-components/native";
 import {
   contrastColor,
   contrastTransColor,
-  foregroundColor,
+  foregroundColor
 } from "../themes/styles";
 import { getRandomNumber, scale } from "../utils";
 import Icon from "./Icon";
-import { sstyled } from "./StyledComponents";
 
 const WrapperWidth = Dimensions.get("window").width * 0.82;
 
@@ -108,18 +107,58 @@ function mapStateToProps(state) {
 
 export default connect(mapStateToProps, actions)(PlaybackControl);
 
-const MainCTNR = sstyled(View)({
-  flexDirection: "row",
-  justifyContent: "space-between",
-  alignItems: "center",
-  width: WrapperWidth + 10,
-});
-const PlayCTNR = sstyled(View)({
-  justifyContent: "center",
-  alignItems: "center",
-  borderRadius: 30,
-  borderColor: "white",
-});
+const MainCTNR = (props) => (
+  <View
+    style={{
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      width: WrapperWidth + 10,
+    }}
+  >
+    {props.children}
+  </View>
+);
+
+const PlayCTNR = (props) => (
+  <View
+    style={{
+      justifyContent: "center",
+      alignItems: "center",
+      borderRadius: 30,
+      borderColor: "white",
+    }}
+  >
+    {props.children}
+  </View>
+);
+
+const IconCTNR = (props) => (
+  <View
+    style={{
+      height: scale(28),
+      width: scale(28),
+      borderRadius: scale(14),
+      justifyContent: "center",
+      alignItems: "center",
+    }}
+  >
+    {props.children}
+  </View>
+);
+
+// const MainCTNR = sstyled(View)({
+//   flexDirection: "row",
+//   justifyContent: "space-between",
+//   alignItems: "center",
+//   width: WrapperWidth + 10,
+// });
+// const PlayCTNR = sstyled(View)({
+//   justifyContent: "center",
+//   alignItems: "center",
+//   borderRadius: 30,
+//   borderColor: "white",
+// });
 
 const StyledIcon = styled(Icon)`
   color: ${contrastColor};
@@ -134,13 +173,13 @@ const DisabledIcon = styled(Icon)`
   color: ${contrastTransColor(0.35)};
 `;
 
-const IconCTNR = sstyled(View)({
-  height: scale(28),
-  width: scale(28),
-  borderRadius: scale(14),
-  justifyContent: "center",
-  alignItems: "center",
-});
+// const IconCTNR = sstyled(View)({
+//   height: scale(28),
+//   width: scale(28),
+//   borderRadius: scale(14),
+//   justifyContent: "center",
+//   alignItems: "center",
+// });
 
 const icons = {
   play: {

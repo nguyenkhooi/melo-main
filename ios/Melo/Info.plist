@@ -39,6 +39,14 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
+	<key>NSAppleMusicUsageDescription</key>
+  	<string>YOUR TEXT</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>YOUR TEXT</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>YOUR TEXT</string>
+	<key>NSSiriUsageDescription</key>
+	<string>YOUR TEXT</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>

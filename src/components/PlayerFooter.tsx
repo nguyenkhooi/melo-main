@@ -1,11 +1,10 @@
-import { useNavigation } from "@react-navigation/native";
-import { CIRCULAR_BOLD, CIRCULAR_LIGHT } from "assets";
-import { navigate, Navigation } from "navigation";
+import { CIRCULAR_BOLD, CIRCULAR_LIGHT, img } from "assets";
+import { navigate } from "navigation";
 import React from "react";
 import { Dimensions, TouchableWithoutFeedback, View } from "react-native";
 import {
   PanGestureHandler,
-  State as GestureState,
+  State as GestureState
 } from "react-native-gesture-handler";
 import Animated, { Extrapolate, interpolate } from "react-native-reanimated";
 import { useTrackPlayerProgress } from "react-native-track-player/lib/hooks";
@@ -34,7 +33,6 @@ const {
   call,
   Clock,
 } = Animated;
-const placeholder = require("../../assets/placeholder.jpg");
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
@@ -59,7 +57,7 @@ function PlayerFooter(props) {
   const progress = position / duration;
   const coverSrc = currentTrack.artwork
     ? { uri: currentTrack.artwork }
-    : placeholder;
+    : img.placeholder;
 
   let clock = new Clock();
   let gestureState = new Value(GestureState.UNDETERMINED);

@@ -1,6 +1,6 @@
 import * as actions from "actions";
 import { CIRCULAR } from "assets";
-import CoverArt from "components/CoverArt";
+import { CoverArt } from "components";
 import Icon from "components/Icon";
 import OptionsMenu from "components/OptionsMenu";
 import PlaybackControl from "components/PlaybackControl";

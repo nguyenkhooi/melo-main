@@ -4,7 +4,6 @@ import { OptionsModal, ScreenTitle } from "components";
 import RenderActivityIndicator from "components/RenderActivityIndicator";
 import RenderTrack from "components/RenderTrack";
 import { scanMessage } from "constants";
-import { navigate, Navigation } from "navigation";
 import React, { useEffect, useState } from "react";
 import {
   Animated,
@@ -12,7 +11,7 @@ import {
   StatusBar,
   TouchableOpacity,
   View,
-  ViewStyle,
+  ViewStyle
 } from "react-native";
 import QuickScrollList from "react-native-quick-scroll";
 import TrackPlayer from "react-native-track-player";
@@ -20,7 +19,7 @@ import { connect } from "react-redux";
 import { setupPlayer } from "services";
 import styled from "styled-components/native";
 import { contrastColor, foregroundColor } from "themes/styles";
-import { getRandomNumber, getStatusBarHeight, scale } from "utils";
+import { getStatusBarHeight, scale } from "utils";
 // import OptionsModal from "components/OptionsModal";
 import { flatListItemLayout } from "utils/FlatListLayout";
 

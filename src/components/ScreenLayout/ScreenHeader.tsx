@@ -1,5 +1,4 @@
 import { CIRCULAR } from "assets";
-import { sstyled } from "components";
 import React from "react";
 import { View } from "react-native";
 import styled from "styled-components/native";
@@ -15,10 +14,21 @@ export function ScreenTitle(props) {
   );
 }
 
-const TitleCTNR = sstyled(View)({
-  alignItems: "flex-start",
-  paddingLeft: scale(15),
-});
+const TitleCTNR = (props) => (
+  <View
+    style={{
+      alignItems: "flex-start",
+      paddingLeft: scale(15),
+    }}
+  >
+    {props.children}
+  </View>
+);
+
+// const TitleCTNR = sstyled(View)({
+//   alignItems: "flex-start",
+//   paddingLeft: scale(15),
+// });
 
 const Title = styled.Text`
   font-family: ${CIRCULAR};

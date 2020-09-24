@@ -1,6 +1,7 @@
-import * as React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { IconPrimr } from "assets";
 import { Icon } from "components";
+import * as React from "react";
+import { StyleSheet, Text, View } from "react-native";
 import { Track } from "./Model";
 
 interface TrackProps {
@@ -19,6 +20,12 @@ export default ({ track, artist, index }: TrackProps) => (
       <Text style={styles.artist}>{track.artist || artist}</Text>
     </View>
     <View style={styles.cell}>
+      <IconPrimr
+        preset={"safe"}
+        name={"dots_horizontal"}
+        size={24}
+        color={C.dim}
+      />
       <Icon name="more-horizontal" type="fa5" color="#b2b3b4" size={24} />
     </View>
   </View>

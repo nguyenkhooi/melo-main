@@ -1,36 +1,35 @@
 import React from "react";
-import { TouchableNativeFeedback, Dimensions, View } from "react-native";
+import { TouchableNativeFeedback } from "react-native";
 import styled, { withTheme } from "styled-components/native";
-import { elevatedBGColor, contrastColor, foregroundColor } from "themes";
+import { elevatedBGColor, foregroundColor } from "themes";
 import { DEVICE_WIDTH } from "utils";
 import Icon from "./Icon";
-import { sstyled } from "components";
 // import { contrastColor, elevatedBGColor } from '../themes/styles';
 
 function CreatePlaylistButton(props) {
   return (
     <TouchableNativeFeedback onPress={props.onPress}>
-      <Wrapperss {...props}>
+      <Wrapper {...props}>
         <AddIcon {...addIcon} />
         <Text>Create new playlist</Text>
-      </Wrapperss>
+      </Wrapper>
     </TouchableNativeFeedback>
   );
 }
 
 export default withTheme(CreatePlaylistButton);
 
-const Wrapperss = sstyled(View)({
-  flexDirection: "row",
-  justifyContent: "center",
-  alignItems: "center",
-  width: DEVICE_WIDTH - 40,
-  borderColor: "#f1f1f1",
-  alignSelf: "center",
-  // backgroundColor: elevatedBGColor,
-  elevation: 1,
-  height: 50,
-});
+// const Wrapperss = sstyled(View)({
+//   flexDirection: "row",
+//   justifyContent: "center",
+//   alignItems: "center",
+//   width: DEVICE_WIDTH - 40,
+//   borderColor: "#f1f1f1",
+//   alignSelf: "center",
+//   // backgroundColor: elevatedBGColor,
+//   elevation: 1,
+//   height: 50,
+// });
 
 const Wrapper = styled.View`
   flex-direction: row;

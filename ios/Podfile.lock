@@ -72,6 +72,16 @@ PODS:
   - OpenSSL-Universal (1.0.2.19):
     - OpenSSL-Universal/Static (= 1.0.2.19)
   - OpenSSL-Universal/Static (1.0.2.19)
+  - Permission-MediaLibrary (2.2.1):
+    - RNPermissions
+  - Permission-Microphone (2.2.1):
+    - RNPermissions
+  - Permission-Notifications (2.2.1):
+    - RNPermissions
+  - Permission-PhotoLibrary (2.2.1):
+    - RNPermissions
+  - Permission-Siri (2.2.1):
+    - RNPermissions
   - RCTRequired (0.62.1)
   - RCTTypeSafety (0.62.1):
     - FBLazyVector (= 0.62.1)
@@ -306,6 +316,8 @@ PODS:
     - React
   - RNGestureHandler (1.8.0):
     - React
+  - RNPermissions (2.2.1):
+    - React-Core
   - RNReactNativeGetMusicFiles (1.0.0):
     - React
   - RNReanimated (1.13.0):
@@ -314,7 +326,7 @@ PODS:
     - React
   - RNShare (3.7.1):
     - React
-  - RNVectorIcons (6.7.0):
+  - RNVectorIcons (7.1.0):
     - React
   - toolbar-android (0.1.0-rc.2):
     - React
@@ -334,6 +346,11 @@ DEPENDENCIES:
   - FlipperKit/SKIOSNetworkPlugin (~> 0.33.1)
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
+  - Permission-MediaLibrary (from `../node_modules/react-native-permissions/ios/MediaLibrary.podspec`)
+  - Permission-Microphone (from `../node_modules/react-native-permissions/ios/Microphone.podspec`)
+  - Permission-Notifications (from `../node_modules/react-native-permissions/ios/Notifications.podspec`)
+  - Permission-PhotoLibrary (from `../node_modules/react-native-permissions/ios/PhotoLibrary.podspec`)
+  - Permission-Siri (from `../node_modules/react-native-permissions/ios/Siri.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
   - React (from `../node_modules/react-native/`)
@@ -362,6 +379,7 @@ DEPENDENCIES:
   - rn-fetch-blob (from `../node_modules/rn-fetch-blob`)
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReactNativeGetMusicFiles (from `../node_modules/react-native-get-music-files/ios`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -398,6 +416,16 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/Folly.podspec"
   glog:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
+  Permission-MediaLibrary:
+    :path: "../node_modules/react-native-permissions/ios/MediaLibrary.podspec"
+  Permission-Microphone:
+    :path: "../node_modules/react-native-permissions/ios/Microphone.podspec"
+  Permission-Notifications:
+    :path: "../node_modules/react-native-permissions/ios/Notifications.podspec"
+  Permission-PhotoLibrary:
+    :path: "../node_modules/react-native-permissions/ios/PhotoLibrary.podspec"
+  Permission-Siri:
+    :path: "../node_modules/react-native-permissions/ios/Siri.podspec"
   RCTRequired:
     :path: "../node_modules/react-native/Libraries/RCTRequired"
   RCTTypeSafety:
@@ -448,6 +476,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/masked-view"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNPermissions:
+    :path: "../node_modules/react-native-permissions"
   RNReactNativeGetMusicFiles:
     :path: "../node_modules/react-native-get-music-files/ios"
   RNReanimated:
@@ -481,6 +511,11 @@ SPEC CHECKSUMS:
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
   glog: 1f3da668190260b06b429bb211bfbee5cd790c28
   OpenSSL-Universal: 8b48cc0d10c1b2923617dfe5c178aa9ed2689355
+  Permission-MediaLibrary: 67006580556e4fd8d886486348fcf309922cff13
+  Permission-Microphone: 0f6d419edccc94135333daf5cb873f9d161557e3
+  Permission-Notifications: 68ed977040885caa5c9ace4812ed448c70018e8d
+  Permission-PhotoLibrary: 6c7add434f810971ea2019117f5322cf54bcace0
+  Permission-Siri: 6d222e8a4015e694e9ef0af8198ece1fc5946a51
   RCTRequired: e291538a455f5ad1afc2139a4288990be0cadd46
   RCTTypeSafety: 8b6237185765dd9a03a3647807e08864105b1f95
   React: 7b33e15fab929c47ac9c3c94c409258b13cfe452
@@ -506,15 +541,16 @@ SPEC CHECKSUMS:
   rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
   RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
   RNGestureHandler: 7a5833d0f788dbd107fbb913e09aa0c1ff333c39
+  RNPermissions: 54f83272e3d1961fcbd6aff8fd826014c37fc578
   RNReactNativeGetMusicFiles: 0d1fa2a85d1eaa66c7cf23614eea6a7a2f283224
   RNReanimated: 89f5e0a04d1dd52fbf27e7e7030d8f80a646a3fc
   RNScreens: b748efec66e095134c7166ca333b628cd7e6f3e2
   RNShare: ea0393515826ea8d27a0e17cd3d6f3cc210630d9
-  RNVectorIcons: 368d6d8b8301224e5ffb6254191f4f8876c2be0d
+  RNVectorIcons: bc69e6a278b14842063605de32bec61f0b251a59
   toolbar-android: 85f3ef4d691469f2d304e7dee4bca013aa1ba1ff
   Yoga: 50fb6eb13d2152e7363293ff603385db380815b1
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: d94a65052869e6381e4f2ca3260a77279cb08921
+PODFILE CHECKSUM: 2696326ac1784edacdd039676b3a10ac8dd071b0
 
 COCOAPODS: 1.9.3
