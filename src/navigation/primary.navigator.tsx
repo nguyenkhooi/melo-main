@@ -1,15 +1,12 @@
-import React from "react";
 import {
   createStackNavigator,
-  TransitionPresets,
+  TransitionPresets
 } from "@react-navigation/stack";
-import MainStack from "./main.navigator";
-import AddToPlaylist from "../screens/AddToPlayList";
-import LyricsScreen from "../screens/LyricsScreen";
-
-import { PlayerScreen } from "screens";
 import R from "ramda";
+import React from "react";
+import { AddToPlaylist, LyricsScreen, PlayerScreen } from "screens";
 import { KeyOf } from "utils";
+import MainStack from "./main.navigator";
 
 const stackOptions = {
   "main-scr": { component: MainStack },

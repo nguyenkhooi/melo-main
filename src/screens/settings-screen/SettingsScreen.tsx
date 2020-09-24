@@ -1,15 +1,14 @@
-import * as actions from "actions";
 import { PROPS_Icon, ScreenTitle } from "components";
 import ConfirmDialog from "components/ConfirmDialog";
 import InputDialog from "components/InputDialog";
 import ListItem from "components/ListItem";
 import { settings } from "constants";
+import { connector, dRedux } from "engines";
 import React, { useEffect, useState } from "react";
 import { Linking, ScrollView, Switch } from "react-native";
 import Share from "react-native-share";
-import { connect } from "react-redux";
 import { withTheme } from "styled-components/native";
-import { clearCache, getStatusBarHeight } from "utils";
+import { clearCache, dSCR, getStatusBarHeight } from "utils";
 
 // import ListItem from "../components/ListItem";
 // import InputDialog from "../components/InputDialog";
@@ -17,24 +16,36 @@ import { clearCache, getStatusBarHeight } from "utils";
 // import { clearCache } from "../utils/FileSystem";
 // import { settings } from "../constants";
 
-function SettingsScreen(props) {
+interface dSCR_Settings extends dSCR, dRedux {}
+function SettingsScreen(props: dSCR_Settings) {
+  const {
+    theme,
+    setTheme,
+    navigation,
+    //* redux state
+    settings: { foldersToSkip },
+    getMedia,
+    setSkipFolders,
+    showFooter,
+  } = props;
+
   const [isInputVisible, setInputVisible] = useState(false);
   const [isDialogVisible, setDialogVisible] = useState(false);
   useEffect(() => {
-    let unsubscribe = props.navigation.addListener("focus", props.showFooter);
+    let unsubscribe = navigation.addListener("focus", showFooter);
     return unsubscribe;
-  }, [props.navigation]);
+  }, [navigation]);
 
   async function onConfirmClear() {
     setDialogVisible(false);
     await clearCache();
-    props.getMedia();
+    getMedia();
   }
 
   function onInputSave(val) {
-    if (props.foldersToSkip !== val) {
-      props.setSkipFolders(val);
-      props.getMedia();
+    if (foldersToSkip !== val) {
+      setSkipFolders(val);
+      getMedia();
     }
     setInputVisible(false);
   }
@@ -52,9 +63,9 @@ function SettingsScreen(props) {
     });
   }
 
-  const { current, elevatedBG, foreground, fgTrans } = props.theme;
+  const { current, elevatedBG, foreground, fgTrans } = theme;
   const darkModeThumbColor = current === "light" ? elevatedBG : foreground;
-  const skippedFolders = props.foldersToSkip.join(", ");
+  const skippedFolders = foldersToSkip.join(", ");
   return (
     <ScrollView style={{ flex: 1, paddingTop: getStatusBarHeight("safe") }}>
       <ScreenTitle title={"Settings"} />
@@ -67,7 +78,7 @@ function SettingsScreen(props) {
             thumbColor={darkModeThumbColor}
             value={current === "dark"}
             trackColor={{ true: `${fgTrans}0.5)` }}
-            onValueChange={(val) => props.setTheme(val ? "dark" : "light")}
+            onValueChange={(val) => setTheme(val ? "dark" : "light")}
           />
         }
       />
@@ -89,7 +100,7 @@ function SettingsScreen(props) {
       <ListItem
         iconProps={icons.rearrange}
         title={settings.changeOrder.title}
-        onPress={() => props.navigation.navigate("tab-order-scr")}
+        onPress={() => navigation.navigate("tab-order-scr")}
         subtitle={settings.changeOrder.subtitle}
       />
 
@@ -109,7 +120,7 @@ function SettingsScreen(props) {
       <ListItem
         iconProps={icons.about}
         title={settings.about.title}
-        onPress={() => props.navigation.navigate("about-scr")}
+        onPress={() => navigation.navigate("about-scr")}
         subtitle={settings.about.subtitle}
       />
 
@@ -140,13 +151,7 @@ function SettingsScreen(props) {
 const SkipFoldersDialog = InputDialog;
 const ClearCacheDialog = ConfirmDialog;
 
-function mapStateToProps({ settings }) {
-  return {
-    foldersToSkip: settings.foldersToSkip,
-  };
-}
-
-export default connect(mapStateToProps, actions)(withTheme(SettingsScreen));
+export default connector(withTheme(SettingsScreen));
 
 const icons = {
   darkMode: {

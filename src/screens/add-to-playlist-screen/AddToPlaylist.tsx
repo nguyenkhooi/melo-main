@@ -1,22 +1,23 @@
+import { CIRCULAR } from "assets";
+import ListItem from "components/ListItem";
+import RenderToast from "components/RenderToast";
+import { connector, dRedux } from "engines";
 import React, { useEffect } from "react";
 import { ScrollView } from "react-native";
 import styled from "styled-components/native";
-import { connect } from "react-redux";
-import * as actions from "actions";
-import ListItem from "../components/ListItem";
-import RenderToast from "../components/RenderToast";
-import { contrastColor } from "../themes/styles";
-import { CIRCULAR } from "assets";
+import { contrastColor } from "themes";
+import { dSCR } from "utils";
 
-function AddToPlayList(props) {
-  const { navigation, route, playlists } = props;
+interface dSCR_AddToPlaylist extends dSCR, dRedux {}
+function AddToPlaylist(props: dSCR_AddToPlaylist) {
+  const { navigation, route, playlists, hideFooter, addToPlaylist } = props;
   useEffect(() => {
-    let unsubscribe = navigation.addListener("focus", props.hideFooter);
+    let unsubscribe = navigation.addListener("focus", hideFooter);
     return unsubscribe;
   }, [navigation]);
 
   function addSong(playlistTitle, song) {
-    props.addToPlaylist(playlistTitle, song);
+    addToPlaylist(playlistTitle, song);
     RenderToast({
       title: "Great",
       message: "Track was added to playlist",
@@ -62,13 +63,7 @@ function AddToPlayList(props) {
   );
 }
 
-function mapStateToProps(state) {
-  return {
-    playlists: state.playlists,
-  };
-}
-
-export default connect(mapStateToProps, actions)(AddToPlayList);
+export default connector(AddToPlaylist);
 
 const EmptyWrapper = styled.View`
   flex: 1;

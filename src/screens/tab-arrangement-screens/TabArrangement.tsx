@@ -1,24 +1,32 @@
-import * as actions from "actions";
 import { PRODUCT_SANS_BOLD } from "assets";
 import { PROPS_Icon } from "components";
 import ListItem from "components/ListItem";
+import { connector, dRedux } from "engines";
 import React, { useEffect } from "react";
 import { View } from "react-native";
 import DraggableFlatList from "react-native-draggable-flatlist";
-import { connect } from "react-redux";
 import styled from "styled-components/native";
 import { contrastColor } from "themes";
+import { dSCR } from "utils";
 
-function TabArrangementScreen(props) {
+interface dSCR_TabArrangement extends dSCR, dRedux {}
+function TabArrangementScreen(props: dSCR_TabArrangement) {
+  const {
+    navigation,
+    //* redux states
+    settings: { topTabs },
+    setTopTabs,
+    hideFooter,
+  } = props;
   useEffect(() => {
-    let unsubscribe = props.navigation.addListener("focus", props.hideFooter);
+    let unsubscribe = navigation.addListener("focus", hideFooter);
     return unsubscribe;
-  }, [props.navigation]);
+  }, [navigation]);
 
   function renderItem({ item, drag }) {
     return (
       <ListItem
-        title={item.charAt(0).toUpperCase() + item.slice(1)}
+        title={item.charAt(0).toUpperCase() + item.slice(1).replace("-scr", "")}
         iconProps={dragIcon}
         onLongPress={drag}
         delayLongPress={0}
@@ -32,20 +40,16 @@ function TabArrangementScreen(props) {
         Hold and drag the tabs to rearrange them
       </Message>
       <DraggableFlatList
-        data={props.tobTabs}
+        data={topTabs}
         renderItem={renderItem}
         keyExtractor={(item) => item}
-        onDragEnd={({ data }) => props.setTopTabs(data)}
+        onDragEnd={({ data }) => setTopTabs(data)}
       />
     </View>
   );
 }
 
-function mapStateToProps(state) {
-  return { tobTabs: state.settings.topTabs };
-}
-
-export default connect(mapStateToProps, actions)(TabArrangementScreen);
+export default connector(TabArrangementScreen);
 
 const Message = styled.Text`
   font-family: ${PRODUCT_SANS_BOLD};

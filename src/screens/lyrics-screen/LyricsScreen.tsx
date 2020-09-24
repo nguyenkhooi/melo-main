@@ -1,29 +1,37 @@
-import React, { useEffect } from "react";
-import { View, ScrollView, Dimensions } from "react-native";
-import styled from "styled-components/native";
-import { connect } from "react-redux";
-import RenderActivityIndicator from "../components/RenderActivityIndicator";
-import * as actions from "actions";
-import { contrastColor, contrastTransColor } from "../themes/styles";
 import { CIRCULAR } from "assets";
+import RenderActivityIndicator from "components/RenderActivityIndicator";
+import { connector, dRedux } from "engines";
+import React, { useEffect } from "react";
+import { Dimensions, ScrollView, View } from "react-native";
+import styled from "styled-components/native";
+import { contrastColor, contrastTransColor } from "themes";
+import { dSCR } from "utils";
+
 
 const ScreenWidth = Dimensions.get("window").width;
 
-function LyricsScreen(props) {
+interface dSCR_Lyrics extends dSCR, dRedux {}
+function LyricsScreen(props: dSCR_Lyrics) {
+  const {
+    navigation,
+    lyrics: { currentLyrics, error },
+    playback: { currentTrack },
+    fetchLyrics,
+  } = props;
   useEffect(() => {
-    let unsubscribe = props.navigation.addListener("focus", onFocus);
+    let unsubscribe = navigation.addListener("focus", onFocus);
     return unsubscribe;
-  }, [props.navigation]);
+  }, [navigation]);
 
   function onFocus() {
-    if (!props.currentLyrics) {
-      const { title, artist } = props.currentTrack;
-      props.fetchLyrics({ title, artist });
+    if (!currentLyrics) {
+      const { title, artist } = currentTrack;
+      fetchLyrics({ title, artist });
     }
   }
 
   function renderLyrics() {
-    let { title, artist, lyrics } = props.currentLyrics;
+    let { title, artist, lyrics } = currentLyrics;
     return lyrics ? (
       <ScrollView>
         <Title>{title}</Title>
@@ -37,7 +45,7 @@ function LyricsScreen(props) {
 
   return (
     <View style={{ flex: 1 }}>
-      {props.error ? (
+      {error ? (
         <ErrorWrapper>
           <ErrorText>{"Oops! No lyrics were found!"}</ErrorText>
         </ErrorWrapper>
@@ -48,15 +56,7 @@ function LyricsScreen(props) {
   );
 }
 
-function mapStateToProps(state) {
-  return {
-    currentTrack: state.playback.currentTrack,
-    currentLyrics: state.lyrics.currentLyrics,
-    error: state.lyrics.error,
-  };
-}
-
-export default connect(mapStateToProps, actions)(LyricsScreen);
+export default connector(LyricsScreen);
 
 const Title = styled.Text`
   font-family: ${CIRCULAR};

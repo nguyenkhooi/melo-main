@@ -1,14 +1,13 @@
-import * as actions from "actions";
 import { CIRCULAR } from "assets";
-import { CoverArt } from "components";
+import { CoverArt, PlaybackControl } from "components";
 import Icon from "components/Icon";
 import OptionsMenu from "components/OptionsMenu";
-import PlaybackControl from "components/PlaybackControl";
 import ProgressSlider from "components/ProgressSlider";
+import { connector, dRedux } from "engines";
 import React, { useEffect } from "react";
 import { Dimensions, ImageBackground } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
-import { connect } from "react-redux";
+import Carousel from "react-native-snap-carousel";
 import styled, { withTheme } from "styled-components/native";
 import {
   backgroundColor,
@@ -16,13 +15,23 @@ import {
   contrastColor,
   contrastTransColor
 } from "themes";
+import { DEVICE_WIDTH, dSCR } from "utils";
 
 const PlayerWidth = Dimensions.get("window").width * 0.82;
 
-function PlayerScreen(props) {
-  const { navigation, currentTrack, theme } = props;
+interface dSCR_Player extends dSCR, dRedux {}
+function PlayerScreen(props: dSCR_Player) {
+  const {
+    theme,
+    navigation,
+    //* redux state
+    playback: { currentTrack },
+    hideFooter,
+  } = props;
+
+  // const { navigation, currentTrack, theme } = props;
   useEffect(() => {
-    let unsubscribe = navigation.addListener("focus", props.hideFooter);
+    let unsubscribe = navigation.addListener("focus", hideFooter);
     return unsubscribe;
   }, [navigation]);
 
@@ -41,7 +50,17 @@ function PlayerScreen(props) {
             currentItem={currentTrack}
           />
         </Header>
+        {/* <$_TracksCarousel {...props} /> */}
         <Wrapper>
+          {/* <Carousel
+            ref={(c) => {
+              // this._carousel = c;
+            }}
+            data={currentList}
+            renderItem={() => }
+            sliderWidth={DEVICE_WIDTH}
+            itemWidth={DEVICE_WIDTH * 0.8}
+          /> */}
           <CoverArt src={currentTrack.artwork} />
           <TextWrapper>
             <Title numberOfLines={1}>{currentTrack.title || "unknown"}</Title>
@@ -55,13 +74,32 @@ function PlayerScreen(props) {
   );
 }
 
-function mapStateToProps(state) {
-  return {
-    currentTrack: state.playback.currentTrack,
-  };
-}
+interface d$_TrackCarousel extends dSCR_Player {}
+const $_TracksCarousel = (props: d$_TrackCarousel) => {
+  const {
+    media: { mediaFiles },
+    playback: { currentList, currentTrack },
+  } = props;
+  return (
+    <Wrapper>
+      <Carousel
+        ref={(c) => {
+          // this._carousel = c;
+        }}
+        data={currentList}
+        renderItem={() => <CoverArt src={currentTrack.artwork} />}
+        sliderWidth={DEVICE_WIDTH}
+        itemWidth={DEVICE_WIDTH * 0.8}
+      />
+      <TextWrapper>
+        <Title numberOfLines={1}>{currentTrack.title || "unknown"}</Title>
+        <Artist numberOfLines={1}>{currentTrack.artist}</Artist>
+      </TextWrapper>
+    </Wrapper>
+  );
+};
 
-export default connect(mapStateToProps, actions)(withTheme(PlayerScreen));
+export default connector(withTheme(PlayerScreen));
 
 const Gradient = styled(LinearGradient)`
   flex: 1;

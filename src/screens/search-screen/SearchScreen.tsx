@@ -1,52 +1,59 @@
-import * as actions from "actions";
 import { CIRCULAR_BOLD } from "assets";
 import { ScreenTitle } from "components";
 import Icon from "components/Icon";
 import OptionsModal from "components/OptionsModal";
 import RenderTrack from "components/RenderTrack";
 import SearchInput from "components/SearchInput";
+import { connector, dRedux } from "engines";
 import React, { useEffect, useRef, useState } from "react";
 import { FlatList, View } from "react-native";
-import { connect } from "react-redux";
 import styled from "styled-components/native";
 import {
-  backgroundColor, contrastColor,
-
+  backgroundColor,
+  contrastColor,
   contrastTransColor
 } from "themes/styles";
-import { getStatusBarHeight } from "utils";
+import { dSCR, getStatusBarHeight } from "utils";
 
+interface dSCR_Search extends dSCR, dRedux {}
+function SearchScreen(props: dSCR_Search) {
+  const {
+    navigation,
+    //* redux state
+    playback: { currentTrack },
+    media: { mediaFiles },
+    showFooter,
+  } = props;
 
-function SearchScreen(props) {
   const [searchInput, setInput] = useState("");
   const [isInputFocused, setInputFocus] = useState(false);
   const [modal, setModal] = useState({ visible: false, item: {} });
   const inputRef = useRef();
 
   useEffect(() => {
-    let unsubscribe1 = props.navigation.addListener("focus", props.showFooter);
-    let unsubscribe2 = props.navigation.addListener("blur", () => setInput(""));
+    let unsubscribe1 = navigation.addListener("focus", showFooter);
+    let unsubscribe2 = navigation.addListener("blur", () => setInput(""));
     return () => {
       unsubscribe1();
       unsubscribe2();
     };
-  }, [props.navigation]);
+  }, [navigation]);
 
   function listFilter() {
     if (searchInput) {
-      return props.media.filter((item) => {
+      return mediaFiles.filter((item) => {
         let itemData = ` ${item.title} ${item.artist}`.toUpperCase();
         let searchData = " " + searchInput.toUpperCase();
         return itemData.indexOf(searchData) > -1;
       });
     } else {
-      return props.media;
+      return mediaFiles;
     }
   }
 
   function renderSearch() {
     const renderMargin =
-      props.currentTrack.id !== "000" ? { marginBottom: 60 } : { flex: 1 };
+      currentTrack.id !== "000" ? { marginBottom: 60 } : { flex: 1 };
     return (
       <FlatList
         data={listFilter()}
@@ -110,14 +117,7 @@ function SearchScreen(props) {
   );
 }
 
-function mapStateToProps(state) {
-  return {
-    currentTrack: state.playback.currentTrack,
-    media: state.media.mediaFiles,
-  };
-}
-
-export default connect(mapStateToProps, actions)(SearchScreen);
+export default connector(SearchScreen);
 
 const Wrapper = styled.View`
   flex: 1;
@@ -128,8 +128,6 @@ const Wrapper = styled.View`
 // const TitleWrapper = styled.View`
 //   align-items: center;
 // `;
-
-
 
 // const TitleWrapper = sstyled(View)({
 //   alignItems: "flex-start",

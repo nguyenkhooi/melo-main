@@ -1,18 +1,19 @@
 import {
   createStackNavigator,
   HeaderBackButton,
-  TransitionPresets,
+  TransitionPresets
 } from "@react-navigation/stack";
 import { CIRCULAR_BOLD } from "assets";
 import R from "ramda";
 import React from "react";
-import { PlaylistsScreen, TabArrangementScreen } from "screens";
+import {
+  AboutScreen,
+  ShowContentScreen,
+
+  ShowPlaylistScreen, TabArrangementScreen
+} from "screens";
 import { withTheme } from "styled-components/native";
 import { KeyOf } from "utils";
-// import AddToPlaylist from '../screens/AddToPlayList';
-import AboutScreen from "../screens/AboutScreen";
-import ShowContentScreen from "../screens/ShowContentScreen";
-import ShowPlaylistScreen from "../screens/ShowPlaylistScreen";
 import HomeBottomTab from "./home.navigator";
 import { nConfig } from "./navigation-service";
 

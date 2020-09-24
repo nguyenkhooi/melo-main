@@ -1,19 +1,20 @@
-import * as actions from "actions";
 import { PRODUCT_SANS, PRODUCT_SANS_BOLD } from "assets";
 import { repoUrl } from "constants/urls";
+import { connector, dRedux } from "engines";
 import React, { useEffect } from "react";
 import { Linking, TouchableOpacity } from "react-native";
-import { connect } from "react-redux";
 import styled from "styled-components/native";
 import { contrastColor, contrastTransColor, foregroundColor } from "themes";
-import { version } from "../../package.json";
+import { dSCR } from "utils";
+import { version } from "../../../package.json";
 
-
-function AboutScreen(props) {
+interface dSCR_About extends dSCR, dRedux {}
+function AboutScreen(props: dSCR_About) {
+  const { navigation, hideFooter } = props;
   useEffect(() => {
-    let unsubscribe = props.navigation.addListener("focus", props.hideFooter);
+    let unsubscribe = navigation.addListener("focus", hideFooter);
     return unsubscribe;
-  }, [props.navigation]);
+  }, [navigation]);
 
   return (
     <Wrapper>
@@ -29,7 +30,7 @@ function AboutScreen(props) {
   );
 }
 
-export default connect(null, actions)(AboutScreen);
+export default connector(AboutScreen);
 
 const Wrapper = styled.View`
   flex: 1;

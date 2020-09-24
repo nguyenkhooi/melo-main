@@ -1,20 +1,24 @@
-import * as actions from "actions";
+import { connector, dRedux } from "engines";
 import React from "react";
-import { Dimensions, TouchableWithoutFeedback, View } from "react-native";
-import { connect } from "react-redux";
+import { Dimensions, TouchableOpacity, View } from "react-native";
 import styled from "styled-components/native";
-import {
-  contrastColor,
-  contrastTransColor,
-  foregroundColor
-} from "../themes/styles";
-import { getRandomNumber, scale } from "../utils";
+import { contrastColor, contrastTransColor, foregroundColor } from "themes";
+import { getRandomNumber, scale } from "utils";
 import Icon from "./Icon";
 
 const WrapperWidth = Dimensions.get("window").width * 0.82;
 
-function PlaybackControl(props) {
-  const { media, currentTrack, isPlaying, loop, shuffle, currentList } = props;
+interface dPlaybackControl extends dRedux {}
+function PlaybackControl(props: dPlaybackControl) {
+  const {
+    media: { mediaFiles },
+    playback: { currentList, currentTrack, loop, shuffle },
+    player: { isPlaying },
+    setCurrentTrack,
+    setShuffle,
+    setLoop,
+    setPlayback,
+  } = props;
 
   function skipForward() {
     let nextTrack = shuffle
@@ -22,7 +26,7 @@ function PlaybackControl(props) {
       : currentTrack.index === currentList.length - 1
       ? currentList[0]
       : currentList[currentTrack.index + 1];
-    props.setCurrentTrack(nextTrack);
+    setCurrentTrack(nextTrack);
   }
 
   function skipBackward() {
@@ -31,7 +35,7 @@ function PlaybackControl(props) {
       : currentTrack.index === 0
       ? currentList[currentList.length - 1]
       : currentList[currentTrack.index - 1];
-    props.setCurrentTrack(nextTrack);
+    setCurrentTrack(nextTrack);
   }
   // function skipForward() {
   //   let nextTrack = shuffle
@@ -39,7 +43,7 @@ function PlaybackControl(props) {
   //     : currentTrack.index === media.length - 1
   //     ? media[0]
   //     : media[currentTrack.index + 1];
-  //   props.setCurrentTrack(nextTrack);
+  //   setCurrentTrack(nextTrack);
   // }
 
   // function skipBackward() {
@@ -48,20 +52,20 @@ function PlaybackControl(props) {
   //     : currentTrack.index === 0
   //     ? media[media.length - 1]
   //     : media[currentTrack.index - 1];
-  //   props.setCurrentTrack(nextTrack);
+  //   setCurrentTrack(nextTrack);
   // }
 
   function onShufflePress() {
-    props.setShuffle(!shuffle);
+    setShuffle(!shuffle);
   }
 
   function onLoopPress() {
-    props.setLoop(!loop);
+    setLoop(!loop);
   }
 
   return (
     <MainCTNR>
-      <TouchableWithoutFeedback onPress={onShufflePress}>
+      <TouchableOpacity onPress={onShufflePress}>
         <IconCTNR>
           {shuffle ? (
             <TransIcon {...icons.shuffle} />
@@ -69,9 +73,9 @@ function PlaybackControl(props) {
             <DisabledIcon {...icons.shuffle} />
           )}
         </IconCTNR>
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
       <StyledIcon {...icons.skipBackward} onPress={skipBackward} />
-      <TouchableWithoutFeedback onPress={() => props.setPlayback(!isPlaying)}>
+      <TouchableOpacity onPress={() => setPlayback(!isPlaying)}>
         <PlayCTNR>
           {isPlaying ? (
             <StyledIcon {...icons.pause} />
@@ -79,9 +83,9 @@ function PlaybackControl(props) {
             <StyledIcon {...icons.play} />
           )}
         </PlayCTNR>
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
       <StyledIcon {...icons.skipForward} onPress={skipForward} />
-      <TouchableWithoutFeedback onPress={onLoopPress}>
+      <TouchableOpacity onPress={onLoopPress}>
         <IconCTNR>
           {loop ? (
             <TransIcon {...icons.loopOne} />
@@ -89,23 +93,12 @@ function PlaybackControl(props) {
             <TransIcon {...icons.loop} />
           )}
         </IconCTNR>
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
     </MainCTNR>
   );
 }
 
-function mapStateToProps(state) {
-  return {
-    media: state.media.mediaFiles,
-    currentList: state.playback.currentList,
-    currentTrack: state.playback.currentTrack,
-    isPlaying: state.player.isPlaying,
-    loop: state.playback.loop,
-    shuffle: state.playback.shuffle,
-  };
-}
-
-export default connect(mapStateToProps, actions)(PlaybackControl);
+export default connector(PlaybackControl);
 
 const MainCTNR = (props) => (
   <View

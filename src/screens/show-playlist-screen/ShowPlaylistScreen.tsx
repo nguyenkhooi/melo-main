@@ -1,24 +1,30 @@
-import React, { useState, useEffect } from "react";
-import { View, FlatList, Button } from "react-native";
-import styled from "styled-components/native";
-import { connect } from "react-redux";
-import * as actions from "actions";
-import RenderTrack from "../components/RenderTrack";
-import OptionsModal from "../components/OptionsModal";
-import { flatListItemLayout } from "../utils/FlatListLayout";
-import { contrastColor } from "../themes/styles";
 import { CIRCULAR } from "assets";
+import { OptionsModal } from "components";
+import RenderTrack from "components/RenderTrack";
+import { connector, dRedux } from "engines";
+import React, { useEffect, useState } from "react";
+import { Button, FlatList, View } from "react-native";
+import styled from "styled-components/native";
+import { contrastColor } from "themes";
+import { dSCR, flatListItemLayout } from "utils";
 
-function ShowPlaylistScreen(props) {
+interface dSCR_ShowPlaylist extends dSCR, dRedux {}
+function ShowPlaylistScreen(props: dSCR_ShowPlaylist) {
+  const {
+    navigation,
+    route,
+    playback: { shuffle },
+    setCurrentList,
+    hideFooter,
+  } = props;
   const [modal, setModal] = useState({ visible: false, item: {} });
 
-  const { shuffle, currentList, setCurrentList } = props;
   useEffect(() => {
-    let unsubscribe = props.navigation.addListener("focus", props.hideFooter);
+    let unsubscribe = navigation.addListener("focus", hideFooter);
     return unsubscribe;
-  }, [props.navigation]);
+  }, [navigation]);
 
-  let listData = props.route.params.content;
+  let listData = route.params.content;
   return listData.length > 0 ? (
     <View style={{ flex: 1 }}>
       <Button
@@ -49,17 +55,7 @@ function ShowPlaylistScreen(props) {
   );
 }
 
-function mapStateToProps(state) {
-  return {
-    currentList: state.playback.currentList,
-    isPlaying: state.player.isPlaying,
-    loop: state.playback.loop,
-    shuffle: state.playback.shuffle,
-    nowPlaying: state.media.nowPlaying,
-  };
-}
-
-export default connect(mapStateToProps, actions)(ShowPlaylistScreen);
+export default connector(ShowPlaylistScreen);
 
 const EmptyWrapper = styled.View`
   flex: 1;

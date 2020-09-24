@@ -3,7 +3,7 @@ import { OptionsModal, ScreenTitle } from "components";
 import RenderActivityIndicator from "components/RenderActivityIndicator";
 import RenderTrack from "components/RenderTrack";
 import { scanMessage } from "constants";
-import { connector, ReduxActions, ReduxStates } from "engines";
+import { connector, dRedux } from "engines";
 import React, { useEffect, useState } from "react";
 import {
   Animated,
@@ -11,16 +11,15 @@ import {
   StatusBar,
   TouchableOpacity,
   View,
-  ViewStyle,
+  ViewStyle
 } from "react-native";
 import QuickScrollList from "react-native-quick-scroll";
 import TrackPlayer from "react-native-track-player";
 import { setupPlayer } from "services";
 import styled from "styled-components/native";
 import { contrastColor, foregroundColor } from "themes/styles";
-import { dSCR, getStatusBarHeight, scale } from "utils";
+import { dSCR, flatListItemLayout, getStatusBarHeight, scale } from "utils";
 // import OptionsModal from "components/OptionsModal";
-import { flatListItemLayout } from "utils/FlatListLayout";
 
 const ScreenHeight = Dimensions.get("window").height;
 const StatusBarHeight = StatusBar.currentHeight;
@@ -30,16 +29,13 @@ const ViewportHeight =
   ScreenHeight - (StatusBarHeight + FooterHeight + BottomTabHeight);
 const itemHeight = 75;
 
-type dTracksScreen = ReduxStates & ReduxActions & dSCR;
-
-function TracksScreen(props: dTracksScreen) {
-  const [scrollY] = useState(new Animated.Value(0));
-  const [modal, setModal] = useState({ visible: false, item: {} });
+interface dSCR_Tracks extends dSCR, dRedux {}
+function TracksScreen(props: dSCR_Tracks) {
   const {
     navigation,
     //* redux state
-    playback: { currentTrack, currentList, shuffle },
-    media: { mediaFiles, mediaLoaded },
+    playback: { currentTrack, shuffle },
+    media: { mediaFiles },
     //* redux actions
     setShuffle,
     getMedia,
@@ -47,11 +43,14 @@ function TracksScreen(props: dTracksScreen) {
     setCurrentList,
   } = props;
 
+  const [scrollY] = useState(new Animated.Value(0));
+  const [modal, setModal] = useState({ visible: false, item: {} });
+
   useEffect(() => {
     let unsubscribe = navigation.addListener("focus", showFooter);
     return unsubscribe;
   }, [navigation]);
-  const [_podcasts, setPodcast] = React.useState(null);
+  const [, setPodcast] = React.useState(null);
   useEffect(function getPodcastResult() {
     fetch(
       "https://listen-api.listennotes.com/api/v2/search?q=star%20wars&sort_by_date=0&type=episode&offset=0&len_min=10&len_max=30&genre_ids=68%2C82&published_before=1580172454000&published_after=0&only_in=title%2Cdescription&language=English&safe_mode=0",
