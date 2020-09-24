@@ -1,10 +1,14 @@
 import { Alert } from "react-native";
 import RNFetchBlob from "rn-fetch-blob";
+import { TrackProps } from "utils";
 import RenderToast from "../components/RenderToast";
+import { DeleteTrackDispatch } from "engines";
 
 const mime = "audio/mpeg";
 
-export const deleteTrack = (track) => async (dispatch) => {
+export const deleteTrack = (track: TrackProps) => async (
+  dispatch: DeleteTrackDispatch
+) => {
   try {
     await RNFetchBlob.fs.unlink(track.url);
     await RNFetchBlob.fs.scanFile([{ path: track.url, mime }]);

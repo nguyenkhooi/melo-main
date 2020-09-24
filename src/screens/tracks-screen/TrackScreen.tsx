@@ -4,6 +4,7 @@ import { OptionsModal, ScreenTitle } from "components";
 import RenderActivityIndicator from "components/RenderActivityIndicator";
 import RenderTrack from "components/RenderTrack";
 import { scanMessage } from "constants";
+import { ReduxActions, ReduxStates } from "engines";
 import React, { useEffect, useState } from "react";
 import {
   Animated,
@@ -11,7 +12,7 @@ import {
   StatusBar,
   TouchableOpacity,
   View,
-  ViewStyle
+  ViewStyle,
 } from "react-native";
 import QuickScrollList from "react-native-quick-scroll";
 import TrackPlayer from "react-native-track-player";
@@ -19,7 +20,7 @@ import { connect } from "react-redux";
 import { setupPlayer } from "services";
 import styled from "styled-components/native";
 import { contrastColor, foregroundColor } from "themes/styles";
-import { getStatusBarHeight, scale } from "utils";
+import { dSCR, getStatusBarHeight, scale } from "utils";
 // import OptionsModal from "components/OptionsModal";
 import { flatListItemLayout } from "utils/FlatListLayout";
 
@@ -31,24 +32,27 @@ const ViewportHeight =
   ScreenHeight - (StatusBarHeight + FooterHeight + BottomTabHeight);
 const itemHeight = 75;
 
-function TracksScreen(props) {
+type dTracksScreen = ReduxStates & ReduxActions & dSCR;
+
+function TracksScreen(props: dTracksScreen) {
   const [scrollY] = useState(new Animated.Value(0));
   const [modal, setModal] = useState({ visible: false, item: {} });
   const {
     navigation,
-    currentTrack,
-    currentList,
-    media,
-    shuffle,
+    //* redux state
+    playback: { currentTrack, currentList, shuffle },
+    media: { mediaFiles, mediaLoaded },
+    //* redux actions
     setShuffle,
-    setPlayback,
+    getMedia,
+    showFooter,
     setCurrentList,
   } = props;
 
   useEffect(() => {
-    let unsubscribe = props.navigation.addListener("focus", props.showFooter);
+    let unsubscribe = navigation.addListener("focus", showFooter);
     return unsubscribe;
-  }, [props.navigation]);
+  }, [navigation]);
   const [_podcasts, setPodcast] = React.useState(null);
   useEffect(function getPodcastResult() {
     fetch(
@@ -70,7 +74,7 @@ function TracksScreen(props) {
   }, []);
 
   useEffect(() => {
-    props.getMedia();
+    getMedia();
     setupPlayer().then(
       () => currentTrack.id !== "000" && TrackPlayer.add(currentTrack)
     );
@@ -85,7 +89,7 @@ function TracksScreen(props) {
   });
 
   // if (mediaLoaded) {
-  //   if (media.length > 0) {
+  //   if (mediaFiles.length > 0) {
   if (1 == 1) {
     if (1 == 1) {
       return (
@@ -96,7 +100,7 @@ function TracksScreen(props) {
           <TouchableOpacity
             onPress={async () => {
               setShuffle(true);
-              await setCurrentList(media, shuffle);
+              await setCurrentList(mediaFiles, shuffle);
             }}
           >
             <ShuffleText style={{ padding: scale(15) }}>
@@ -105,7 +109,7 @@ function TracksScreen(props) {
           </TouchableOpacity>
           <QuickScrollList
             keyExtractor={(asset) => asset.id.toString()}
-            data={media}
+            data={mediaFiles}
             // data={[
             //   {
             //     id: "1111",
@@ -201,51 +205,8 @@ const ShuffleText = styled.Text`
   color: ${foregroundColor};
 `;
 
-// export default function Screen(props) {
-//   const modals = Array.from({ length: 8 }).map(
-//     (_) => React.useRef(null).current
-//   );
-//   const animated = React.useRef(new Animated.Value(0)).current;
-//   return (
-//     <Animated.View
-//       style={{
-//         borderRadius: animated.interpolate({
-//           inputRange: [0, 1],
-//           outputRange: [0, 12],
-//         }),
-//         transform: [
-//           {
-//             scale: animated.interpolate({
-//               inputRange: [0, 1],
-//               outputRange: [1, 0.92],
-//             }),
-//           },
-//         ],
-//         opacity: animated.interpolate({
-//           inputRange: [0, 1],
-//           outputRange: [1, 0.75],
-//         }),
-//       }}
-//     >
-//       <Text onPress={() => modals[6].open(1)}>Press here</Text>
-//       <$$_Player
-//         {...props}
-//         ref={(el) => (modals[6] = el)}
-//         animated={animated}
-//       />
-//     </Animated.View>
-//   );
-// }
-
-function mapStateToProps(state) {
-  return {
-    currentTrack: state.playback.currentTrack,
-    currentList: state.playback.currentList,
-    media: state.media.mediaFiles,
-    mediaLoaded: state.media.mediaLoaded,
-    shuffle: state.playback.shuffle,
-    isPlaying: state.player.isPlaying,
-  };
+function mapStateToProps(state: ReduxStates) {
+  return state;
 }
 
 export default connect(mapStateToProps, actions)(TracksScreen);

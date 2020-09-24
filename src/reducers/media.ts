@@ -1,8 +1,17 @@
 const INITIAL_STATE = { mediaFiles: [], mediaLoaded: false, currentList: [] };
 
+const get_media_success = "get_media_success";
+const rename_track = "rename_track";
+const delete_track = "delete_track";
+
+export type enumTrackActions =
+  | "get_media_success"
+  | "rename_track"
+  | "delete_track";
+
 export default function (
   state = INITIAL_STATE,
-  action: { type: any; payload: { id: any } }
+  action: { type: enumTrackActions; payload: { id: any } }
 ) {
   switch (action.type) {
     case "get_media_success":
