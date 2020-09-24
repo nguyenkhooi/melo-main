@@ -4,30 +4,37 @@ import MusicFiles from "react-native-get-music-files";
 import TrackPlayer from "react-native-track-player";
 import RNFetchBlob from "rn-fetch-blob";
 import {
+  checkStoragePermissions,
+  checkStoragePermissionss,
   cleanupMedia,
-  errorReporter
+  errorReporter,
+  getStoragePermission,
+  IS_ANDROID,
 } from "utils";
 import { MediaModel } from "../media.store";
 
 export function TracksActions() {
   return MediaModel().actions((self) => ({
-    /** Fetch track from device */
+    /**
+     * Fetch track from device
+     */
     g_fetchTracks: flow(function* () {
       try {
-        // let granted = yield checkStoragePermissions();
-        // if (!granted) yield getStoragePermission();
-        // if (isMediaLoaded) {
-        if (1 == 2) {
-          let media = yield getMediaWithCovers();
+        let isGranted = yield checkStoragePermissionss();
+
+        // if (isMediaLoaded && granted) {
+        if (1 == 2 && isGranted) {
+          let deviceTracks = yield getMediaWithCovers();
           console.log("getting t");
-          self.g_tracks = media;
+          self.g_tracks = deviceTracks;
         } else {
           console.log("getting f");
           let results = yield MusicFiles.getAll(options);
+
           /** Temporary set __MEDIA for ios since it doesn't have local db */
-          let media = 1 == 2 ? cleanupMedia(results) : __MEDIA;
+          let deviceTracks = IS_ANDROID ? cleanupMedia(results) : __MEDIA;
           //   let media = IS_ANDROID ? cleanupMedia(results) : __MEDIA;
-          self.g_tracks = media;
+          self.g_tracks = deviceTracks;
           console.log("media length: ", self.g_tracks.length);
           let mediaWithCovers = yield getMediaWithCovers();
           self.g_tracks = mediaWithCovers;

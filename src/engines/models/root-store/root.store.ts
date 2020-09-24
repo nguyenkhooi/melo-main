@@ -1,5 +1,6 @@
 import { Instance, SnapshotOut, types } from "mobx-state-tree";
 import { MediaStore } from "../media-store/media.store";
+import { ConfigStore } from "../config-store/config.store";
 // import { NavigationStoreModel } from "../../navigation/navigation-store";
 
 /**
@@ -9,6 +10,7 @@ export const RootStoreModel = types
   .model("RootStore")
   .props({
     mediaStore: types.optional(MediaStore(), {}),
+    configStore: types.optional(ConfigStore(), {}),
     // navigationStore: types.optional(NavigationStoreModel, {}),
     // userStore: types.optional(UserStore(), {}),
     // requestStore: types.optional(PostsStore(), {}),
