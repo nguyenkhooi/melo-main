@@ -1,22 +1,29 @@
 import React, { useEffect } from "react";
 import { View, ScrollView } from "react-native";
-import { connect } from "react-redux";
-import * as actions from "actions";
 import _ from "lodash";
 import ListItem from "components/ListItem";
+import { connector, dRedux } from "engines";
+import { dSCR } from "utils";
 
-function FoldersScreen(props) {
+interface dSCR_Folders extends dSCR, dRedux {}
+function FoldersScreen(props: dSCR_Folders) {
+  const {
+    navigation,
+    //* redux states
+    media: { mediaFiles },
+    showFooter,
+  } = props;
   useEffect(() => {
-    let unsubscribe = props.navigation.addListener("focus", props.showFooter);
+    let unsubscribe = navigation.addListener("focus", showFooter);
     return unsubscribe;
-  }, [props.navigation]);
+  }, [navigation]);
 
   function onListItemPress(title, content) {
-    props.navigation.navigate("content-scr", { title, content });
+    navigation.navigate("content-scr", { title, content });
   }
 
   function renderFolders() {
-    let data = _.groupBy(props.media, "folder");
+    let data = _.groupBy(mediaFiles, "folder");
     let keys = Object.keys(data);
     return keys.map((key, index) => (
       <ListItem
@@ -38,13 +45,7 @@ function FoldersScreen(props) {
   );
 }
 
-function mapStateToProps(state) {
-  return {
-    media: state.media.mediaFiles,
-  };
-}
-
-export default connect(mapStateToProps, actions)(FoldersScreen);
+export default connector(FoldersScreen);
 
 const folderIcon = {
   name: "folder",

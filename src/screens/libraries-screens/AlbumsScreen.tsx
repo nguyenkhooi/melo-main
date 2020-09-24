@@ -1,20 +1,28 @@
 import React, { useEffect } from "react";
 import { View, FlatList } from "react-native";
-import { connect } from "react-redux";
-import * as actions from "actions";
 import _ from "lodash";
 
 import RenderCategory from "components/RenderCategory";
-import { flatListCardLayout } from "utils";
+import { dSCR, flatListCardLayout } from "utils";
+import { connector, dRedux } from "engines";
 
-function AlbumsScreen(props) {
+interface dSCR_Albums extends dSCR, dRedux {}
+
+function AlbumsScreen(props: dSCR_Albums) {
+  const {
+    navigation,
+    //* redux states
+    media: { mediaFiles },
+    playback: { currentTrack },
+    showFooter,
+  } = props;
   useEffect(() => {
-    let unsubscribe = props.navigation.addListener("focus", props.showFooter);
+    let unsubscribe = navigation.addListener("focus", showFooter);
     return unsubscribe;
-  }, [props.navigation]);
+  }, [navigation]);
 
   function onAlbumPress(title, content) {
-    props.navigation.navigate("content-scr", { title, content });
+    navigation.navigate("content-scr", { title, content });
   }
 
   function renderAlbums({ item, index }) {
@@ -35,7 +43,7 @@ function AlbumsScreen(props) {
 
   function mediaListParser() {
     let sectionsData = [];
-    let data = _.groupBy(props.media, "album");
+    let data = _.groupBy(mediaFiles, "album");
     let titles = Object.keys(data);
     titles.forEach((title) => {
       sectionsData.push({
@@ -52,7 +60,7 @@ function AlbumsScreen(props) {
   }
 
   let bottomMargin =
-    props.currentTrack.id !== "000" ? { marginBottom: 60 } : { flex: 1 };
+    currentTrack.id !== "000" ? { marginBottom: 60 } : { flex: 1 };
   return (
     <View style={bottomMargin}>
       <FlatList
@@ -66,14 +74,7 @@ function AlbumsScreen(props) {
   );
 }
 
-function mapStateToProps(state) {
-  return {
-    media: state.media.mediaFiles,
-    currentTrack: state.playback.currentTrack,
-  };
-}
-
-export default connect(mapStateToProps, actions)(AlbumsScreen);
+export default connector(AlbumsScreen);
 
 const styles = {
   itemInvisible: {

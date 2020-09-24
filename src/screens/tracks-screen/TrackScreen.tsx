@@ -1,10 +1,9 @@
-import * as actions from "actions";
 import { CIRCULAR } from "assets";
 import { OptionsModal, ScreenTitle } from "components";
 import RenderActivityIndicator from "components/RenderActivityIndicator";
 import RenderTrack from "components/RenderTrack";
 import { scanMessage } from "constants";
-import { ReduxActions, ReduxStates } from "engines";
+import { connector, ReduxActions, ReduxStates } from "engines";
 import React, { useEffect, useState } from "react";
 import {
   Animated,
@@ -16,7 +15,6 @@ import {
 } from "react-native";
 import QuickScrollList from "react-native-quick-scroll";
 import TrackPlayer from "react-native-track-player";
-import { connect } from "react-redux";
 import { setupPlayer } from "services";
 import styled from "styled-components/native";
 import { contrastColor, foregroundColor } from "themes/styles";
@@ -205,11 +203,7 @@ const ShuffleText = styled.Text`
   color: ${foregroundColor};
 `;
 
-function mapStateToProps(state: ReduxStates) {
-  return state;
-}
-
-export default connect(mapStateToProps, actions)(TracksScreen);
+export default connector(TracksScreen);
 
 const MessageWrapper = styled.View`
   flex: 1;

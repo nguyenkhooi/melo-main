@@ -10,9 +10,20 @@ import Icon, { PROPS_Icon } from "components/Icon";
 import PlaylistOptions from "components/PlaylistOptions";
 import RenderToast from "components/RenderToast";
 import { contrastTransColor } from "themes";
-import { getStatusBarHeight } from "utils";
+import { dSCR, getStatusBarHeight } from "utils";
+import { connector, dRedux } from "engines";
 
-function PlaylistsScreen(props) {
+interface dSCR_Playlists extends dSCR, dRedux {}
+function PlaylistsScreen(props: dSCR_Playlists) {
+  const {
+    navigation,
+    //* redux states
+    media: { mediaFiles },
+    playback: { currentTrack },
+    playlists,
+    showFooter,
+    createPlaylist,
+  } = props;
   const [isModalVisible, setModal] = useState(false);
   const [optionsModal, setOptionsModal] = useState({
     visible: false,
@@ -20,16 +31,16 @@ function PlaylistsScreen(props) {
   });
 
   useEffect(() => {
-    let unsubscribe = props.navigation.addListener("focus", props.showFooter);
+    let unsubscribe = navigation.addListener("focus", showFooter);
     return unsubscribe;
-  }, [props.navigation]);
+  }, [navigation]);
 
   function onPressSave(playlistName) {
     if (playlistName) {
-      let keys = Object.keys(props.playlists);
+      let keys = Object.keys(playlists);
       let index = keys.indexOf(playlistName);
       if (index === -1) {
-        props.createPlaylist(playlistName);
+        createPlaylist(playlistName);
         setModal(false);
       } else {
         RenderToast({
@@ -47,16 +58,15 @@ function PlaylistsScreen(props) {
   }
 
   function onListItemPress(title, content) {
-    props.navigation.navigate("playlist-scr", { title, content });
+    navigation.navigate("playlist-scr", { title, content });
   }
 
   function onOptionsPress(name) {
     setOptionsModal({ visible: true, name });
   }
 
-  const { playlists } = props;
   let bottomMargin =
-    props.currentTrack.id !== "000" ? { marginBottom: 160 } : { flex: 1 };
+    currentTrack.id !== "000" ? { marginBottom: 160 } : { flex: 1 };
   let keys = Object.keys(playlists);
   return (
     <View style={{ paddingTop: getStatusBarHeight("safe"), bottomMargin }}>
@@ -97,14 +107,7 @@ function PlaylistsScreen(props) {
   );
 }
 
-function mapStateToProps(state) {
-  return {
-    playlists: state.playlists,
-    currentTrack: state.playback.currentTrack,
-  };
-}
-
-export default connect(mapStateToProps, actions)(PlaylistsScreen);
+export default connector(PlaylistsScreen);
 
 const StyledIcon = styled(Icon)`
   color: ${contrastTransColor(0.75)};
