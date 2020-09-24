@@ -1,14 +1,11 @@
 import { dTrack } from "engines/models/media-store/track-doc/track.doc";
 import { flow } from "mobx-state-tree";
 import MusicFiles from "react-native-get-music-files";
-import TrackPlayer, { Track } from "react-native-track-player";
+import TrackPlayer from "react-native-track-player";
 import RNFetchBlob from "rn-fetch-blob";
 import {
-  checkStoragePermissions,
-  getStoragePermission,
   cleanupMedia,
-  errorReporter,
-  IS_ANDROID,
+  errorReporter
 } from "utils";
 import { MediaModel } from "../media.store";
 
@@ -17,8 +14,8 @@ export function TracksActions() {
     /** Fetch track from device */
     g_fetchTracks: flow(function* () {
       try {
-        let granted = yield checkStoragePermissions();
-        if (!granted) yield getStoragePermission();
+        // let granted = yield checkStoragePermissions();
+        // if (!granted) yield getStoragePermission();
         // if (isMediaLoaded) {
         if (1 == 2) {
           let media = yield getMediaWithCovers();
