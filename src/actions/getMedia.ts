@@ -3,6 +3,7 @@ import RNFetchBlob from "rn-fetch-blob";
 import { store } from "store";
 import {
   checkStoragePermissions,
+  checkStoragePermissionss,
   cleanupMedia,
   errorReporter,
   getStoragePermission,
@@ -42,10 +43,12 @@ const options = {
 
 export const getMedia = () => async (dispatch) => {
   try {
-    let granted = await checkStoragePermissions();
-    if (!granted) await getStoragePermission();
+    // let granted = await checkStoragePermissions();
+    // if (!granted) await getStoragePermission();
+
+    let granted = await checkStoragePermissionss();
     let { media } = store.getState();
-    if (media.mediaLoaded) {
+    if (media.mediaLoaded && granted) {
       let media = await getMediaWithCovers();
       dispatch({ type: "get_media_success", payload: media });
       dispatch({ type: "current_list", payload: media });
