@@ -1,7 +1,6 @@
 import { CIRCULAR, IconPrimr } from "assets";
-import { CoverArt } from "components";
+import { CoverArt, OptionsMenu } from "components";
 import Icon from "components/Icon";
-import OptionsMenu from "components/OptionsMenu";
 import ProgressSlider from "components/ProgressSlider";
 import { connector, dRedux } from "engines";
 import React, { useEffect } from "react";
@@ -48,7 +47,7 @@ function PlayerScreen(props: dSCR_Player) {
             preset={"safe"}
             name={"arrow_down"}
             size={20}
-            color={C.dim}
+            color={C["color-basic-transparent-500"]}
             onPress={() => navigation.goBack()}
           />
           <HeaderText>Now Playing</HeaderText>
@@ -58,7 +57,7 @@ function PlayerScreen(props: dSCR_Player) {
                 preset={"safe"}
                 name={"dots_horizontal"}
                 size={20}
-                color={C.dim}
+                color={C["color-basic-transparent-500"]}
               />
             }
             currentItem={currentTrack}

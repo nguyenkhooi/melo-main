@@ -2,6 +2,7 @@
 export * from "./Externals";
 export { default as Toasty } from "./Generals/Toasty/Toasty";
 export { default as Icon, PROPS_Icon } from "./Icon";
+export * from "./Menus/OptionsMenu";
 export * from "./Modals/$$_Player";
 export { default as OptionsModal } from "./Modals/OptionsModal";
 export { default as PlayerFooter } from "./PlayerFooter";

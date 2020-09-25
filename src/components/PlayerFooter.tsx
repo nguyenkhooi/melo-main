@@ -35,19 +35,6 @@ const {
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
-function mapStateToProps(state) {
-  return {
-    renderFooter: state.footer.footerVisible,
-    currentTrack: state.playback.currentTrack,
-    currentList: state.playback.currentList,
-    isPlaying: state.player.isPlaying,
-
-    media: state.media.mediaFiles,
-    loop: state.playback.loop,
-    shuffle: state.playback.shuffle,
-  };
-}
-
 interface dCOMP_PlayerFooter extends dRedux {}
 function PlayerFooter(props: dCOMP_PlayerFooter) {
   const {
@@ -154,65 +141,66 @@ function PlayerFooter(props: dCOMP_PlayerFooter) {
   }
   return footerVisible && currentTrack.id !== "000" ? (
     //   return 1 == 1 && renderFooter ? (
-    <MainWrapper>
+    <Animated.View
+      style={{
+        height: 60,
+        position: "absolute",
+        left: 0,
+        right: 0,
+        bottom: getBottomSpace() + 48,
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: theme.elevatedBG,
+        transform: [{ translateY: _height }],
+        opacity: _opacity,
+      }}
+    >
+      <Animated.Code>
+        {() =>
+          block([
+            // If the clock is running, increment position in next tick by calling spring()
+            cond(clockRunning(clock), [
+              spring(clock, animState, animConfig),
+              // Stop and reset clock when spring is complete
+              cond(animState.finished, [
+                stopClock(clock),
+
+                set(animState.finished, 0),
+              ]),
+            ]),
+          ])
+        }
+      </Animated.Code>
       <PanGestureHandler
         // activeOffsetY={-10}
         onGestureEvent={onPanEvent}
         onHandlerStateChange={onHandlerStateChange}
       >
-        <Animated.View
-          style={{
-            // flex: 1,
-            width: "100%",
-            backgroundColor: theme.elevatedBG,
-            transform: [{ translateY: _height }],
-            opacity: _opacity,
-          }}
-        >
-          <Animated.Code>
-            {() =>
-              block([
-                // If the clock is running, increment position in next tick by calling spring()
-                cond(clockRunning(clock), [
-                  spring(clock, animState, animConfig),
-                  // Stop and reset clock when spring is complete
-                  cond(animState.finished, [
-                    stopClock(clock),
-
-                    set(animState.finished, 0),
-                  ]),
-                ]),
-              ])
-            }
-          </Animated.Code>
-          <TouchableWithoutFeedback onPress={() => navigate("player-scr")}>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Thumbnail source={coverSrc} />
-              <TextWrapper>
-                <Title numberOfLines={1}>
-                  {currentTrack.title || "unknown"}
-                </Title>
-                <Artist numberOfLines={1}>
-                  {currentTrack.artist || "unknown"}
-                </Artist>
-              </TextWrapper>
-              {isPlaying ? (
-                <StyledIcon {...icons.pauseIcon} onPress={togglePlayback} />
-              ) : (
-                <StyledIcon {...icons.playIcon} onPress={togglePlayback} />
-              )}
-              <StyledIcon {...icons.nextIcon} onPress={skipForward} />
-              <ProgressWrapper>
-                <Progress
-                  progress={isNaN(progress) ? 0 : +progress.toFixed(3)}
-                  color={theme.foreground}
-                />
-              </ProgressWrapper>
-            </View>
-          </TouchableWithoutFeedback>
-        </Animated.View>
+        <TouchableWithoutFeedback onPress={() => navigate("player-scr")}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Thumbnail source={coverSrc} />
+            <TextWrapper>
+              <Title numberOfLines={1}>{currentTrack.title || "unknown"}</Title>
+              <Artist numberOfLines={1}>
+                {currentTrack.artist || "unknown"}
+              </Artist>
+            </TextWrapper>
+            {isPlaying ? (
+              <StyledIcon {...icons.pauseIcon} onPress={togglePlayback} />
+            ) : (
+              <StyledIcon {...icons.playIcon} onPress={togglePlayback} />
+            )}
+            <StyledIcon {...icons.nextIcon} onPress={skipForward} />
+            <ProgressWrapper>
+              <Progress
+                progress={isNaN(progress) ? 0 : +progress.toFixed(3)}
+                color={theme.foreground}
+              />
+            </ProgressWrapper>
+          </View>
+        </TouchableWithoutFeedback>
       </PanGestureHandler>
-    </MainWrapper>
+    </Animated.View>
   ) : null;
 }
 

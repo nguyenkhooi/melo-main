@@ -5,7 +5,7 @@ import React from "react";
 import { ViewStyle } from "react-native";
 import { SearchScreen, SettingsScreen, TracksScreen } from "screens";
 import { withTheme } from "styled-components/native";
-import { KeyOf } from "utils";
+import { getBottomSpace, KeyOf } from "utils";
 import TopMaterialTabNav from "./libraries.navigator";
 
 const stackOptions = {
@@ -28,6 +28,7 @@ function HomeBottomTab(props) {
     activeBackgroundColor: elevatedBG,
     inactiveBackgroundColor: elevatedBG,
     style: {
+      height: getBottomSpace("safe") + 48,
       borderTopWidth: 0,
       backgroundColor: elevatedBG,
     } as ViewStyle,
