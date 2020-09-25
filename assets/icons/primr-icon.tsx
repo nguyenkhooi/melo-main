@@ -1,7 +1,7 @@
 // import Octicons from "react-native-vector-icons/Octicons"
 import * as R from "ramda";
 import React from "react";
-import { Platform, View, ViewStyle } from "react-native";
+import { Platform, TouchableOpacity, View, ViewStyle } from "react-native";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import EntypoIcon from "react-native-vector-icons/Entypo";
 import FeatherIcon from "react-native-vector-icons/Feather";
@@ -101,7 +101,14 @@ export const iconOptions = {
  *  <IconPrimr preset={`safe`} name={`arrow_left`} size={30} color={"black"} />
  */
 export default function IconPrimr(props: dIconPrimr) {
-  const { preset = "safe", name, size, color, containerStyle = {} } = props;
+  const {
+    preset = "safe",
+    name,
+    size,
+    color,
+    containerStyle = {},
+    onPress,
+  } = props;
   const _containerStyle: ViewStyle = R.mergeAll(
     R.flatten([
       presets(size)[preset].containerStyle ||
@@ -130,10 +137,11 @@ export default function IconPrimr(props: dIconPrimr) {
     const { type, scale = 1, icon } = iconOptions[name];
     const { size, color } = _iconStyle;
     const BrandedIcon = getType(type);
+    const IconContainer = !!onPress ? TouchableOpacity : View;
     return (
-      <View style={_containerStyle}>
+      <IconContainer style={_containerStyle} onPress={onPress}>
         <BrandedIcon name={icon} solid size={size * scale} color={color} />
-      </View>
+      </IconContainer>
     );
   }
 }

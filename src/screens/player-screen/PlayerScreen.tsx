@@ -1,4 +1,4 @@
-import { CIRCULAR } from "assets";
+import { CIRCULAR, IconPrimr } from "assets";
 import { CoverArt } from "components";
 import Icon from "components/Icon";
 import OptionsMenu from "components/OptionsMenu";
@@ -15,7 +15,7 @@ import {
   contrastColor,
   contrastTransColor
 } from "themes";
-import { DEVICE_WIDTH, dSCR } from "utils";
+import { C, DEVICE_WIDTH, dSCR } from "utils";
 import S_PlaybackControl from "./S_PlaybackControl";
 
 const PlayerWidth = Dimensions.get("window").width * 0.82;
@@ -44,10 +44,23 @@ function PlayerScreen(props: dSCR_Player) {
     >
       <Gradient colors={[`${theme.bgTrans}0.35)`, `${theme.bgTrans}0.8)`]}>
         <Header>
-          <StyledIcon {...icons.collapse} onPress={navigation.goBack} />
+          <IconPrimr
+            preset={"safe"}
+            name={"arrow_down"}
+            size={20}
+            color={C.dim}
+            onPress={() => navigation.goBack()}
+          />
           <HeaderText>Now Playing</HeaderText>
           <OptionsMenu
-            target={<StyledIcon {...icons.options} />}
+            target={
+              <IconPrimr
+                preset={"safe"}
+                name={"dots_horizontal"}
+                size={20}
+                color={C.dim}
+              />
+            }
             currentItem={currentTrack}
           />
         </Header>
