@@ -1,18 +1,17 @@
 //@ts-check
-import { NavigationContainerRef } from "@react-navigation/native";
+import RootNavigator, {
+  canExit,
+  navigationRef,
+  setRootNavigation,
+  useBackButtonHandler,
+  useNavigationPersistence
+} from "navigation";
 import React, { useEffect, useState } from "react";
 import Toasty from "react-native-toast-message";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistor, store } from "store";
 import SplashScreen from "./src/screens/SplashScreen";
-import RootNavigator, {
-  canExit,
-  navigationRef,
-  setRootNavigation,
-  useBackButtonHandler,
-  useNavigationPersistence,
-} from "navigation";
 // import { Toasty } from "components";
 
 export default function App() {

@@ -1,16 +1,17 @@
-import { actions, dRedux } from "engines";
+import { IconPrimr } from "assets";
+import { Icon } from "components";
+import { connector, dRedux } from "engines";
 import React from "react";
 import { Dimensions, TouchableOpacity, View } from "react-native";
-import { connect } from "react-redux";
 import styled from "styled-components/native";
 import { contrastColor, contrastTransColor, foregroundColor } from "themes";
-import { getRandomNumber, scale } from "utils";
-import Icon from "./Icon";
+import { C, getRandomNumber, scale } from "utils";
+// import Icon from "./Icon";
 
 const WrapperWidth = Dimensions.get("window").width * 0.82;
 
 interface dPlaybackControl extends dRedux {}
-function PlaybackControl(props: dPlaybackControl) {
+function S_PlaybackControl(props: dPlaybackControl) {
   const {
     media: { mediaFiles },
     playback: { currentList, currentTrack, loop, shuffle },
@@ -64,6 +65,10 @@ function PlaybackControl(props: dPlaybackControl) {
     setLoop(!loop);
   }
 
+  const PlaybackIcon = (name: string, props: PROPS_Accessory) => (
+    <IconPrimr name={name} size={props.style.width} color={C.text01} />
+  );
+
   return (
     <MainCTNR>
       <TouchableOpacity onPress={onShufflePress}>
@@ -99,7 +104,7 @@ function PlaybackControl(props: dPlaybackControl) {
   );
 }
 
-export default connect((state) => state, actions)(PlaybackControl);
+export default connector(S_PlaybackControl);
 
 const MainCTNR = (props) => (
   <View
@@ -207,8 +212,8 @@ const icons = {
     size: scale(22),
   },
   shuffle: {
-    name: "shuffle",
-    type: "material",
+    name: "random",
+    type: "fa5",
     size: scale(20),
   },
 };

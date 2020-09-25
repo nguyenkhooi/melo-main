@@ -1,9 +1,10 @@
 //@ts-check
 import {
-    NavigationContainer,
-    NavigationContainerRef
+  NavigationContainer,
+  NavigationContainerRef
 } from "@react-navigation/native";
-import PlayerFooter from "components/PlayerFooter";
+import { PlayerFooter } from "components";
+// import PlayerFooter from "components/PlayerFooter";
 import { actions } from "engines";
 import React from "react";
 import { StatusBar } from "react-native";

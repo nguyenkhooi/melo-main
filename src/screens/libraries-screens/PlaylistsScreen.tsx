@@ -1,4 +1,5 @@
-import CreatePlaylistButton from "components/CreatePlaylistButton";
+import { IconPrimr } from "assets";
+import { dAccessory, Kitt } from "components";
 import Icon, { PROPS_Icon } from "components/Icon";
 import InputDialog from "components/InputDialog";
 import ListItem from "components/ListItem";
@@ -9,7 +10,7 @@ import React, { useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
 import styled from "styled-components";
 import { contrastTransColor } from "themes";
-import { dSCR, getStatusBarHeight } from "utils";
+import { dSCR } from "utils";
 
 interface dSCR_Playlists extends dSCR, dRedux {}
 function PlaylistsScreen(props: dSCR_Playlists) {
@@ -67,8 +68,21 @@ function PlaylistsScreen(props: dSCR_Playlists) {
     currentTrack.id !== "000" ? { marginBottom: 160 } : { flex: 1 };
   let keys = Object.keys(playlists);
   return (
-    <View style={{ paddingTop: getStatusBarHeight("safe"), bottomMargin }}>
-      <CreatePlaylistButton onPress={() => setModal(true)} />
+    <View style={[bottomMargin]}>
+      <Kitt.Button
+        appearance="ghost"
+        onPress={() => setModal(true)}
+        accessoryLeft={(props: dAccessory) => (
+          <IconPrimr
+            preset={`safe`}
+            name={"plus"}
+            size={props.style.width}
+            color={props.style.tintColor}
+          />
+        )}
+      >
+        Create Playlist
+      </Kitt.Button>
       <InputDialog
         isVisible={isModalVisible}
         onPressSave={onPressSave}

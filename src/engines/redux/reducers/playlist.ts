@@ -1,12 +1,12 @@
 import {
-	add_to_playlist,
-	create_playlist,
-	delete_playlist,
-	dPlaylistActions,
-	PlaylistState,
-	remove_from_playlist,
-	rename_playlist
-} from "../actions";
+  add_to_playlist,
+  create_playlist,
+  delete_playlist,
+  dPlaylistActions,
+  PlaylistState,
+  remove_from_playlist,
+  rename_playlist
+} from "../types";
 
 //* Object of playlist folders; starting with Favourites
 const INITIAL_STATE: PlaylistState = { Favourites: [] };

@@ -1,2 +1,2 @@
 //@ts-check
-// export * from "./ui-kitten";
+export * from "./ui-kitten";

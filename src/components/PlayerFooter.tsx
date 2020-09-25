@@ -1,5 +1,5 @@
 import { CIRCULAR_BOLD, CIRCULAR_LIGHT, img } from "assets";
-import { actions } from "engines";
+import { connector, dRedux } from "engines";
 import { navigate } from "navigation";
 import React from "react";
 import { Dimensions, TouchableWithoutFeedback, View } from "react-native";
@@ -9,7 +9,6 @@ import {
 } from "react-native-gesture-handler";
 import Animated, { Extrapolate, interpolate } from "react-native-reanimated";
 import { useTrackPlayerProgress } from "react-native-track-player/lib/hooks";
-import { connect } from "react-redux";
 import styled, { withTheme } from "styled-components/native";
 import { getBottomSpace, getRandomNumber } from "utils";
 import { contrastColor, contrastTransColor } from "../themes/styles";
@@ -36,22 +35,36 @@ const {
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
-function PlayerFooter(props) {
+function mapStateToProps(state) {
+  return {
+    renderFooter: state.footer.footerVisible,
+    currentTrack: state.playback.currentTrack,
+    currentList: state.playback.currentList,
+    isPlaying: state.player.isPlaying,
+
+    media: state.media.mediaFiles,
+    loop: state.playback.loop,
+    shuffle: state.playback.shuffle,
+  };
+}
+
+interface dCOMP_PlayerFooter extends dRedux {}
+function PlayerFooter(props: dCOMP_PlayerFooter) {
   const {
-    isPlaying,
-    renderFooter,
-    currentTrack,
-    currentList,
+    footer: { footerVisible },
+    playback: { currentTrack, loop, shuffle },
+    player: { isPlaying },
+    media: { mediaFiles },
+    setPlayback,
+    setCurrentTrack,
     theme,
     swipeThreshold = 0.6,
-    media,
-    loop,
-    shuffle,
   } = props;
+  const currentList = mediaFiles;
   const { position, duration } = useTrackPlayerProgress(100);
   // const navigation = useNavigation();
   function togglePlayback() {
-    props.setPlayback(!isPlaying);
+    setPlayback(!isPlaying);
   }
 
   const progress = position / duration;
@@ -137,9 +150,9 @@ function PlayerFooter(props) {
       : currentTrack.index === currentList.length - 1
       ? currentList[0]
       : currentList[currentTrack.index + 1];
-    props.setCurrentTrack(nextTrack);
+    setCurrentTrack(nextTrack);
   }
-  return renderFooter && currentTrack.id !== "000" ? (
+  return footerVisible && currentTrack.id !== "000" ? (
     //   return 1 == 1 && renderFooter ? (
     <MainWrapper>
       <PanGestureHandler
@@ -203,20 +216,7 @@ function PlayerFooter(props) {
   ) : null;
 }
 
-function mapStateToProps(state) {
-  return {
-    renderFooter: state.footer.footerVisible,
-    currentTrack: state.playback.currentTrack,
-    currentList: state.playback.currentList,
-    isPlaying: state.player.isPlaying,
-
-    media: state.media.mediaFiles,
-    loop: state.playback.loop,
-    shuffle: state.playback.shuffle,
-  };
-}
-
-export default connect(mapStateToProps, actions)(withTheme(PlayerFooter));
+export default connector(withTheme(PlayerFooter));
 
 const MainWrapper = styled.View`
   height: 60px;

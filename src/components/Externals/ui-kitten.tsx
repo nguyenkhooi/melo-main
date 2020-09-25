@@ -9,4 +9,13 @@ import * as UIKT from "@ui-kitten/components";
  */
 
 export const Kitt = { ...UIKT };
+
+export type dAccessory = {
+  style: {
+    height: number;
+    marginHorizontal: number;
+    tintColor: string;
+    width: number;
+  };
+};
 // export default Kitt;

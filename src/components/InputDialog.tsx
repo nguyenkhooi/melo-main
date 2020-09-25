@@ -83,6 +83,6 @@ export default connect(null, actions)(withTheme(InputDialog));
 
 const DialogInput = styled(Dialog.Input)`
   color: ${evaLight["color-basic-800"]};
-  border-bottom-color: ${IS_ANDROID ? foregroundColor : null};
+  border-bottom-color: ${IS_ANDROID ? foregroundColor : "transparent"};
   border-bottom-width: 1px;
 `;

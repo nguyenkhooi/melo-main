@@ -1,5 +1,5 @@
 import { CIRCULAR } from "assets";
-import { CoverArt, PlaybackControl } from "components";
+import { CoverArt } from "components";
 import Icon from "components/Icon";
 import OptionsMenu from "components/OptionsMenu";
 import ProgressSlider from "components/ProgressSlider";
@@ -16,6 +16,7 @@ import {
   contrastTransColor
 } from "themes";
 import { DEVICE_WIDTH, dSCR } from "utils";
+import S_PlaybackControl from "./S_PlaybackControl";
 
 const PlayerWidth = Dimensions.get("window").width * 0.82;
 
@@ -67,12 +68,14 @@ function PlayerScreen(props: dSCR_Player) {
             <Artist numberOfLines={1}>{currentTrack.artist}</Artist>
           </TextWrapper>
           <ProgressSlider />
-          <PlaybackControl />
+          <$_PlaybackControl {...props} />
         </Wrapper>
       </Gradient>
     </ImageBackground>
   );
 }
+
+const $_PlaybackControl = S_PlaybackControl;
 
 interface d$_TrackCarousel extends dSCR_Player {}
 const $_TracksCarousel = (props: d$_TrackCarousel) => {
