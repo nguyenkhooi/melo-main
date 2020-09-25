@@ -1,17 +1,18 @@
 //@ts-check
+import { NavigationContainer } from "@react-navigation/native";
+import PlayerFooter from "components/PlayerFooter";
+import { connector } from "engines";
 import React from "react";
 import { StatusBar } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
 import { ThemeProvider } from "styled-components/native";
-import { connect } from "react-redux";
-import * as actions from "actions";
+import * as themes from "themes";
 import { navigationRef } from "./navigation-service";
 import PrimaryStack from "./primary.navigator";
-import PlayerFooter from "components/PlayerFooter";
-import * as themes from "themes";
 
 function RootNavigator(props) {
-  const { theme } = props;
+  const {
+    settings: { theme },
+  } = props;
   const color = themes[theme].background;
   const statusBarContent = `${theme === "light" ? "dark" : "light"}-content`;
   const wrapperColor = {
@@ -40,9 +41,10 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, actions)(RootNavigator);
+export default connector(RootNavigator);
 /**
  * NOTE Currently deprecate due to useless "out-of-context" use for Navigation()
  */
-export { default as AppNavigation } from "./root.navigator";
 export * from "./navigation-service";
+export { default as AppNavigation } from "./root.navigator";
+

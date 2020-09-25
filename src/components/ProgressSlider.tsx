@@ -1,5 +1,5 @@
-import * as actions from "actions";
 import { PRODUCT_SANS } from "assets";
+import { actions } from "engines";
 import React from "react";
 import { Dimensions, ViewStyle } from "react-native";
 import Slider from "react-native-slider";

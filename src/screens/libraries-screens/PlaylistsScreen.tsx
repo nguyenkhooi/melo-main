@@ -1,17 +1,15 @@
-import React, { useState, useEffect } from "react";
-import { View, ScrollView } from "react-native";
-import styled from "styled-components";
-import { connect } from "react-redux";
-import * as actions from "actions";
 import CreatePlaylistButton from "components/CreatePlaylistButton";
-import ListItem from "components/ListItem";
-import InputDialog from "components/InputDialog";
 import Icon, { PROPS_Icon } from "components/Icon";
+import InputDialog from "components/InputDialog";
+import ListItem from "components/ListItem";
 import PlaylistOptions from "components/PlaylistOptions";
 import RenderToast from "components/RenderToast";
+import { connector, dRedux } from "engines";
+import React, { useEffect, useState } from "react";
+import { ScrollView, View } from "react-native";
+import styled from "styled-components";
 import { contrastTransColor } from "themes";
 import { dSCR, getStatusBarHeight } from "utils";
-import { connector, dRedux } from "engines";
 
 interface dSCR_Playlists extends dSCR, dRedux {}
 function PlaylistsScreen(props: dSCR_Playlists) {

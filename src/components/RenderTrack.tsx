@@ -1,13 +1,13 @@
-import * as actions from "actions";
 import { CIRCULAR, img } from "assets";
+import { actions } from "engines";
 import React from "react";
 import { Dimensions } from "react-native";
 import { connect } from "react-redux";
 import styled from "styled-components/native";
 import {
-  contrastColor,
-  contrastTransColor,
-  foregroundColor
+    contrastColor,
+    contrastTransColor,
+    foregroundColor
 } from "../themes/styles";
 import Icon from "./Icon";
 

@@ -1,4 +1,4 @@
-import { actionss, dRedux } from "engines";
+import { actions, dRedux } from "engines";
 import React from "react";
 import { Dimensions, TouchableOpacity, View } from "react-native";
 import { connect } from "react-redux";
@@ -99,7 +99,7 @@ function PlaybackControl(props: dPlaybackControl) {
   );
 }
 
-export default connect((state) => state, actionss)(PlaybackControl);
+export default connect((state) => state, actions)(PlaybackControl);
 
 const MainCTNR = (props) => (
   <View

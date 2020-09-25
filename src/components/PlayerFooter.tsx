@@ -1,4 +1,5 @@
 import { CIRCULAR_BOLD, CIRCULAR_LIGHT, img } from "assets";
+import { actions } from "engines";
 import { navigate } from "navigation";
 import React from "react";
 import { Dimensions, TouchableWithoutFeedback, View } from "react-native";
@@ -11,7 +12,6 @@ import { useTrackPlayerProgress } from "react-native-track-player/lib/hooks";
 import { connect } from "react-redux";
 import styled, { withTheme } from "styled-components/native";
 import { getBottomSpace, getRandomNumber } from "utils";
-import * as actions from "../actions";
 import { contrastColor, contrastTransColor } from "../themes/styles";
 import Icon from "./Icon";
 import ProgressBar from "./ProgressBar";

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { connect } from "react-redux";
-import * as actions from "actions";
+import { actions } from "engines";
+import React, { useEffect, useState } from "react";
 import Dialog from "react-native-dialog";
+import { connect } from "react-redux";
 import styled, { withTheme } from "styled-components/native";
 import { foregroundColor } from "themes";
 import { evaLight, IS_ANDROID } from "utils";

@@ -1,16 +1,16 @@
 //@ts-check
+import {
+    NavigationContainer,
+    NavigationContainerRef
+} from "@react-navigation/native";
+import PlayerFooter from "components/PlayerFooter";
+import { actions } from "engines";
 import React from "react";
 import { StatusBar } from "react-native";
-import {
-  NavigationContainer,
-  NavigationContainerRef,
-} from "@react-navigation/native";
-import { ThemeProvider } from "styled-components/native";
 import { connect } from "react-redux";
-import * as actions from "actions";
-import PrimaryStack from "./primary.navigator";
-import PlayerFooter from "components/PlayerFooter";
+import { ThemeProvider } from "styled-components/native";
 import * as themes from "themes";
+import PrimaryStack from "./primary.navigator";
 
 /**
  * The root navigator is used to switch between major navigation flows of your app.
