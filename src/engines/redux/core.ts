@@ -1,6 +1,6 @@
 //@ts-check
 import { connect } from "react-redux";
-import { actionss } from "../../actions";
+import { actionss } from "./actions";
 
 const mapState = (state) => state;
 

@@ -1,6 +1,7 @@
-import { connector, dRedux } from "engines";
+import { actionss, dRedux } from "engines";
 import React from "react";
 import { Dimensions, TouchableOpacity, View } from "react-native";
+import { connect } from "react-redux";
 import styled from "styled-components/native";
 import { contrastColor, contrastTransColor, foregroundColor } from "themes";
 import { getRandomNumber, scale } from "utils";
@@ -98,7 +99,7 @@ function PlaybackControl(props: dPlaybackControl) {
   );
 }
 
-export default connector(PlaybackControl);
+export default connect((state) => state, actionss)(PlaybackControl);
 
 const MainCTNR = (props) => (
   <View

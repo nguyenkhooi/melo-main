@@ -1,0 +1,47 @@
+import { RenderToast } from "components";
+import { DeleteTrackDispatch } from "engines";
+import { Alert } from "react-native";
+import RNFetchBlob from "rn-fetch-blob";
+import { TrackProps } from "utils";
+
+const mime = "audio/mpeg";
+
+export const deleteTrack = (track: TrackProps) => async (
+  dispatch: DeleteTrackDispatch
+) => {
+  try {
+    await RNFetchBlob.fs.unlink(track.url);
+    await RNFetchBlob.fs.scanFile([{ path: track.url, mime }]);
+    dispatch({ type: "delete_track", payload: track });
+  } catch (e) {
+    Alert.alert(JSON.stringify(e));
+  }
+};
+
+export const renameTrack = (track: TrackProps, newName: string) => async (
+  dispatch
+) => {
+  try {
+    let pathArr = track.url.split("/");
+    let extension = pathArr[pathArr.length - 1].split(".");
+    extension = extension[extension.length - 1];
+    pathArr[pathArr.length - 1] = `${newName}.${extension}`;
+    let newPath = pathArr.join("/");
+    let exists = await RNFetchBlob.fs.exists(newPath);
+    if (exists)
+      return RenderToast({
+        title: "Error",
+        message: "A file with the same name already exists",
+        type: "error",
+      });
+    await RNFetchBlob.fs.mv(track.url, newPath);
+    await RNFetchBlob.fs.scanFile([{ path: newPath, mime }]);
+    await RNFetchBlob.fs.scanFile([{ path: track.url, mime }]);
+    dispatch({
+      type: "rename_track",
+      payload: { ...track, title: newName, url: newPath },
+    });
+  } catch (e) {
+    Alert.alert(JSON.stringify(e));
+  }
+};
