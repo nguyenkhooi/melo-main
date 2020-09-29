@@ -1,48 +1,20 @@
 import TrackPlayer from "react-native-track-player";
-import { AnyAction } from "redux";
-import { ThunkDispatch } from "redux-thunk";
-import { errorReporter, getRandomNumber, TrackProps } from "utils";
+import { Dispatch } from "redux";
+import { errorReporter, TrackProps } from "utils";
+import {
+  SetCurrentTrackAction,
+  SetPlayerAction,
+  ToggleLoopAction,
+  ToggleShuffleAction
+} from "../types";
 
-export const setCurrentList = (
-  currentTrackList: TrackProps[],
-  shuffle: boolean = false
-) => async (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
-  try {
-    await TrackPlayer.reset();
-    await TrackPlayer.add(currentTrackList);
-    dispatch({
-      type: "current_track_list",
-      payload: currentTrackList,
-    });
-
-    /**
-     * Check if shuffle is true or not. If true,
-     * set the `nextTrack` to random item, else
-     * play the first item in the `currentTrackList`
-     */
-    let nextTrack = shuffle
-      ? currentTrackList[getRandomNumber(0, currentTrackList.length)]
-      : currentTrackList[0];
-    console.log(
-      "setCurrentList: ",
-      currentTrackList.length + ", shuffle: " + shuffle + nextTrack
-    );
-    dispatch({
-      type: "current_track",
-      payload: nextTrack,
-    });
-    // TrackPlayer.play();
-    // dispatch({
-    //   type: "set_playback",
-    //   payload: true,
-    // });
-  } catch (e) {
-    errorReporter(e);
-  }
-};
-
+/**
+ * Set current track to play.
+ * Think of users pressing specific track to play it
+ * @param currentTrack
+ */
 export const setCurrentTrack = (currentTrack: TrackProps) => async (
-  dispatch: ThunkDispatch<{}, {}, AnyAction>
+  dispatch: Dispatch<SetCurrentTrackAction | SetPlayerAction>
 ) => {
   try {
     await TrackPlayer.reset();
@@ -61,12 +33,12 @@ export const setCurrentTrack = (currentTrack: TrackProps) => async (
   }
 };
 
-export const setPlayback = (isPlaying?: boolean) => {
+export const setPlayback = (isPlaying?: boolean): SetPlayerAction => {
   isPlaying ? TrackPlayer.play() : TrackPlayer.pause();
   return { type: "set_playback", payload: isPlaying };
 };
 
-export const setLoop = (isLoop) => {
+export const setLoop = (isLoop: boolean): ToggleLoopAction => {
   return { type: "set_loop", payload: isLoop };
 };
 
@@ -74,6 +46,6 @@ export const setLoop = (isLoop) => {
  * Set Shuffle
  * @param isShuffle
  */
-export const setShuffle = (isShuffle) => {
+export const setShuffle = (isShuffle: boolean): ToggleShuffleAction => {
   return { type: "set_shuffle", payload: isShuffle };
 };

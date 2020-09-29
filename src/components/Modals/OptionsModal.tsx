@@ -1,25 +1,36 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { CIRCULAR } from "assets";
-import { actions } from "engines";
+import { InputDialog } from "components";
+import { connector, dRedux } from "engines";
 import React, { useState } from "react";
 import Modal from "react-native-modal";
 import Share from "react-native-share";
-import { connect } from "react-redux";
 import styled from "styled-components/native";
 import { contrastColor, elevatedBGColor } from "themes";
-import { DEVICE_HEIGHT, DEVICE_WIDTH } from "utils";
+import { DEVICE_HEIGHT, DEVICE_WIDTH, TrackProps } from "utils";
 import ConfirmDialog from "../ConfirmDialog";
-import InputDialog from "../InputDialog";
 import ListItem from "../ListItem";
 import RenderToast from "../RenderToast";
 
-function OptionsModal(props) {
+
+interface dCOMP_OptionsModal extends dRedux {
+  selectedTrack: TrackProps;
+  isVisible: boolean;
+  onPressCancel(): void;
+  playlistRemoveOption: any;
+}
+function OptionsModal(props: dCOMP_OptionsModal) {
   const [isDialogVisible, setDialogVisible] = useState(false);
   const [isRenameModalVisible, setRenameModal] = useState(false);
 
   const navigation = useNavigation();
   const route = useRoute();
   const {
+    /** redux */
+    removeFromPlaylist,
+    renameTrack,
+    deleteTrack,
+
     selectedTrack,
     isVisible,
     onPressCancel,
@@ -27,20 +38,20 @@ function OptionsModal(props) {
   } = props;
 
   function onAddToPlaylist() {
-    props.onPressCancel();
+    onPressCancel();
     navigation.navigate("addToPlaylist-scr", { song: selectedTrack });
   }
 
   function onRemoveFromPlaylist() {
-    props.onPressCancel();
-    props.removeFromPlaylist(route.params.title, selectedTrack);
+    onPressCancel();
+    removeFromPlaylist(route.params.title, selectedTrack);
   }
 
   function onPressRename(newName) {
     if (newName !== selectedTrack.title) {
       let index = newName.split("").indexOf("/");
       if (index === -1) {
-        props.renameTrack(selectedTrack, newName);
+        renameTrack(selectedTrack, newName);
       } else {
         return RenderToast({
           title: "Error",
@@ -50,11 +61,11 @@ function OptionsModal(props) {
       }
     }
     setRenameModal(false);
-    props.onPressCancel();
+    onPressCancel();
   }
 
   function onShare() {
-    props.onPressCancel();
+    onPressCancel();
     Share.open({
       url: `file://${selectedTrack.url}`,
       type: "audio/mp3",
@@ -64,8 +75,8 @@ function OptionsModal(props) {
 
   function onDeleteConfirm() {
     setDialogVisible(false);
-    props.onPressCancel();
-    props.deleteTrack(selectedTrack);
+    onPressCancel();
+    deleteTrack(selectedTrack);
   }
 
   const modalTitle = `${selectedTrack.title}  •  ${selectedTrack.artist}`;
@@ -132,7 +143,7 @@ function OptionsModal(props) {
   );
 }
 
-export default connect(null, actions)(OptionsModal);
+export default connector(OptionsModal);
 
 const StyledModal = styled(Modal)`
   justify-content: flex-end;

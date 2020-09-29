@@ -1,59 +1,64 @@
 import { CIRCULAR, img } from "assets";
-import { actions } from "engines";
+import { connector, dRedux } from "engines";
 import React from "react";
 import { Dimensions } from "react-native";
-import { connect } from "react-redux";
 import styled from "styled-components/native";
+import { TrackProps } from "utils";
 import {
-    contrastColor,
-    contrastTransColor,
-    foregroundColor
+  contrastColor,
+  contrastTransColor,
+  foregroundColor
 } from "../themes/styles";
 import Icon from "./Icon";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
-const RenderTrack = React.memo(
-  (props) => {
-    const { item, currentTrack, setCurrentTrack, setOptions } = props;
+interface dTrackComp extends dRedux {
+  item: TrackProps;
+  setOptions({ visible: boolean, item: TrackProps }): void;
+}
+export const RenderTrack = connector(
+  React.memo(
+    (props: dTrackComp) => {
+      const {
+        item,
+        playback: { currentTrack },
+        setCurrentTrack,
+        setOptions,
+      } = props;
 
-    function onTrackPress() {
-      if (item.id !== currentTrack.id) setCurrentTrack(item);
-    }
+      function onTrackPress() {
+        if (item.id !== currentTrack.id) setCurrentTrack(item);
+      }
 
-    const coverSrc = item.artwork ? { uri: item.artwork } : img.placeholder;
-    return (
-      <Touchable onPress={onTrackPress} activeOpacity={0.4}>
-        <Thumbnail source={coverSrc} />
-        <TextWrapper>
-          <Title numberOfLines={1} current={item.id === currentTrack.id}>
-            {item.title}
-          </Title>
-          <Artist numberOfLines={1}>{item.artist}</Artist>
-          {/* <Text>{JSON.stringify(Object.keys(item))}</Text> */}
-        </TextWrapper>
-        <StyledIcon
-          {...optionsIcon}
-          onPress={() => setOptions({ visible: true, item })}
-        />
-      </Touchable>
-    );
-  },
-  (prevProps, nextProps) =>
-    !(
-      nextProps.currentTrack.id === nextProps.item.id ||
-      prevProps.currentTrack.id === prevProps.item.id ||
-      prevProps.item !== nextProps.item
-    )
+      const coverSrc = item.artwork ? { uri: item.artwork } : img.placeholder;
+      return (
+        <Touchable onPress={onTrackPress} activeOpacity={0.4}>
+          <Thumbnail source={coverSrc} />
+          <TextWrapper>
+            <Title numberOfLines={1} current={item.id === currentTrack.id}>
+              {item.title}
+            </Title>
+            <Artist numberOfLines={1}>{item.artist}</Artist>
+            {/* <Text>{JSON.stringify(Object.keys(item))}</Text> */}
+          </TextWrapper>
+          <StyledIcon
+            {...optionsIcon}
+            onPress={() => setOptions({ visible: true, item })}
+          />
+        </Touchable>
+      );
+    },
+    (prevProps, nextProps) =>
+      !(
+        nextProps.playback.currentTrack.id === nextProps.item.id ||
+        prevProps.playback.currentTrack.id === prevProps.item.id ||
+        prevProps.item !== nextProps.item
+      )
+  )
 );
 
-function mapStateToProps(state) {
-  return {
-    currentTrack: state.playback.currentTrack,
-  };
-}
-
-export default connect(mapStateToProps, actions)(RenderTrack);
+export default RenderTrack;
 
 const Touchable = styled.TouchableOpacity`
   flex-direction: row;

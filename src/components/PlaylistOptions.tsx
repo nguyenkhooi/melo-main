@@ -1,36 +1,48 @@
 import { CIRCULAR } from "assets";
-import { actions } from "engines";
+import { connector, dRedux } from "engines";
 import React, { useState } from "react";
 import { Dimensions } from "react-native";
 import Modal from "react-native-modal";
-import { connect } from "react-redux";
 import styled from "styled-components/native";
 import { getBottomSpace } from "utils";
 import { contrastColor, elevatedBGColor } from "../themes/styles";
 import ConfirmDialog from "./ConfirmDialog";
-import InputDialog from "./InputDialog";
+import { InputDialog } from "./Generals";
 import ListItem from "./ListItem";
 import RenderToast from "./RenderToast";
 
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
-function PlaylistOptions(props) {
+interface dCOMP_PlaylistOptions extends dRedux {
+  selectedPlaylist: any;
+  isVisible: boolean;
+  onPressCancel(): void;
+  playlistRemoveOption: any;
+}
+function PlaylistOptions(props: dCOMP_PlaylistOptions) {
   const [isDialogVisible, setDialogVisible] = useState(false);
   const [isRenameModalVisible, setRenameModal] = useState(false);
 
-  const { selectedPlaylist, isVisible, onPressCancel } = props;
+  const {
+    playlists,
+    renamePlaylist,
+    deletePlaylist,
+    selectedPlaylist,
+    isVisible,
+    onPressCancel,
+  } = props;
 
   function onPressRename(newName) {
     let playlistName = newName.trim();
     if (playlistName === selectedPlaylist) return setRenameModal(false);
     if (playlistName) {
-      let keys = Object.keys(props.playlists);
+      let keys = Object.keys(playlists);
       let index = keys.indexOf(playlistName);
       if (index === -1) {
-        props.renamePlaylist(selectedPlaylist, playlistName);
+        renamePlaylist(selectedPlaylist, playlistName);
         setRenameModal(false);
-        props.onPressCancel();
+        onPressCancel();
       } else
         RenderToast({
           title: "Error",
@@ -47,8 +59,8 @@ function PlaylistOptions(props) {
 
   function onDeleteConfirm() {
     setDialogVisible(false);
-    props.onPressCancel();
-    props.deletePlaylist(selectedPlaylist);
+    onPressCancel();
+    deletePlaylist(selectedPlaylist);
   }
 
   return (
@@ -101,13 +113,7 @@ function PlaylistOptions(props) {
   );
 }
 
-function mapStateToProps(state) {
-  return {
-    playlists: state.playlists,
-  };
-}
-
-export default connect(mapStateToProps, actions)(PlaylistOptions);
+export default connector(PlaylistOptions);
 
 const StyledModal = styled(Modal)`
   justify-content: flex-end;

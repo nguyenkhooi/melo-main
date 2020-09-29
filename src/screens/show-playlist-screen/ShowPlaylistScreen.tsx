@@ -1,6 +1,5 @@
 import { CIRCULAR } from "assets";
-import { OptionsModal } from "components";
-import RenderTrack from "components/RenderTrack";
+import { OptionsModal, RenderTrack } from "components";
 import { connector, dRedux } from "engines";
 import React, { useEffect, useState } from "react";
 import { Button, FlatList, View } from "react-native";

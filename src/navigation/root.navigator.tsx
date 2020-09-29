@@ -5,13 +5,18 @@ import {
 } from "@react-navigation/native";
 import { PlayerFooter } from "components";
 // import PlayerFooter from "components/PlayerFooter";
-import { actions } from "engines";
+import { connector, dRedux } from "engines";
 import React from "react";
 import { StatusBar } from "react-native";
-import { connect } from "react-redux";
 import { ThemeProvider } from "styled-components/native";
 import * as themes from "themes";
 import PrimaryStack from "./primary.navigator";
+
+function mapStateToProps(state) {
+  return {
+    theme: state.settings.theme,
+  };
+}
 
 /**
  * The root navigator is used to switch between major navigation flows of your app.
@@ -20,10 +25,12 @@ import PrimaryStack from "./primary.navigator";
  * will use once logged in.
  */
 export const RootNavigator = React.forwardRef<
-  NavigationContainerRef,
+  NavigationContainerRef & dRedux,
   Partial<React.ComponentProps<typeof NavigationContainer>>
 >((props, ref) => {
-  const { theme } = props;
+  const {
+    settings: { theme },
+  } = props;
   const color = themes[theme].background;
   const statusBarContent = `${theme === "light" ? "dark" : "light"}-content`;
   const wrapperColor = {
@@ -54,10 +61,4 @@ export const RootNavigator = React.forwardRef<
 
 RootNavigator.displayName = "RootNavigator";
 
-function mapStateToProps(state) {
-  return {
-    theme: state.settings.theme,
-  };
-}
-
-export default connect(mapStateToProps, actions)(RootNavigator);
+export default connector(RootNavigator);

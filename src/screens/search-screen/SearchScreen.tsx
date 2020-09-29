@@ -1,8 +1,6 @@
 import { CIRCULAR_BOLD } from "assets";
-import { ScreenTitle } from "components";
+import { OptionsModal, RenderTrack, ScreenTitle } from "components";
 import Icon from "components/Icon";
-import OptionsModal from "components/OptionsModal";
-import RenderTrack from "components/RenderTrack";
 import SearchInput from "components/SearchInput";
 import { connector, dRedux } from "engines";
 import React, { useEffect, useRef, useState } from "react";

@@ -4,7 +4,6 @@ import { dRedux } from "engines";
 import React, { useEffect } from "react";
 import { Dimensions, StatusBar, ViewStyle } from "react-native";
 import { dSCR, getStatusBarHeight } from "utils";
-// import OptionsModal from "components/OptionsModal";
 
 const ScreenHeight = Dimensions.get("window").height;
 const StatusBarHeight = StatusBar.currentHeight;

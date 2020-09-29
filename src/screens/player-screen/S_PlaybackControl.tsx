@@ -14,14 +14,14 @@ interface dPlaybackControl extends dRedux {}
 function S_PlaybackControl(props: dPlaybackControl) {
   const {
     media: { mediaFiles },
-    playback: { currentTrackList, currentTrack, loop, shuffle },
+    playback: { currentTrack, loop, shuffle },
     player: { isPlaying },
     setCurrentTrack,
     setShuffle,
     setLoop,
     setPlayback,
   } = props;
-
+  let currentTrackList = mediaFiles;
   function skipForward() {
     let nextTrack = shuffle
       ? currentTrackList[getRandomNumber(0, currentTrackList.length)]

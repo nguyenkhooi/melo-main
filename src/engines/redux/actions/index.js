@@ -1,6 +1,7 @@
 export * from "./fileSystem";
 export * from "./getLyrics";
 export * from "./getMedia";
+export * from "./media";
 export * from "./playback";
 export * from "./playerFooter";
 export * from "./playlist";

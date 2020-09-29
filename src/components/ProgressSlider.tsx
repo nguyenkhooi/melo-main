@@ -1,10 +1,9 @@
 import { PRODUCT_SANS } from "assets";
-import { actions } from "engines";
+import { connector } from "engines";
 import React from "react";
 import { Dimensions, ViewStyle } from "react-native";
 import Slider from "react-native-slider";
 import TrackPlayer, { ProgressComponent } from "react-native-track-player";
-import { connect } from "react-redux";
 import styled, { withTheme } from "styled-components/native";
 import { contrastTransColor } from "themes";
 import { scale } from "utils";
@@ -36,12 +35,16 @@ class ProgressSlider extends ProgressComponent {
   }
 
   seekTo = (value) => {
-    let seekPosition = value * this.msToSec(this.props.currentTrack.duration);
+    let seekPosition =
+      value * this.msToSec(this.props.playback.currentTrack.duration);
     TrackPlayer.seekTo(seekPosition);
   };
 
   render() {
-    const { currentTrack, theme } = this.props;
+    const {
+      playback: { currentTrack },
+      theme,
+    } = this.props;
     return (
       <Wrapper>
         <Slider
@@ -63,11 +66,7 @@ class ProgressSlider extends ProgressComponent {
   }
 }
 
-function mapStateToProps({ playback }) {
-  return { currentTrack: playback.currentTrack };
-}
-
-export default connect(mapStateToProps, actions)(withTheme(ProgressSlider));
+export default connector(withTheme(ProgressSlider));
 
 const Wrapper = styled.View`
   flex-direction: column;

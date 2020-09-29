@@ -1,7 +1,6 @@
 import { IconPrimr } from "assets";
-import { dAccessory, Kitt } from "components";
+import { dAccessory, InputDialog, Kitt } from "components";
 import Icon, { PROPS_Icon } from "components/Icon";
-import InputDialog from "components/InputDialog";
 import ListItem from "components/ListItem";
 import PlaylistOptions from "components/PlaylistOptions";
 import RenderToast from "components/RenderToast";

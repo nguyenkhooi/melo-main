@@ -1,7 +1,6 @@
 import { CIRCULAR } from "assets";
-import { OptionsModal, ScreenTitle } from "components";
+import { OptionsModal, RenderTrack, ScreenTitle } from "components";
 import RenderActivityIndicator from "components/RenderActivityIndicator";
-import RenderTrack from "components/RenderTrack";
 import { scanMessage } from "constants";
 import { connector, dRedux } from "engines";
 import React, { useEffect, useState } from "react";
@@ -19,7 +18,6 @@ import { setupPlayer } from "services";
 import styled from "styled-components/native";
 import { contrastColor, foregroundColor } from "themes/styles";
 import { dSCR, flatListItemLayout, getStatusBarHeight, scale } from "utils";
-// import OptionsModal from "components/OptionsModal";
 
 const ScreenHeight = Dimensions.get("window").height;
 const StatusBarHeight = StatusBar.currentHeight;
@@ -39,7 +37,8 @@ function TracksScreen(props: dSCR_Tracks) {
     //* redux actions
     setShuffle,
     showFooter,
-    setCurrentList,
+    setCurrentTrackList,
+    // setCurrentList,
   } = props;
 
   const [scrollY] = useState(new Animated.Value(0));
@@ -75,7 +74,7 @@ function TracksScreen(props: dSCR_Tracks) {
           <TouchableOpacity
             onPress={async () => {
               setShuffle(true);
-              await setCurrentList(mediaFiles, shuffle);
+              await setCurrentTrackList(mediaFiles, shuffle);
             }}
           >
             <ShuffleText style={{ padding: scale(15) }}>

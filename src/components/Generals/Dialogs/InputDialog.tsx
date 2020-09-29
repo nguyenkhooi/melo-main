@@ -1,12 +1,21 @@
-import { actions } from "engines";
+import { connector, dRedux } from "engines";
 import React, { useEffect, useState } from "react";
 import Dialog from "react-native-dialog";
-import { connect } from "react-redux";
 import styled, { withTheme } from "styled-components/native";
 import { foregroundColor } from "themes";
 import { evaLight, IS_ANDROID } from "utils";
 
-function InputDialog(props) {
+interface dCOMP_InputDialog extends dRedux {
+  isVisible: boolean;
+  name: string;
+  inputPlaceholder: string;
+  saveButtonTitle: string;
+  title: string;
+  description: string;
+  onPressSave(): void;
+  onPressCancel(): void;
+}
+function InputDialog(props: dCOMP_InputDialog) {
   const {
     isVisible,
     name,
@@ -15,6 +24,8 @@ function InputDialog(props) {
     title,
     description,
     theme,
+    onPressSave,
+    onPressCancel,
   } = props;
   const [input, setInput] = useState("");
 
@@ -24,11 +35,11 @@ function InputDialog(props) {
   }, [isVisible]);
 
   function onSave() {
-    props.onPressSave(input.trim());
+    onPressSave(input.trim());
   }
 
   function onCancel() {
-    props.onPressCancel();
+    onPressCancel();
   }
 
   const { contrast, foreground } = theme;
@@ -79,7 +90,7 @@ function InputDialog(props) {
   );
 }
 
-export default connect(null, actions)(withTheme(InputDialog));
+export default connector(withTheme(InputDialog));
 
 const DialogInput = styled(Dialog.Input)`
   color: ${evaLight["color-basic-800"]};

@@ -1,6 +1,5 @@
-import { PROPS_Icon, ScreenTitle } from "components";
+import { InputDialog, PROPS_Icon, ScreenTitle } from "components";
 import ConfirmDialog from "components/ConfirmDialog";
-import InputDialog from "components/InputDialog";
 import ListItem from "components/ListItem";
 import { settings } from "constants";
 import { connector, dRedux } from "engines";
@@ -11,7 +10,6 @@ import { withTheme } from "styled-components/native";
 import { clearCache, dSCR, getStatusBarHeight } from "utils";
 
 // import ListItem from "../components/ListItem";
-// import InputDialog from "../components/InputDialog";
 // import ConfirmDialog from "../components/ConfirmDialog";
 // import { clearCache } from "../utils/FileSystem";
 // import { settings } from "../constants";
