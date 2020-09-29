@@ -1,12 +1,10 @@
 // import { rootReducer } from "../../../reducers";
-import * as actionss from "../actions";
+import * as actions from "../actions";
 // import { actionss } from "../actions";
 import { rootReducer } from "../reducers";
 
-
-
 export type ReduxStates = ReturnType<typeof rootReducer>;
-export type ReduxActions = typeof actionss;
+export type ReduxActions = typeof actions;
 
 export type dRedux = ReduxActions & ReduxStates;
 
