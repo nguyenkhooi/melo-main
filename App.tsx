@@ -7,6 +7,7 @@ import RootNavigator, {
   useNavigationPersistence
 } from "navigation";
 import React, { useEffect, useState } from "react";
+import { YellowBox } from "react-native";
 import Toasty from "react-native-toast-message";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
@@ -52,3 +53,15 @@ export default function App() {
     </Provider>
   );
 }
+
+/**
+ * Ignore some yellowbox warnings. Some of these are for deprecated fn
+ * that we haven't gotten around to replacing yet.
+ */
+YellowBox.ignoreWarnings([
+  "componentWillMount is deprecated",
+  "componentWillReceiveProps is deprecated",
+  "Story with id",
+  "Require cycle",
+]);
+console.disableYellowBox = true;

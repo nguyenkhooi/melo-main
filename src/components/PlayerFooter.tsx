@@ -47,7 +47,7 @@ function PlayerFooter(props: dCOMP_PlayerFooter) {
     theme,
     swipeThreshold = 0.6,
   } = props;
-  const currentList = mediaFiles;
+  const currentTrackList = mediaFiles;
   const { position, duration } = useTrackPlayerProgress(100);
   // const navigation = useNavigation();
   function togglePlayback() {
@@ -133,10 +133,10 @@ function PlayerFooter(props: dCOMP_PlayerFooter) {
 
   function skipForward() {
     let nextTrack = shuffle
-      ? currentList[getRandomNumber(0, currentList.length)]
-      : currentTrack.index === currentList.length - 1
-      ? currentList[0]
-      : currentList[currentTrack.index + 1];
+      ? currentTrackList[getRandomNumber(0, currentTrackList.length)]
+      : currentTrack.index === currentTrackList.length - 1
+      ? currentTrackList[0]
+      : currentTrackList[currentTrack.index + 1];
     setCurrentTrack(nextTrack);
   }
   return footerVisible && currentTrack.id !== "000" ? (

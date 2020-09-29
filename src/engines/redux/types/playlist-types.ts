@@ -1,4 +1,4 @@
-import { TrackProps } from "utils";
+import { dTracks, TrackProps } from "utils";
 
 export const create_playlist = "create_playlist";
 export const add_to_playlist = "add_to_playlist";
@@ -36,7 +36,7 @@ export interface RemoveFromPlaylistAction {
 }
 
 export interface PlaylistState {
-  Favourites: TrackProps[] | undefined[];
+  Favourites: dTracks;
 }
 
 export type dPlaylistActions =

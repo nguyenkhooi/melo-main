@@ -1,4 +1,5 @@
 import MusicFiles from "react-native-get-music-files";
+import { Dispatch } from "redux";
 import RNFetchBlob from "rn-fetch-blob";
 import { store } from "store";
 import {
@@ -7,6 +8,7 @@ import {
   errorReporter,
   IS_ANDROID
 } from "utils";
+import { CurrentTrackAction, GetMediaAction } from "../types";
 
 // import MusicFiles from 'react-native-get-music-files-v3dev-test';
 
@@ -66,7 +68,13 @@ const options = {
   blured: false,
 };
 
-export const getMedia = () => async (dispatch) => {
+/**
+ * Get media from device then
+ * distribute them to `current_track_list` and `mediaFiles`
+ */
+export const getMedia = () => async (
+  dispatch: Dispatch<GetMediaAction | CurrentTrackAction>
+) => {
   try {
     // let granted = await checkStoragePermissions();
     // if (!granted) await getStoragePermission();
@@ -77,7 +85,7 @@ export const getMedia = () => async (dispatch) => {
     if (media.mediaLoaded && granted) {
       let media = await getMediaWithCovers();
       dispatch({ type: "get_media_success", payload: media });
-      dispatch({ type: "current_list", payload: media });
+      dispatch({ type: "current_track_list", payload: media });
     } else {
       console.log("New coming...");
       // let results = await MusicFiles.getAll(options);
@@ -87,10 +95,10 @@ export const getMedia = () => async (dispatch) => {
         : __MEDIA;
       console.log("media:");
       dispatch({ type: "get_media_success", payload: media });
-      dispatch({ type: "current_list", payload: media });
+      dispatch({ type: "current_track_list", payload: media });
       let mediaWithCovers = await getMediaWithCovers();
       dispatch({ type: "get_media_success", payload: mediaWithCovers });
-      dispatch({ type: "current_list", payload: mediaWithCovers });
+      dispatch({ type: "current_track_list", payload: mediaWithCovers });
     }
   } catch (e) {
     errorReporter(e);

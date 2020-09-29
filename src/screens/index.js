@@ -11,6 +11,7 @@ export { default as SearchScreen } from "./search-screen/SearchScreen";
 export { default as SettingsScreen } from "./settings-screen/SettingsScreen";
 export { default as ShowContentScreen } from "./show-content-screen/ShowContentScreen";
 export { default as ShowPlaylistScreen } from "./show-playlist-screen/ShowPlaylistScreen";
+export { default as SplashScreen } from "./SplashScreen";
 export { default as TabArrangementScreen } from "./tab-arrangement-screens/TabArrangement";
 export { default as TracksScreen } from "./tracks-screen/TrackScreen";
 

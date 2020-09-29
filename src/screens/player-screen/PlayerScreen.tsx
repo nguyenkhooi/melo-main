@@ -69,7 +69,7 @@ function PlayerScreen(props: dSCR_Player) {
             ref={(c) => {
               // this._carousel = c;
             }}
-            data={currentList}
+            data={currentTrackList}
             renderItem={() => }
             sliderWidth={DEVICE_WIDTH}
             itemWidth={DEVICE_WIDTH * 0.8}
@@ -93,7 +93,7 @@ interface d$_TrackCarousel extends dSCR_Player {}
 const $_TracksCarousel = (props: d$_TrackCarousel) => {
   const {
     media: { mediaFiles },
-    playback: { currentList, currentTrack },
+    playback: { currentTrackList, currentTrack },
   } = props;
   return (
     <Wrapper>
@@ -101,7 +101,7 @@ const $_TracksCarousel = (props: d$_TrackCarousel) => {
         ref={(c) => {
           // this._carousel = c;
         }}
-        data={currentList}
+        data={currentTrackList}
         renderItem={() => <CoverArt src={currentTrack.artwork} />}
         sliderWidth={DEVICE_WIDTH}
         itemWidth={DEVICE_WIDTH * 0.8}

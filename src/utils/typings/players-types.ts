@@ -1,6 +1,7 @@
 import { Track } from "react-native-track-player";
 
 export interface TrackProps extends Track {}
+export type dTracks = TrackProps[];
 
 export interface AlbumProps {
   album?: string;

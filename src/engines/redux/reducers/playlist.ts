@@ -11,7 +11,7 @@ import {
 //* Object of playlist folders; starting with Favourites
 const INITIAL_STATE: PlaylistState = { Favourites: [] };
 
-export default function (state = INITIAL_STATE, action: dPlaylistActions) {
+export function playlists(state = INITIAL_STATE, action: dPlaylistActions) {
   switch (action.type) {
     case create_playlist:
       return { ...state, [action.payload]: [] };

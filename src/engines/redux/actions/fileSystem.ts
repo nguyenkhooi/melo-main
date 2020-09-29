@@ -1,13 +1,18 @@
 import { RenderToast } from "components";
-import { DeleteTrackDispatch } from "engines";
 import { Alert } from "react-native";
+import { Dispatch } from "redux";
 import RNFetchBlob from "rn-fetch-blob";
 import { TrackProps } from "utils";
+import { DeleteTrackAction, RenameTrackAction } from "../types";
 
 const mime = "audio/mpeg";
 
+/**
+ * Delete the selected track from device
+ * @param track
+ */
 export const deleteTrack = (track: TrackProps) => async (
-  dispatch: DeleteTrackDispatch
+  dispatch: Dispatch<DeleteTrackAction>
 ) => {
   try {
     await RNFetchBlob.fs.unlink(track.url);
@@ -18,8 +23,13 @@ export const deleteTrack = (track: TrackProps) => async (
   }
 };
 
+/**
+ * Rename selected track with given name
+ * @param track
+ * @param newName
+ */
 export const renameTrack = (track: TrackProps, newName: string) => async (
-  dispatch
+  dispatch: Dispatch<RenameTrackAction>
 ) => {
   try {
     let pathArr = track.url.split("/");
@@ -42,6 +52,7 @@ export const renameTrack = (track: TrackProps, newName: string) => async (
       payload: { ...track, title: newName, url: newPath },
     });
   } catch (e) {
+    //* NOTE update err handling
     Alert.alert(JSON.stringify(e));
   }
 };

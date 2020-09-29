@@ -1,5 +1,5 @@
 //@ts-check
-import reducers from "engines/redux/reducers";
+import { rootReducer } from "engines/redux/reducers";
 import { AsyncStorage } from "react-native";
 import { applyMiddleware, compose, createStore } from "redux";
 import { persistReducer, persistStore } from "redux-persist";
@@ -12,7 +12,7 @@ const persistConfig = {
   blacklist: ["footer", "player", "search-scr"],
 };
 
-const persistedReducer = persistReducer(persistConfig, reducers);
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = createStore(
   persistedReducer,

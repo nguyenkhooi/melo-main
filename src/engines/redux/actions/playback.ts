@@ -1,32 +1,31 @@
-import { log } from "react-native-reanimated";
-import TrackPlayer, { Track } from "react-native-track-player";
+import TrackPlayer from "react-native-track-player";
 import { AnyAction } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import { errorReporter, getRandomNumber, TrackProps } from "utils";
 
 export const setCurrentList = (
-  currentList: TrackProps[],
+  currentTrackList: TrackProps[],
   shuffle: boolean = false
 ) => async (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
   try {
     await TrackPlayer.reset();
-    await TrackPlayer.add(currentList);
+    await TrackPlayer.add(currentTrackList);
     dispatch({
-      type: "current_list",
-      payload: currentList,
+      type: "current_track_list",
+      payload: currentTrackList,
     });
 
     /**
      * Check if shuffle is true or not. If true,
      * set the `nextTrack` to random item, else
-     * play the first item in the `currentList`
+     * play the first item in the `currentTrackList`
      */
     let nextTrack = shuffle
-      ? currentList[getRandomNumber(0, currentList.length)]
-      : currentList[0];
+      ? currentTrackList[getRandomNumber(0, currentTrackList.length)]
+      : currentTrackList[0];
     console.log(
       "setCurrentList: ",
-      currentList.length + ", shuffle: " + shuffle + nextTrack
+      currentTrackList.length + ", shuffle: " + shuffle + nextTrack
     );
     dispatch({
       type: "current_track",
@@ -71,6 +70,10 @@ export const setLoop = (isLoop) => {
   return { type: "set_loop", payload: isLoop };
 };
 
+/**
+ * Set Shuffle
+ * @param isShuffle
+ */
 export const setShuffle = (isShuffle) => {
   return { type: "set_shuffle", payload: isShuffle };
 };

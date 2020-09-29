@@ -1,13 +1,20 @@
+//@ts-check
 import { img } from "assets";
+import { connector, dRedux } from "engines";
 import React from "react";
 import { Image, StatusBar } from "react-native";
 import styled from "styled-components/native";
-import { colors } from "utils";
+import { C, colors, dSCR } from "utils";
 
-function SplashScreen() {
+interface dSCR_Splash extends dSCR, dRedux {}
+function SplashScreen(props: dSCR_Splash) {
+  const { getMedia } = props;
+  React.useEffect(function fetchMedia() {
+    getMedia();
+  }, []);
   return (
     <Wrapper>
-      <StatusBar backgroundColor={colors.elevatedBG} animated />
+      <StatusBar backgroundColor={C.surface} animated />
       <Image
         source={img.meloLogo}
         resizeMode="center"
@@ -19,7 +26,7 @@ function SplashScreen() {
   );
 }
 
-export default SplashScreen;
+export default connector(SplashScreen);
 
 const Wrapper = styled.View`
   flex: 1;

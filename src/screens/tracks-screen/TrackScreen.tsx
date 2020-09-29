@@ -38,7 +38,6 @@ function TracksScreen(props: dSCR_Tracks) {
     media: { mediaFiles },
     //* redux actions
     setShuffle,
-    getMedia,
     showFooter,
     setCurrentList,
   } = props;
@@ -50,28 +49,7 @@ function TracksScreen(props: dSCR_Tracks) {
     let unsubscribe = navigation.addListener("focus", showFooter);
     return unsubscribe;
   }, [navigation]);
-  const [, setPodcast] = React.useState(null);
-  useEffect(function getPodcastResult() {
-    fetch(
-      "https://listen-api.listennotes.com/api/v2/search?q=star%20wars&sort_by_date=0&type=episode&offset=0&len_min=10&len_max=30&genre_ids=68%2C82&published_before=1580172454000&published_after=0&only_in=title%2Cdescription&language=English&safe_mode=0",
-      {
-        method: "GET",
-        headers: {
-          "X-ListenAPI-Key": "d7f9fea7ad1c47499a5130cf3ae447d4",
-        },
-      }
-    )
-      .then((result) => result.json())
-      .then((json) => {
-        // console.log("RSULT>>>>>>>", json);
-        setPodcast(json);
-      })
-      .catch((error) => console.warn(error));
-    // .finally();
-  }, []);
-
   useEffect(() => {
-    getMedia();
     setupPlayer().then(
       () => currentTrack.id !== "000" && TrackPlayer.add(currentTrack)
     );

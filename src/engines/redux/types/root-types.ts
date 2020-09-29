@@ -1,8 +1,9 @@
-import { ConnectedProps } from "react-redux";
+// import { rootReducer } from "../../../reducers";
+import * as actionss from "../actions";
+// import { actionss } from "../actions";
+import { rootReducer } from "../reducers";
 
-import rootReducer from "../../../reducers";
-import { actionss } from "../../../actions";
-import { connector } from "../core";
+
 
 export type ReduxStates = ReturnType<typeof rootReducer>;
 export type ReduxActions = typeof actionss;

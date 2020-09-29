@@ -1,21 +1,20 @@
-const INITIAL_STATE = { mediaFiles: [], mediaLoaded: false, currentList: [] };
+import { dMediaActions, dMediaState } from "../types";
 
-const get_media_success = "get_media_success";
-const rename_track = "rename_track";
-const delete_track = "delete_track";
+const INITIAL_STATE: dMediaState = {
+  mediaFiles: [],
+  mediaLoaded: false,
+  currentTrackList: [],
+};
 
-export type enumTrackActions =
-  | "get_media_success"
-  | "rename_track"
-  | "delete_track";
-
-export default function (
-  state = INITIAL_STATE,
-  action: { type: enumTrackActions; payload: { id: any } }
+export function media(
+  state: dMediaState = INITIAL_STATE,
+  action: dMediaActions
 ) {
   switch (action.type) {
     case "get_media_success":
       return { mediaLoaded: true, mediaFiles: action.payload };
+    case "current_track_list":
+      return { ...state, currentTrackList: action.payload };
     case "rename_track": {
       let mediaArr = [...state.mediaFiles];
       let index = mediaArr.findIndex((i) => i.id === action.payload.id);

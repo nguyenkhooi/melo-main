@@ -14,7 +14,7 @@ interface dPlaybackControl extends dRedux {}
 function S_PlaybackControl(props: dPlaybackControl) {
   const {
     media: { mediaFiles },
-    playback: { currentList, currentTrack, loop, shuffle },
+    playback: { currentTrackList, currentTrack, loop, shuffle },
     player: { isPlaying },
     setCurrentTrack,
     setShuffle,
@@ -24,19 +24,19 @@ function S_PlaybackControl(props: dPlaybackControl) {
 
   function skipForward() {
     let nextTrack = shuffle
-      ? currentList[getRandomNumber(0, currentList.length)]
-      : currentTrack.index === currentList.length - 1
-      ? currentList[0]
-      : currentList[currentTrack.index + 1];
+      ? currentTrackList[getRandomNumber(0, currentTrackList.length)]
+      : currentTrack.index === currentTrackList.length - 1
+      ? currentTrackList[0]
+      : currentTrackList[currentTrack.index + 1];
     setCurrentTrack(nextTrack);
   }
 
   function skipBackward() {
     let nextTrack = shuffle
-      ? currentList[getRandomNumber(0, currentList.length)]
+      ? currentTrackList[getRandomNumber(0, currentTrackList.length)]
       : currentTrack.index === 0
-      ? currentList[currentList.length - 1]
-      : currentList[currentTrack.index - 1];
+      ? currentTrackList[currentTrackList.length - 1]
+      : currentTrackList[currentTrack.index - 1];
     setCurrentTrack(nextTrack);
   }
   // function skipForward() {

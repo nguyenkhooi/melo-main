@@ -1,15 +1,15 @@
+//@ts-check
 import { combineReducers } from "redux";
-import media from "./media";
-import footer from "./playerFooter";
-import playback from "./playback";
-import player from "./blacklistedPlayback";
-import playlists from "./playlist";
-import settings from "./settings";
-import lyrics from "./lyrics";
+import { player } from "./blacklistedPlayback";
+import { lyrics } from "./lyrics";
+import { media } from "./media";
+import { playback } from "./playback";
+import { footer } from "./playerFooter";
+import { playlists } from "./playlist";
+import { settings } from "./settings";
+// export { media, footer, playback, player, playlists, settings, lyrics };
 
-export { media, footer, playback, player, playlists, settings, lyrics };
-
-export default combineReducers({
+export const rootReducer = combineReducers({
   media,
   footer,
   playback,

@@ -10,10 +10,8 @@ const INITIAL_STATE = {
   shuffle: false,
 };
 
-export default function (state = INITIAL_STATE, action) {
+export function playback(state = INITIAL_STATE, action) {
   switch (action.type) {
-    case "current_list":
-      return { ...state, currentList: action.payload };
     case "current_track":
       return { ...state, currentTrack: action.payload };
     case "set_loop":
