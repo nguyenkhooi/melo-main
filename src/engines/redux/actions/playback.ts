@@ -33,6 +33,10 @@ export const setCurrentTrack = (currentTrack: TrackProps) => async (
   }
 };
 
+/**
+ * Set play or pause
+ * @param isPlaying
+ */
 export const setPlayback = (isPlaying?: boolean): SetPlayerAction => {
   isPlaying ? TrackPlayer.play() : TrackPlayer.pause();
   return { type: "set_playback", payload: isPlaying };

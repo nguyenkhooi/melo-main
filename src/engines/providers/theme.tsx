@@ -2,11 +2,11 @@
 import AsyncStorage from "@react-native-community/async-storage";
 import * as React from "react";
 import {
-    PROPSCOMP,
-    PROPS_ThemeProvider,
-    storage,
-    themeDark,
-    themeLight
+  PROPSCOMP,
+  PROPS_ThemeProvider,
+  storage,
+  themeDark,
+  themeLight
 } from "utils";
 
 /** REVIEW themeProviders
@@ -102,7 +102,7 @@ interface IPwithTheme extends PROPSCOMP {}
  *
  * @param OGComponent: React component
  */
-export function withTheme<P extends IPwithTheme = IPwithTheme>(
+export function withThemme<P extends IPwithTheme = IPwithTheme>(
   OGComponent: React.ComponentType<P>
 ) {
   return class ThemedComponent extends React.Component<P & IPwithTheme> {

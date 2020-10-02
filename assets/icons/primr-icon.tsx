@@ -46,6 +46,10 @@ export const iconOptions = {
     type: "fa5",
     icon: "chevron-right",
   } as dIconOptions,
+  chevron_down: {
+    type: "fa5",
+    icon: "chevron-down",
+  } as dIconOptions,
   check: {
     type: "fa5",
     icon: "check",

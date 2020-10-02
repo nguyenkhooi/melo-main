@@ -7,7 +7,8 @@ import { PlayerFooter } from "components";
 // import PlayerFooter from "components/PlayerFooter";
 import { connector, dRedux } from "engines";
 import React from "react";
-import { StatusBar } from "react-native";
+import { Button, StatusBar } from "react-native";
+import { Modalize } from "react-native-modalize";
 import { ThemeProvider } from "styled-components/native";
 import * as themes from "themes";
 import PrimaryStack from "./primary.navigator";
@@ -38,6 +39,10 @@ export const RootNavigator = React.forwardRef<
       background: color,
     },
   };
+  React.useEffect(function gettingStarted() {
+    ref$$Player.current.open();
+  }, []);
+  const ref$$Player = React.useRef<Modalize>();
   return (
     <NavigationContainer
       ref={ref}
@@ -53,7 +58,8 @@ export const RootNavigator = React.forwardRef<
           animated
         />
         <PrimaryStack />
-        <PlayerFooter navigationRef={ref} />
+        <Button onPress={() => ref$$Player.current.open()} title={"hey"} />
+        <PlayerFooter ref={ref$$Player} alwaysOpen={true} />
       </ThemeProvider>
     </NavigationContainer>
   );

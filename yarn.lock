@@ -2200,15 +2200,15 @@ core-js-pure@^3.0.0:
   resolved "https://registry.yarnpkg.com/core-js-pure/-/core-js-pure-3.6.5.tgz#c79e75f5e38dbc85a662d91eea52b8256d53b813"
   integrity sha512-lacdXOimsiD0QyNf9BC/mxivNJ/ybBGJXQFKzRekp1WTHoVUWsUHEn+2T8GJAzzIhyOuXA+gOxCVN3l+5PLPUA==
 
+core-js@2, core-js@^2.2.2, core-js@^2.4.1:
+  version "2.6.11"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.11.tgz#38831469f9922bded8ee21c9dc46985e0399308c"
+  integrity sha512-5wjnpaT/3dV+XB4borEsnAYQchn00XSgTAWKDkEqv+K8KevjbzmofK6hfJ9TZIlpj2N0xQpazy7PiRQiWHqzWg==
+
 core-js@^1.0.0:
   version "1.2.7"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-1.2.7.tgz#652294c14651db28fa93bd2d5ff2983a4f08c636"
   integrity sha1-ZSKUwUZR2yj6k70tX/KYOk8IxjY=
-
-core-js@^2.2.2, core-js@^2.4.1:
-  version "2.6.11"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.11.tgz#38831469f9922bded8ee21c9dc46985e0399308c"
-  integrity sha512-5wjnpaT/3dV+XB4borEsnAYQchn00XSgTAWKDkEqv+K8KevjbzmofK6hfJ9TZIlpj2N0xQpazy7PiRQiWHqzWg==
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
@@ -5302,6 +5302,13 @@ react-native-quick-scroll@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/react-native-quick-scroll/-/react-native-quick-scroll-2.1.0.tgz#545d1f49bcf075f755e96f38fec0560e85f9f771"
   integrity sha512-5G8e3b4Si/XWcmkq5IQnDSLfkigdoYhXHLjeZPbK0WQc+oRzzksPnBdqHiS2uBlugvh6Rup3TRPSH2lpKZ84Dw==
+
+react-native-reanimated-slider@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/react-native-reanimated-slider/-/react-native-reanimated-slider-1.0.5.tgz#f6e2a5f086b7d34b239bd05438b8be5f40f7aba5"
+  integrity sha512-HnbVod050jC5fQDNHQ3kJHA/+f35iY6Ep8lQkJOcY6FTZq2/Mv9IVCAZJalDpVpwcxDdSBB6ry1mvfoysEv63g==
+  dependencies:
+    core-js "2"
 
 react-native-reanimated@^1.7.1:
   version "1.13.0"

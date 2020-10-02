@@ -11,7 +11,7 @@ export * from "./Players";
 export { default as RenderToast } from "./RenderToast";
 export * from "./RenderTrack";
 export * from "./ScreenLayout/ScreenHeader";
-export * from "./StyledComponents";
+export * from "./Sstyled";
 
 
 /**

@@ -8,14 +8,9 @@ import { Dimensions, ImageBackground } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import Carousel from "react-native-snap-carousel";
 import styled, { withTheme } from "styled-components/native";
-import {
-  backgroundColor,
-  bgTransColor,
-  contrastColor,
-  contrastTransColor
-} from "themes";
+import { bgTransColor, contrastColor, contrastTransColor } from "themes";
 import { C, DEVICE_WIDTH, dSCR } from "utils";
-import S_PlaybackControl from "./S_PlaybackControl";
+import S_PlaybackControl from "./s-playback-control";
 
 const PlayerWidth = Dimensions.get("window").width * 0.82;
 
@@ -45,7 +40,7 @@ function PlayerScreen(props: dSCR_Player) {
         <Header>
           <IconPrimr
             preset={"safe"}
-            name={"arrow_down"}
+            name={"chevron_down"}
             size={20}
             color={C["color-basic-transparent-500"]}
             onPress={() => navigation.goBack()}
@@ -121,11 +116,6 @@ const Gradient = styled(LinearGradient)`
   justify-content: center;
   align-items: center;
   /* background-color: ${bgTransColor(0.15)}; */
-`;
-
-const Background = styled.ImageBackground`
-  flex: 1;
-  background-color: ${backgroundColor};
 `;
 
 const Header = styled.View`
