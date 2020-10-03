@@ -26,7 +26,7 @@ function TracksScreen(props: dSCR_Tracks) {
     navigation,
     //* redux state
     playback: { currentTrack, shuffle },
-    media: { mediaFiles },
+    media: { mediaFiles, mediaLoaded },
     //* redux actions
     getMedia,
     setShuffle,
@@ -65,10 +65,10 @@ function TracksScreen(props: dSCR_Tracks) {
     extrapolate: "clamp",
   });
 
-  // if (mediaLoaded) {
-  //   if (mediaFiles.length > 0) {
-  if (1 == 1) {
-    if (1 == 1) {
+  if (mediaLoaded) {
+    if (mediaFiles.length > 0) {
+      // if (1 == 1) {
+      //   if (1 == 1) {
       return (
         <View
           style={{ paddingTop: getStatusBarHeight("safe"), ...renderMargin }}
