@@ -3,7 +3,7 @@ import {
   CIRCULAR_LIGHT,
   dIconPrimr,
   IconPrimr,
-  img
+  img,
 } from "assets";
 import { connector, dRedux } from "engines";
 import { navigate } from "navigation";
@@ -12,37 +12,37 @@ import {
   Animated,
   Image,
   PanResponder,
-  StyleSheet,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 import { useTrackPlayerProgress } from "react-native-track-player/lib/hooks";
 import styled, { withTheme } from "styled-components/native";
 import { contrastColor, contrastTransColor } from "themes";
-import {
-  C,
-  DEVICE_WIDTH,
-  dSCR,
-  getBottomSpace,
-  getRandomNumber,
-  spacing
-} from "utils";
+import { C, DEVICE_WIDTH, dSCR, getBottomSpace, spacing } from "utils";
 import ProgressBar from "./ProgressBar";
+import { sstyled } from "./Sstyled";
 
 interface dCOMP_PlayerFooter extends dSCR, dRedux {}
+
+/**
+ * One of the most animated-complex components of the whole project,
+ *
+ * PlayerFooter<> is a footer with playback control. It has an ability to:
+ * -  Show/hide based on specific screen, with fadeInUp/fadeOutDown animation
+ * -  Play/Pause, Forward button
+ * -  Swipe horizontally to skip/return track
+ * -  Swipe vertically to open SS_PlayerScreen
+ *
+ * @version 1.1.0
+ * @param props
+ */
 function PlayerFooter(props: dCOMP_PlayerFooter) {
   const {
-    footer: { footerVisible },
-    playback: { currentTrack, loop, shuffle },
-    player: { isPlaying },
+    playback: { currentTrack },
     media: { mediaFiles },
-    setPlayback,
-    setCurrentTrack,
     hideFooter,
     theme,
-    swipeThreshold = 0.6,
   } = props;
-  const currentTrackList = mediaFiles;
   const { position, duration } = useTrackPlayerProgress(100);
   // const navigation = useNavigation();
 
@@ -55,14 +55,8 @@ function PlayerFooter(props: dCOMP_PlayerFooter) {
     /** NOTE replace with animation. See _toggleFooter() */
     // footerVisible &&
     currentTrack.id !== "000" && (
-      <FooterCtnr {...props} onHideFooter={() => navigate("player-scr")}>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            paddingVertical: spacing[2],
-          }}
-        >
+      <CtnrFooter {...props} onHideFooter={() => navigate("player-scr")}>
+        <CtnrFooterContent {...props}>
           <Thumbnail
             source={coverSrc}
             onPress={async () => {
@@ -70,20 +64,20 @@ function PlayerFooter(props: dCOMP_PlayerFooter) {
               navigate("player-scr");
             }}
           />
-          <TextWrapper>
+          <CtnrTrackInfo>
             <Title numberOfLines={1}>{currentTrack.title || "unknown"}</Title>
             <Artist numberOfLines={1}>
               {currentTrack.artist || "unknown"}
             </Artist>
-          </TextWrapper>
-        </View>
+          </CtnrTrackInfo>
+        </CtnrFooterContent>
         <ProgressWrapper>
           <Progress
             progress={isNaN(progress) ? 0 : +progress.toFixed(3)}
             color={theme.foreground}
           />
         </ProgressWrapper>
-      </FooterCtnr>
+      </CtnrFooter>
     )
   );
 }
@@ -94,54 +88,35 @@ const X_SWIPE_DELTA = 70;
 interface dFooterCtnr extends dCOMP_PlayerFooter {
   onHideFooter(): void;
 }
-const FooterCtnr = (props: dFooterCtnr) => {
+
+/**
+ * FooterCtnr<> is a container of the PlayerFooter<>,
+ * where all of the animation configs stay.
+ * Try the best not to put much playback actions here, though
+ * it's inevitable since the animation depends on actions
+ * and vice versa
+ */
+const CtnrFooter = (props: dFooterCtnr) => {
   const {
     footer: { footerVisible },
     player: { isPlaying },
     media: { mediaFiles },
-    playback: { currentTrack, loop, shuffle },
-    setPlayback,
-    setCurrentTrack,
-    hideFooter,
-    onHideFooter,
+    playback: { currentTrack, shuffle },
+    sethPlayback,
     theme,
     children,
   } = props;
   const currentTrackList = mediaFiles;
 
+  /**
+   * Run `_onToggleFooter()` ani every time `footerVisible` changes
+   */
   React.useEffect(
     function toggleFooter() {
       _onToggleFooter(footerVisible);
     },
     [footerVisible]
   );
-  /**
-   * PLAYBACK FUNCTIONS
-   */
-  function _togglePlayback() {
-    setPlayback(!isPlaying);
-  }
-  function _skipForward() {
-    let nextTrack = shuffle
-      ? currentTrackList[getRandomNumber(0, currentTrackList.length)]
-      : currentTrack.index === currentTrackList.length - 1
-      ? currentTrackList[0]
-      : currentTrackList[currentTrack.index + 1];
-
-    // let nextTrack = mediaFiles[currentTrack.index + 1];
-    // console.log("forward! ", nextTrack);
-    setCurrentTrack(nextTrack);
-  }
-  function _skipBackward() {
-    let nextTrack = shuffle
-      ? currentTrackList[getRandomNumber(0, currentTrackList.length)]
-      : currentTrack.index === 0
-      ? currentTrackList[currentTrackList.length - 1]
-      : currentTrackList[currentTrack.index - 1];
-    // let nextTrack = mediaFiles[currentTrack.index - 1];
-    // console.log("backward! ", nextTrack);
-    setCurrentTrack(nextTrack);
-  }
 
   /**
    * ANI FUNCTIONS
@@ -150,7 +125,7 @@ const FooterCtnr = (props: dFooterCtnr) => {
   const panY = useRef(new Animated.Value(0)).current;
 
   const [_isYSwipeable, shouldYSwipeable] = React.useState(true);
-  const [_isXSwipeable, shouldXSwipeable] = React.useState(true);
+  const [, shouldXSwipeable] = React.useState(true);
 
   /**
    * Reverse transition for the footer:
@@ -182,12 +157,14 @@ const FooterCtnr = (props: dFooterCtnr) => {
 
   const YpanResponder = useRef(
     PanResponder.create({
+      /** If user swipes horizontally more than vertically, disable `YpanResponder` */
       onMoveShouldSetPanResponder: (evt, gestureState) => {
         if (Math.abs(gestureState.dx) > 1.5 * Math.abs(gestureState.dy)) {
           return false;
         } else return gestureState.dy < 0 && _isYSwipeable ? true : false;
       },
       onPanResponderGrant: () => {},
+      /** If user swipes down, don't track; else, track `dy` w `panY` */
       onPanResponderMove: (evt, gestureState) => {
         if (gestureState.dy > 0) {
           return null;
@@ -197,17 +174,18 @@ const FooterCtnr = (props: dFooterCtnr) => {
           // gestureState.dy < -100 && alert('Fire!!');
         }
       },
+      /**
+       * moveY: current Y pos
+       * dy: delta y. If gesture up, value <0
+       */
       onPanResponderRelease: (evt, gestureState) => {
-        /**
-         * moveY: current Y pos
-         * dy: delta y. If gesture up, value <0
-         */
-        /** If scroll up pass threshold... */
+        /** If scroll up pass threshold, open `player-scr` */
         if (gestureState.dy < -Y_SWIPE_DELTA) {
           shouldYSwipeable(false);
           navigate("player-scr");
           shouldYSwipeable(true);
         }
+        /** If scroll not pass threshold, return to initial pos */
         if (gestureState.dy > -Y_SWIPE_DELTA && gestureState.dy < 0) {
           shouldYSwipeable(false);
           Animated.spring(panY, {
@@ -228,7 +206,7 @@ const FooterCtnr = (props: dFooterCtnr) => {
   const XpanResponder = React.useMemo(
     () =>
       PanResponder.create({
-        onMoveShouldSetPanResponder: (evt, gestureState) => {
+        onMoveShouldSetPanResponder: () => {
           // return gestureState.dy < 0 && _isXSwipeable ? true : false;
           return true;
         },
@@ -241,12 +219,22 @@ const FooterCtnr = (props: dFooterCtnr) => {
 
           if (gestureState.dx < -X_SWIPE_DELTA) {
             shouldXSwipeable(false);
-            _skipForward();
+            sethPlayback({
+              type: "fwd",
+              currentTrackList,
+              currentTrack,
+              isShuffle: shuffle,
+            });
             // setAction("next");
           } else if (gestureState.dx > X_SWIPE_DELTA) {
             /** If scroll right pass threshold... */
             shouldXSwipeable(false);
-            _skipBackward();
+            sethPlayback({
+              type: "bwd",
+              currentTrackList,
+              currentTrack,
+              isShuffle: shuffle,
+            });
             // setAction("back");
           }
           setTimeout(() => {
@@ -318,11 +306,34 @@ const FooterCtnr = (props: dFooterCtnr) => {
         }}
       >
         {isPlaying ? (
-          <ActionIcon {...props} name="pause" onPress={_togglePlayback} />
+          <ActionIcon
+            {...props}
+            name="pause"
+            onPress={() =>
+              sethPlayback({
+                type: "pause",
+              })
+            }
+          />
         ) : (
-          <ActionIcon {...props} name="play" onPress={_togglePlayback} />
+          <ActionIcon
+            {...props}
+            name="play"
+            onPress={() => sethPlayback({ type: "play" })}
+          />
         )}
-        <ActionIcon {...props} name="forward" onPress={_skipForward} />
+        <ActionIcon
+          {...props}
+          name="forward"
+          onPress={() =>
+            sethPlayback({
+              type: "fwd",
+              currentTrackList,
+              currentTrack,
+              isShuffle: shuffle,
+            })
+          }
+        />
       </Animated.View>
     </View>
   );
@@ -351,14 +362,32 @@ const Thumbnail = (props) => {
   );
 };
 
-const TextWrapper = styled.View`
-  height: 75%;
-  flex: 1;
-  flex-direction: column;
-  justify-content: space-evenly;
-  margin-left: 15px;
-`;
+const CtnrFooterContent = sstyled(View)({
+  flexDirection: "row",
+  alignItems: "center",
+  paddingVertical: spacing[2],
+});
 
+const CtnrTrackInfo = sstyled(View)({
+  height: "75%",
+  flex: 1,
+  flexDirection: "column",
+  justifyContent: "space-evenly",
+  marginLeft: 15,
+});
+// const TextWrapper = styled.View`
+//   height: 75%;
+//   flex: 1;
+//   flex-direction: column;
+//   justify-content: space-evenly;
+//   margin-left: 15px;
+// `;
+
+// const Title= sstyled(Text)(({theme})=>({
+//   fontFamile: CIRCULAR_BOLD,
+//   fontSize: 14,
+//   color: theme.current
+// }))
 const Title = styled.Text`
   font-family: ${CIRCULAR_BOLD};
   font-size: 14px;
@@ -383,31 +412,5 @@ const Progress = styled(ProgressBar)`
   width: ${DEVICE_WIDTH}px;
   background-color: ${contrastTransColor(0.1)};
 `;
-
-const icons = {
-  playIcon: {
-    name: "play",
-    type: "fa5",
-    size: 20,
-  },
-  pauseIcon: {
-    name: "pause",
-    type: "fa5",
-    size: 20,
-  },
-  nextIcon: {
-    name: "forward",
-    type: "fa5",
-    size: 20,
-  },
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
 
 export default connector(withTheme(PlayerFooter));

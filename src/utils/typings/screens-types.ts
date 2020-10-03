@@ -1,9 +1,9 @@
 import { NavigationProp } from "@react-navigation/native";
 
-export interface dSCR {
+export interface dSCR extends React.FC<NavigationProp<{}>> {
   /**
    * NOTE prroperly setup types later
    */
-  navigation: NavigationProp<{}>;
+  // navigation: NavigationProp<{}>;
   theme: any;
 }

@@ -13,8 +13,8 @@ export type enum_IconName = KeyOf<typeof iconOptions>;
  */
 export interface dIconPrimr {
   name: enum_IconName;
-  size: number;
-  color: string;
+  size?: number;
+  color?: string;
   containerStyle?: ViewStyle;
   preset?: "default" | "safe" | "circular" | "header";
   onPress?(): void;

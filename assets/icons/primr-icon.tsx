@@ -110,9 +110,9 @@ export const iconOptions = {
 export default function IconPrimr(props: dIconPrimr) {
   const {
     preset = "safe",
-    name,
-    size,
-    color,
+    name = "placeholder",
+    size = 20,
+    color = "dodgerblue",
     containerStyle = {},
     onPress,
   } = props;
