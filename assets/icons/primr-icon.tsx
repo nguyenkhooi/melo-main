@@ -39,6 +39,7 @@ export const iconOptions = {
     icon: Platform.OS == "android" ? "arrow-down" : "chevron-down",
   } as dIconOptions,
   award: { type: "fa5", icon: "award" } as dIconOptions,
+  backward: { type: "fa5", icon: "backward" } as dIconOptions,
   bars: { type: "fa5", icon: "bars" } as dIconOptions,
   ban: { type: "fa5", icon: "ban" } as dIconOptions,
   calendar: { type: "fa5", icon: "calendar" } as dIconOptions,
@@ -70,6 +71,11 @@ export const iconOptions = {
   forward: { type: "fa5", icon: "forward" } as dIconOptions,
   list: { type: "fa5", icon: "th-list" } as dIconOptions,
   lock: { type: "fa5", icon: "lock" } as dIconOptions,
+  loop: { type: "entypo", icon: "loop", scale: 1.1 } as dIconOptions,
+  loop_one: {
+    type: "material-community",
+    icon: "numeric-1-box",
+  } as dIconOptions,
   minus: { type: "fa5", icon: "minus" } as dIconOptions,
   pause: { type: "fa5", icon: "pause" } as dIconOptions,
   pen: { type: "fa5", icon: "pen" } as dIconOptions,
@@ -78,7 +84,7 @@ export const iconOptions = {
   plus: { type: "fa5", icon: "plus" } as dIconOptions,
   rocket: { type: "fa5", icon: "rocket" } as dIconOptions,
   share: { type: "fa5", icon: "share-alt" } as dIconOptions,
-  shuffle: { type: "entypo", icon: "shuffle" } as dIconOptions,
+  shuffle: { type: "entypo", icon: "shuffle", scale: 1.1 } as dIconOptions,
   sms: { type: "fa5", icon: "sms" } as dIconOptions,
   trash: { type: "fa5", icon: "trash" } as dIconOptions,
   tv: { type: "fa5", icon: "tv" } as dIconOptions,
@@ -104,6 +110,7 @@ export const iconOptions = {
 /**
  * Main and the only Icon component of the whole codebase
  *
+ * @version 1.1.0
  * @example
  *  <IconPrimr preset={`safe`} name={`arrow_left`} size={30} color={"black"} />
  */

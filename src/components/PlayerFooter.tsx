@@ -339,14 +339,14 @@ const CtnrFooter = (props: dFooterCtnr) => {
   );
 };
 
-interface dActionIcon extends dIconPrimr, dFooterCtnr {}
+interface dActionIcon extends dIconPrimr {}
 const ActionIcon = (props: dActionIcon) => (
   <IconPrimr
-    {...props}
     preset={"default"}
     size={20}
-    color={props.theme.current == "light" ? C.text : C.text01}
+    color={contrastColor(props)}
     containerStyle={{ padding: spacing[4] }}
+    {...props}
   />
 );
 

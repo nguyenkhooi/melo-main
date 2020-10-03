@@ -9,7 +9,7 @@ import QuickScrollList from "react-native-quick-scroll";
 import TrackPlayer from "react-native-track-player";
 import { setupPlayer } from "services";
 import styled from "styled-components/native";
-import { contrastColor, foregroundColor } from "themes/styles";
+import { contrastColor, foregroundColor } from "themes";
 import { dSCR, flatListItemLayout, getStatusBarHeight } from "utils";
 
 const ScreenHeight = Dimensions.get("window").height;
@@ -182,18 +182,7 @@ function TracksScreen(props: dSCR_Tracks) {
   }
 
   return <RenderActivityIndicator text={scanMessage} />;
-  // return (
-  //   <ShuffleText style={{ paddingTop: scale(100) }}>
-  //     {JSON.stringify(_podcasts)}
-  //   </ShuffleText>
-  // );
 }
-
-const ShuffleText = styled.Text`
-  font-family: ${CIRCULAR};
-  font-size: 14px;
-  color: ${foregroundColor};
-`;
 
 export default connector(TracksScreen);
 

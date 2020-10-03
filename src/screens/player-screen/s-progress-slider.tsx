@@ -1,17 +1,20 @@
 import { PRODUCT_SANS } from "assets";
-import { connector } from "engines";
+import { sstyled } from "components";
+import { connector, dRedux } from "engines";
 import React from "react";
-import { Dimensions, ViewStyle } from "react-native";
+import { Dimensions, ViewStyle, View, Text } from "react-native";
 import Slider from "react-native-slider";
 import TrackPlayer, { ProgressComponent } from "react-native-track-player";
-import styled, { withTheme } from "styled-components/native";
+import { withTheme } from "styled-components/native";
 import { contrastTransColor } from "themes";
-import { scale } from "utils";
+import { dSCR, scale } from "utils";
 
 const ScreenWidth = Dimensions.get("window").width;
 const SliderWidth = ScreenWidth * 0.82;
 
-class ProgressSlider extends ProgressComponent {
+interface P extends dRedux, dSCR, ProgressComponent {}
+
+class S_ProgressSlider extends ProgressComponent<P> {
   msToSec(ms) {
     return parseInt(ms / 1000, 10);
   }
@@ -46,7 +49,7 @@ class ProgressSlider extends ProgressComponent {
       theme,
     } = this.props;
     return (
-      <Wrapper>
+      <CtnrSlider {...this.props}>
         <Slider
           value={this.getProgress()}
           style={styles.sliderStyle}
@@ -57,35 +60,38 @@ class ProgressSlider extends ProgressComponent {
           thumbStyle={{ ...styles.thumbStyle, backgroundColor: theme.contrast }}
           onValueChange={this.seekTo}
         />
-        <TimeWrapper>
-          <Time>{this.timePassed(currentTrack.duration)}</Time>
-          <Time>{this.secToTimeDuration(currentTrack.duration)}</Time>
-        </TimeWrapper>
-      </Wrapper>
+        <CtnrTime {...this.props}>
+          <TxtTime {...this.props}>
+            {this.timePassed(currentTrack.duration)}
+          </TxtTime>
+          <TxtTime {...this.props}>
+            {this.secToTimeDuration(currentTrack.duration)}
+          </TxtTime>
+        </CtnrTime>
+      </CtnrSlider>
     );
   }
 }
 
-export default connector(withTheme(ProgressSlider));
+export default connector(withTheme(S_ProgressSlider));
 
-const Wrapper = styled.View`
-  flex-direction: column;
-  align-items: center;
-`;
+const CtnrSlider = sstyled(View)({
+  flexDirection: "column",
+  alignItems: "center",
+});
 
-const TimeWrapper = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  width: ${SliderWidth}px;
-  margin-top: -0px;
-`;
+const CtnrTime = sstyled(View)({
+  flexDirection: "row",
+  justifyContent: "space-between",
+  alignItems: "center",
+  width: SliderWidth,
+});
 
-const Time = styled.Text`
-  font-family: ${PRODUCT_SANS};
-  font-size: 12px;
-  color: ${contrastTransColor(0.75)};
-`;
+const TxtTime = sstyled(Text)((props) => ({
+  fontFamily: PRODUCT_SANS,
+  fontSize: 12,
+  color: contrastTransColor(0.75)(props),
+}));
 
 const styles = {
   sliderStyle: {

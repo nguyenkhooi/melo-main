@@ -5,7 +5,7 @@ import {
   SetCurrentTrackAction,
   SetPlayerAction,
   ToggleLoopAction,
-  ToggleShuffleAction
+  ToggleShuffleAction,
 } from "../types";
 
 /**
@@ -81,23 +81,6 @@ export const sethPlayback = ({
         return dispatch(setCurrentTrack(prevTrack));
         break;
     }
-  } catch (error) {
-    errorReporter(error);
-  }
-};
-
-export const setForward = (
-  currentTrackList: TrackProps[],
-  currentTrack: TrackProps,
-  isShuffle: boolean
-) => async (dispatch: Dispatch<SetCurrentTrackAction | SetPlayerAction>) => {
-  try {
-    let nextTrack = isShuffle
-      ? currentTrackList[getRandomNumber(0, currentTrackList.length)]
-      : currentTrack.index === currentTrackList.length - 1
-      ? currentTrackList[0]
-      : currentTrackList[currentTrack.index + 1];
-    dispatch(setCurrentTrack(nextTrack));
   } catch (error) {
     errorReporter(error);
   }

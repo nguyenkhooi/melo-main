@@ -9,7 +9,7 @@ const ImageSize = Dimensions.get("window").width * 0.82;
  * Cover Art inside PlayerScreen
  * @param props
  */
-export const CoverArt = (props) => {
+export const $_CoverArt = (props) => {
   const imgSrc = props.artwork ? { uri: props.artwork } : img.placeholder;
   // return <Cover {...props} source={imgSrc} />;
   return (

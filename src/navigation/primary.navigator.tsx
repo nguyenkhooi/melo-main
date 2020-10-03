@@ -1,6 +1,7 @@
 import {
   createStackNavigator,
-  TransitionPresets
+  StackNavigationOptions,
+  TransitionPresets,
 } from "@react-navigation/stack";
 import R from "ramda";
 import React from "react";
@@ -21,10 +22,12 @@ const stackOptions = {
 const SCR_KEYS = R.keys(stackOptions);
 export type enum_PrimaryStack = KeyOf<typeof stackOptions>;
 
-const screenOptions = {
+const screenOptions: StackNavigationOptions = {
   ...TransitionPresets.ModalPresentationIOS,
   gestureEnabled: true,
   cardOverlayEnabled: true,
+  /** Modal swipe distance */
+  gestureResponseDistance: { vertical: 500 },
 };
 
 function PrimaryStack() {
