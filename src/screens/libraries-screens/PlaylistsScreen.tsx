@@ -70,6 +70,7 @@ function PlaylistsScreen(props: dSCR_Playlists) {
     <View style={[bottomMargin]}>
       <Kitt.Button
         appearance="ghost"
+        size="small"
         onPress={() => setModal(true)}
         accessoryLeft={(props: dAccessory) => (
           <IconPrimr

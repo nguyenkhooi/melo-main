@@ -32,7 +32,7 @@ function PlayerScreen(props: dSCR_Player) {
 
   return (
     <ImageBackground
-      source={{ uri: theme.current == "light" ? "" : currentTrack.artwork }}
+      source={{ uri: theme.current == "light" ? null : currentTrack.artwork }}
       blurRadius={40}
       style={{ width: "100%", height: "100%" }}
     >
@@ -69,7 +69,7 @@ function PlayerScreen(props: dSCR_Player) {
             sliderWidth={DEVICE_WIDTH}
             itemWidth={DEVICE_WIDTH * 0.8}
           /> */}
-          <CoverArt src={currentTrack.artwork} />
+          <CoverArt artwork={currentTrack.artwork} />
           <TextWrapper>
             <Title numberOfLines={1}>{currentTrack.title || "unknown"}</Title>
             <Artist numberOfLines={1}>{currentTrack.artist}</Artist>

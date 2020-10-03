@@ -1,23 +1,16 @@
 import { CIRCULAR } from "assets";
-import { OptionsModal, RenderTrack, ScreenTitle } from "components";
+import { Kitt, OptionsModal, RenderTrack, ScreenTitle } from "components";
 import RenderActivityIndicator from "components/RenderActivityIndicator";
 import { scanMessage } from "constants";
 import { connector, dRedux } from "engines";
 import React, { useEffect, useState } from "react";
-import {
-  Animated,
-  Dimensions,
-  StatusBar,
-  TouchableOpacity,
-  View,
-  ViewStyle
-} from "react-native";
+import { Animated, Dimensions, StatusBar, View, ViewStyle } from "react-native";
 import QuickScrollList from "react-native-quick-scroll";
 import TrackPlayer from "react-native-track-player";
 import { setupPlayer } from "services";
 import styled from "styled-components/native";
 import { contrastColor, foregroundColor } from "themes/styles";
-import { dSCR, flatListItemLayout, getStatusBarHeight, scale } from "utils";
+import { dSCR, flatListItemLayout, getStatusBarHeight } from "utils";
 
 const ScreenHeight = Dimensions.get("window").height;
 const StatusBarHeight = StatusBar.currentHeight;
@@ -35,6 +28,7 @@ function TracksScreen(props: dSCR_Tracks) {
     playback: { currentTrack, shuffle },
     media: { mediaFiles },
     //* redux actions
+    getMedia,
     setShuffle,
     showFooter,
     setCurrentTrackList,
@@ -43,6 +37,7 @@ function TracksScreen(props: dSCR_Tracks) {
 
   const [scrollY] = useState(new Animated.Value(0));
   const [modal, setModal] = useState({ visible: false, item: {} });
+  const [_isFetched, shouldFetch] = React.useState(false);
 
   useEffect(() => {
     let unsubscribe = navigation.addListener("focus", showFooter);
@@ -53,6 +48,14 @@ function TracksScreen(props: dSCR_Tracks) {
       () => currentTrack.id !== "000" && TrackPlayer.add(currentTrack)
     );
   }, []);
+
+  function fetchMedia() {
+    shouldFetch(true);
+    getMedia();
+    setTimeout(() => {
+      shouldFetch(false);
+    }, 1000);
+  }
 
   const renderMargin =
     currentTrack.id !== "000" ? { marginBottom: 60, flex: 1 } : { flex: 1 };
@@ -71,7 +74,18 @@ function TracksScreen(props: dSCR_Tracks) {
           style={{ paddingTop: getStatusBarHeight("safe"), ...renderMargin }}
         >
           <ScreenTitle title={"Your Melo"} />
-          <TouchableOpacity
+          <Kitt.Button
+            appearance="ghost"
+            style={{ alignSelf: "flex-start" }}
+            size="small"
+            onPress={async () => {
+              setShuffle(true);
+              await setCurrentTrackList(mediaFiles, shuffle);
+            }}
+          >
+            Shuffle 'Em All
+          </Kitt.Button>
+          {/* <TouchableOpacity
             onPress={async () => {
               setShuffle(true);
               await setCurrentTrackList(mediaFiles, shuffle);
@@ -80,10 +94,12 @@ function TracksScreen(props: dSCR_Tracks) {
             <ShuffleText style={{ padding: scale(15) }}>
               Shuffle 'Em All
             </ShuffleText>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <QuickScrollList
             keyExtractor={(asset) => asset.id.toString()}
             data={mediaFiles}
+            refreshing={_isFetched}
+            onRefresh={fetchMedia}
             // data={[
             //   {
             //     id: "1111",
