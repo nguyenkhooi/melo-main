@@ -2,9 +2,17 @@ import { CIRCULAR } from "assets";
 import { Kitt, OptionsModal, RenderTrack, ScreenTitle } from "components";
 import RenderActivityIndicator from "components/RenderActivityIndicator";
 import { scanMessage } from "constants";
-import { connector, dRedux } from "engines";
+import { connector, dRedux, fn } from "engines";
+import R from "ramda";
 import React, { useEffect, useState } from "react";
-import { Animated, Dimensions, StatusBar, View, ViewStyle } from "react-native";
+import {
+  Animated,
+  Dimensions,
+  StatusBar,
+  Text,
+  View,
+  ViewStyle,
+} from "react-native";
 import QuickScrollList from "react-native-quick-scroll";
 import TrackPlayer from "react-native-track-player";
 import { setupPlayer } from "services";
@@ -26,14 +34,15 @@ function TracksScreen(props: dSCR_Tracks) {
     navigation,
     //* redux state
     playback: { currentTrack, shuffle },
-    media: { mediaFiles, mediaLoaded },
+    media: { mediaLoaded, mediaFiles, nowPlayingTracks },
     //* redux actions
     getMedia,
     setShuffle,
     showFooter,
-    setCurrentTrackList,
+    setNowPlayingTracks,
     // setCurrentList,
   } = props;
+  const indexedTracks = R.sortBy(R.prop("index"))(mediaFiles);
 
   const [scrollY] = useState(new Animated.Value(0));
   const [modal, setModal] = useState({ visible: false, item: {} });
@@ -59,11 +68,6 @@ function TracksScreen(props: dSCR_Tracks) {
 
   const renderMargin =
     currentTrack.id !== "000" ? { marginBottom: 60, flex: 1 } : { flex: 1 };
-  const headerHeight = scrollY.interpolate({
-    inputRange: [0, 20],
-    outputRange: [50, 0],
-    extrapolate: "clamp",
-  });
 
   if (mediaLoaded) {
     if (mediaFiles.length > 0) {
@@ -73,31 +77,29 @@ function TracksScreen(props: dSCR_Tracks) {
         <View
           style={{ paddingTop: getStatusBarHeight("safe"), ...renderMargin }}
         >
-          <ScreenTitle title={"Your Melo"} />
+          <ScreenTitle
+            title={
+              "Your Melo" +
+              ": " +
+              mediaFiles.length +
+              " - " +
+              nowPlayingTracks.length
+            }
+          />
           <Kitt.Button
             appearance="ghost"
             style={{ alignSelf: "flex-start" }}
             size="small"
             onPress={async () => {
-              setShuffle(true);
-              await setCurrentTrackList(mediaFiles, shuffle);
+              setShuffle(true, nowPlayingTracks);
             }}
           >
             Shuffle 'Em All
           </Kitt.Button>
-          {/* <TouchableOpacity
-            onPress={async () => {
-              setShuffle(true);
-              await setCurrentTrackList(mediaFiles, shuffle);
-            }}
-          >
-            <ShuffleText style={{ padding: scale(15) }}>
-              Shuffle 'Em All
-            </ShuffleText>
-          </TouchableOpacity> */}
+          {/* <Text>{R.pluck("title")(nowPlayingTracks)}</Text> */}
           <QuickScrollList
             keyExtractor={(asset) => asset.id.toString()}
-            data={mediaFiles}
+            data={indexedTracks}
             refreshing={_isFetched}
             onRefresh={fetchMedia}
             // data={[
@@ -154,15 +156,12 @@ function TracksScreen(props: dSCR_Tracks) {
             )}
             scrollEventThrottle={16}
             contentContainerStyle={styles.flatlistContent}
-            initialScrollIndex={currentTrack.index || undefined}
+            // initialScrollIndex={currentTrack.index || undefined}
             itemHeight={itemHeight}
             viewportHeight={ViewportHeight}
             rightOffset={10}
             thumbStyle={styles.thumbStyle}
           />
-          <Animated.View
-            style={[styles.header, { height: headerHeight }]}
-          ></Animated.View>
 
           <OptionsModal
             selectedTrack={modal.item}

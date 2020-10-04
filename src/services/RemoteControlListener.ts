@@ -61,7 +61,7 @@ async function bgService() {
     console.log("remote-queue-end...");
     let { playback, media } = store.getState();
     let { currentTrack, shuffle, loop } = playback;
-    let { mediaFiles } = media;
+    let { mediaFiles, nowPlayingTracks  } = media;
     // console.log("current state: ", playback);
     // console.warn("current media: ", mediaFiles.length);
     if (position > 0) {

@@ -8,8 +8,8 @@ import {
   rename_playlist
 } from "../types";
 
-//* Object of playlist folders; starting with Favourites
-const INITIAL_STATE: PlaylistState = { Favourites: [] };
+//* Object of playlist folders; starting with Favorites
+const INITIAL_STATE: PlaylistState = { Favorites: [] };
 
 export function playlists(state = INITIAL_STATE, action: dPlaylistActions) {
   switch (action.type) {

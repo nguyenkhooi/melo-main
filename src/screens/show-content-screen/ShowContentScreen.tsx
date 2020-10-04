@@ -9,8 +9,9 @@ function ShowFolderScreen(props: dSCR_ShowFolder) {
   const {
     navigation,
     route,
+    media: { mediaFiles, nowPlayingTracks },
     playback: { shuffle },
-    setCurrentList,
+    setNowPlayingTracks,
     hideFooter,
   } = props;
   const [modal, setModal] = useState({ visible: false, item: {} });
@@ -24,9 +25,9 @@ function ShowFolderScreen(props: dSCR_ShowFolder) {
   return (
     <View style={{ flex: 1 }}>
       <Button
-        title="Play"
+        title={mediaFiles.length + " - " + nowPlayingTracks.length}
         onPress={() => {
-          setCurrentList(route.params.content, shuffle);
+          setNowPlayingTracks(route.params.content, true);
         }}
       />
 

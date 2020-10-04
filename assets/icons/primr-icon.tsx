@@ -81,6 +81,12 @@ export const iconOptions = {
   pen: { type: "fa5", icon: "pen" } as dIconOptions,
   placeholder: { type: "fa5", icon: "kickstarter-k" } as dIconOptions,
   play: { type: "fa5", icon: "play" } as dIconOptions,
+  playlist: {
+    type: "material-community",
+    icon: "playlist-music",
+    scale: 1.4,
+  } as dIconOptions,
+
   plus: { type: "fa5", icon: "plus" } as dIconOptions,
   rocket: { type: "fa5", icon: "rocket" } as dIconOptions,
   share: { type: "fa5", icon: "share-alt" } as dIconOptions,
@@ -110,7 +116,7 @@ export const iconOptions = {
 /**
  * Main and the only Icon component of the whole codebase
  *
- * @version 1.1.0
+ * @version 1.10.4
  * @example
  *  <IconPrimr preset={`safe`} name={`arrow_left`} size={30} color={"black"} />
  */
@@ -120,6 +126,7 @@ export default function IconPrimr(props: dIconPrimr) {
     name = "placeholder",
     size = 20,
     color = "dodgerblue",
+    disabled = false,
     containerStyle = {},
     onPress,
   } = props;
@@ -153,7 +160,11 @@ export default function IconPrimr(props: dIconPrimr) {
     const BrandedIcon = getType(type);
     const IconContainer = !!onPress ? TouchableOpacity : View;
     return (
-      <IconContainer style={_containerStyle} onPress={onPress}>
+      <IconContainer
+        disabled={disabled}
+        style={_containerStyle}
+        onPress={onPress}
+      >
         <BrandedIcon name={icon} solid size={size * scale} color={color} />
       </IconContainer>
     );

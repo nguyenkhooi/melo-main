@@ -3,7 +3,7 @@ import { dMediaActions, dMediaState } from "../types";
 const INITIAL_STATE: dMediaState = {
   mediaFiles: [],
   mediaLoaded: false,
-  currentTrackList: [],
+  nowPlayingTracks: [],
 };
 
 export function media(
@@ -12,9 +12,9 @@ export function media(
 ) {
   switch (action.type) {
     case "get_media_success":
-      return { mediaLoaded: true, mediaFiles: action.payload };
-    case "current_track_list":
-      return { ...state, currentTrackList: action.payload };
+      return { ...state, mediaLoaded: true, mediaFiles: action.payload };
+    case "now_playing_tracks":
+      return { ...state, nowPlayingTracks: action.payload };
     case "rename_track": {
       let mediaArr = [...state.mediaFiles];
       let index = mediaArr.findIndex((i) => i.id === action.payload.id);

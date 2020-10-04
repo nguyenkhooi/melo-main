@@ -9,7 +9,7 @@ import { DEVICE_WIDTH, scale } from "utils";
 interface dPlaybackControl extends dRedux {}
 function S_PlaybackControl(props: dPlaybackControl) {
   const {
-    media: { mediaFiles },
+    media: { mediaFiles, nowPlayingTracks },
     playback: { currentTrack, loop, shuffle },
     player: { isPlaying },
     sethPlayback,
@@ -18,7 +18,6 @@ function S_PlaybackControl(props: dPlaybackControl) {
     onNext,
     onBack,
   } = props;
-  let currentTrackList = mediaFiles;
 
   return (
     <CtnrMain {...props}>
@@ -26,7 +25,7 @@ function S_PlaybackControl(props: dPlaybackControl) {
         {...props}
         type="sub"
         name="shuffle"
-        onPress={() => setShuffle(!shuffle)}
+        onPress={() => setShuffle(!shuffle, nowPlayingTracks, currentTrack)}
         color={
           shuffle ? foregroundColor(props) : contrastTransColor(0.35)(props)
         }
@@ -40,7 +39,7 @@ function S_PlaybackControl(props: dPlaybackControl) {
           sethPlayback({
             type: "bwd",
             currentTrack,
-            currentTrackList,
+            nowPlayingTracks,
             isShuffle: shuffle,
           });
         }}
@@ -64,7 +63,7 @@ function S_PlaybackControl(props: dPlaybackControl) {
           sethPlayback({
             type: "fwd",
             currentTrack,
-            currentTrackList,
+            nowPlayingTracks,
             isShuffle: shuffle,
           });
         }}

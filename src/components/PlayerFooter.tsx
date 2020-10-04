@@ -100,13 +100,13 @@ const CtnrFooter = (props: dFooterCtnr) => {
   const {
     footer: { footerVisible },
     player: { isPlaying },
-    media: { mediaFiles },
+    media: { mediaFiles, nowPlayingTracks },
     playback: { currentTrack, shuffle },
     sethPlayback,
+    setShuffle,
     theme,
     children,
   } = props;
-  const currentTrackList = mediaFiles;
 
   /**
    * Run `_onToggleFooter()` ani every time `footerVisible` changes
@@ -139,12 +139,6 @@ const CtnrFooter = (props: dFooterCtnr) => {
 
   const _opacityFooter = panY.interpolate({
     inputRange: [-60, 0, 60],
-    outputRange: [0, 1, 0],
-    extrapolate: "clamp",
-  });
-
-  const _opacityButtons = panY.interpolate({
-    inputRange: [-20, 0, 20],
     outputRange: [0, 1, 0],
     extrapolate: "clamp",
   });
@@ -182,8 +176,14 @@ const CtnrFooter = (props: dFooterCtnr) => {
         /** If scroll up pass threshold, open `player-scr` */
         if (gestureState.dy < -Y_SWIPE_DELTA) {
           shouldYSwipeable(false);
-          navigate("player-scr");
-          shouldYSwipeable(true);
+          Animated.timing(panY, {
+            toValue: -150,
+            duration: 100,
+            useNativeDriver: true,
+          }).start(() => {
+            navigate("player-scr");
+            shouldYSwipeable(true);
+          });
         }
         /** If scroll not pass threshold, return to initial pos */
         if (gestureState.dy > -Y_SWIPE_DELTA && gestureState.dy < 0) {
@@ -221,7 +221,7 @@ const CtnrFooter = (props: dFooterCtnr) => {
             shouldXSwipeable(false);
             sethPlayback({
               type: "fwd",
-              currentTrackList,
+              nowPlayingTracks,
               currentTrack,
               isShuffle: shuffle,
             });
@@ -231,7 +231,7 @@ const CtnrFooter = (props: dFooterCtnr) => {
             shouldXSwipeable(false);
             sethPlayback({
               type: "bwd",
-              currentTrackList,
+              nowPlayingTracks,
               currentTrack,
               isShuffle: shuffle,
             });
@@ -259,7 +259,7 @@ const CtnrFooter = (props: dFooterCtnr) => {
     } else {
       // onHideFooter();
       Animated.timing(panY, {
-        toValue: -70,
+        toValue: -150,
         duration: 100,
         useNativeDriver: true,
       }).start();
@@ -298,7 +298,8 @@ const CtnrFooter = (props: dFooterCtnr) => {
       </Animated.View>
       <Animated.View
         style={{
-          opacity: _opacityButtons,
+          transform: [{ translateY: _transY }],
+          opacity: _opacityFooter,
           position: "absolute",
           right: 0,
           flexDirection: "row",
@@ -309,31 +310,50 @@ const CtnrFooter = (props: dFooterCtnr) => {
           <ActionIcon
             {...props}
             name="pause"
-            onPress={() =>
-              sethPlayback({
-                type: "pause",
-              })
-            }
+            onPress={() => sethPlayback({ type: "pause" })}
+            disabled={!footerVisible}
           />
         ) : (
           <ActionIcon
             {...props}
             name="play"
             onPress={() => sethPlayback({ type: "play" })}
+            disabled={!footerVisible}
           />
         )}
         <ActionIcon
           {...props}
           name="forward"
+          disabled={!footerVisible}
           onPress={() =>
             sethPlayback({
               type: "fwd",
-              currentTrackList,
+              nowPlayingTracks,
               currentTrack,
               isShuffle: shuffle,
             })
           }
         />
+        {/* <ActionIcon
+          {...props}
+          name="backward"
+          disabled={!footerVisible}
+          onPress={() =>
+            sethPlayback({
+              type: "bwd",
+              nowPlayingTracks,
+              currentTrack,
+              isShuffle: shuffle,
+            })
+          }
+        />
+        <ActionIcon
+          {...props}
+          name="shuffle"
+          color={shuffle ? "dodgerblue" : "grey"}
+          disabled={!footerVisible}
+          onPress={() => setShuffle(!shuffle, nowPlayingTracks, currentTrack)}
+        /> */}
       </Animated.View>
     </View>
   );

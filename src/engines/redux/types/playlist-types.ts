@@ -36,7 +36,7 @@ export interface RemoveFromPlaylistAction {
 }
 
 export interface PlaylistState {
-  Favourites: dTracks;
+  Favorites: dTracks;
 }
 
 export type dPlaylistActions =

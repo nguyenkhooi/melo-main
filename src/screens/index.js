@@ -14,4 +14,5 @@ export { default as ShowPlaylistScreen } from "./show-playlist-screen/ShowPlayli
 export { default as SplashScreen } from "./SplashScreen";
 export { default as TabArrangementScreen } from "./tab-arrangement-screens/TabArrangement";
 export { default as TracksScreen } from "./tracks-screen/TrackScreen";
+export { default as NowPlayingScreen } from "./now-playing-screen/NowPlayingScreen";
 

@@ -1,16 +1,25 @@
-const INITIAL_STATE = {
+import { dPlaybackActions, dPlaybackState } from "../types";
+
+const INITIAL_STATE: dPlaybackState = {
   currentTrack: {
+    /** Assuming index is the og position of this track in mediaFiles */
+    // index: 0,
+    position: "dasd",
     id: "000",
     title: "Melo",
     artist: "Khoi Tran",
     duration: 0,
     artwork: "cover",
+    url: "",
   },
   loop: false,
   shuffle: false,
 };
 
-export function playback(state = INITIAL_STATE, action) {
+export function playback(
+  state: dPlaybackState = INITIAL_STATE,
+  action: dPlaybackActions
+) {
   switch (action.type) {
     case "current_track":
       return { ...state, currentTrack: action.payload };

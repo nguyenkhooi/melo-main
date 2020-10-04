@@ -3,12 +3,8 @@ import { connector, dRedux } from "engines";
 import React from "react";
 import { Dimensions } from "react-native";
 import styled from "styled-components/native";
+import { foregroundColor, contrastColor, contrastTransColor } from "themes";
 import { TrackProps } from "utils";
-import {
-  contrastColor,
-  contrastTransColor,
-  foregroundColor
-} from "../themes/styles";
 import Icon from "./Icon";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
@@ -23,12 +19,20 @@ export const RenderTrack = connector(
       const {
         item,
         playback: { currentTrack },
+        media: { mediaFiles, nowPlayingTracks },
         setCurrentTrack,
+        setNowPlayingTracks,
         setOptions,
       } = props;
 
       function onTrackPress() {
-        if (item.id !== currentTrack.id) setCurrentTrack(item);
+        if (item.id !== currentTrack.id) {
+          /** If track is pressed, set `nowPlayingTracks == mediaFiles`
+           * NOTE should think more about this
+           */
+          setNowPlayingTracks(mediaFiles);
+          setCurrentTrack(item);
+        }
       }
 
       const coverSrc = item.artwork ? { uri: item.artwork } : img.placeholder;

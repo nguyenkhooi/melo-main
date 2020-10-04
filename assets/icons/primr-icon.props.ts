@@ -18,6 +18,7 @@ export interface dIconPrimr {
   containerStyle?: ViewStyle;
   preset?: "default" | "safe" | "circular" | "header";
   onPress?(): void;
+  disabled?: boolean;
 }
 export type enum_IconPkg =
   | "ion"

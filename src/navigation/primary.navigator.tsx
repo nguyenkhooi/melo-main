@@ -5,8 +5,13 @@ import {
 } from "@react-navigation/stack";
 import R from "ramda";
 import React from "react";
-import { AddToPlaylist, LyricsScreen, PlayerScreen } from "screens";
-import { KeyOf } from "utils";
+import {
+  AddToPlaylist,
+  LyricsScreen,
+  NowPlayingScreen,
+  PlayerScreen,
+} from "screens";
+import { DEVICE_HEIGHT, KeyOf } from "utils";
 import MainStack from "./main.navigator";
 
 const stackOptions = {
@@ -17,6 +22,10 @@ const stackOptions = {
     options: { title: "Add to playlist" },
   },
   "lyrics-scr": { component: LyricsScreen },
+  "now-playing-scr": {
+    component: NowPlayingScreen,
+    options: { gestureResponseDistance: { vertical: 60 } },
+  },
 };
 
 const SCR_KEYS = R.keys(stackOptions);
@@ -27,7 +36,7 @@ const screenOptions: StackNavigationOptions = {
   gestureEnabled: true,
   cardOverlayEnabled: true,
   /** Modal swipe distance */
-  gestureResponseDistance: { vertical: 500 },
+  gestureResponseDistance: { vertical: DEVICE_HEIGHT * 0.6 },
 };
 
 function PrimaryStack() {

@@ -6,9 +6,9 @@ import {
   checkStoragePermissions,
   cleanupMedia,
   errorReporter,
-  IS_ANDROID
+  IS_ANDROID,
 } from "utils";
-import { CurrentTrackAction, GetMediaAction } from "../types";
+import { NowPlayingTracksAction, GetMediaAction } from "../types";
 
 // import MusicFiles from 'react-native-get-music-files-v3dev-test';
 
@@ -70,10 +70,10 @@ const options = {
 
 /**
  * Get media from device then
- * distribute them to `current_track_list` and `mediaFiles`
+ * distribute them to `now_playing_tracks` and `mediaFiles`
  */
 export const getMedia = () => async (
-  dispatch: Dispatch<GetMediaAction | CurrentTrackAction>
+  dispatch: Dispatch<GetMediaAction | NowPlayingTracksAction>
 ) => {
   try {
     // let granted = await checkStoragePermissions();
@@ -83,22 +83,23 @@ export const getMedia = () => async (
     let { media } = store.getState();
     console.log("granted: ", media.mediaLoaded && granted);
     if (media.mediaLoaded && granted) {
-      let media = await getMediaWithCovers();
-      dispatch({ type: "get_media_success", payload: media });
-      dispatch({ type: "current_track_list", payload: media });
+      let tracks = await getMediaWithCovers();
+      dispatch({ type: "get_media_success", payload: tracks });
+      if (media.nowPlayingTracks == []) {
+        dispatch({ type: "now_playing_tracks", payload: tracks });
+      }
     } else {
       console.log("New coming...");
       // let results = await MusicFiles.getAll(options);
       /** Temporary set __MEDIA for ios since it doesn't have local db */
-      let media = IS_ANDROID
+      let tracks = IS_ANDROID
         ? cleanupMedia(await MusicFiles.getAll(options))
         : __MEDIA;
-      console.log("media:");
-      dispatch({ type: "get_media_success", payload: media });
-      dispatch({ type: "current_track_list", payload: media });
-      let mediaWithCovers = await getMediaWithCovers();
-      dispatch({ type: "get_media_success", payload: mediaWithCovers });
-      dispatch({ type: "current_track_list", payload: mediaWithCovers });
+      dispatch({ type: "get_media_success", payload: tracks });
+      dispatch({ type: "now_playing_tracks", payload: tracks });
+      let trackWithCovers = await getMediaWithCovers();
+      dispatch({ type: "get_media_success", payload: trackWithCovers });
+      dispatch({ type: "now_playing_tracks", payload: trackWithCovers });
     }
   } catch (e) {
     errorReporter(e);

@@ -1,7 +1,7 @@
 import { dTracks, TrackProps } from "utils";
 
 export const get_media_success = "get_media_success";
-export const current_track_list = "current_track_list";
+export const now_playing_tracks = "now_playing_tracks";
 export const rename_track = "rename_track";
 export const delete_track = "delete_track";
 
@@ -10,8 +10,8 @@ export interface GetMediaAction {
   payload: dTracks;
 }
 
-export interface CurrentTrackAction {
-  type: typeof current_track_list;
+export interface NowPlayingTracksAction {
+  type: typeof now_playing_tracks;
   payload: dTracks;
 }
 
@@ -36,14 +36,13 @@ export interface dMediaState {
    */
   mediaLoaded: boolean;
   /**
-   * Current Track List. When app is 1st started,
-   * currentTrackList == mediaFiles
+   * List of now playing tracks
    */
-  currentTrackList: dTracks;
+  nowPlayingTracks: dTracks;
 }
 
 export type dMediaActions =
   | GetMediaAction
-  | CurrentTrackAction
+  | NowPlayingTracksAction
   | RenameTrackAction
   | DeleteTrackAction;
