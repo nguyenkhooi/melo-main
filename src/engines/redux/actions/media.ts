@@ -1,12 +1,7 @@
 import TrackPlayer from "react-native-track-player";
 import { Dispatch } from "redux";
-import { errorReporter, getRandomNumber, TrackProps } from "utils";
-import {
-  dPlaybackActions,
-  GetMediaAction,
-  NowPlayingTracksAction,
-  SetCurrentTrackAction,
-} from "../types";
+import { errorReporter, TrackProps } from "utils";
+import { NowPlayingTracksAction, SetCurrentTrackAction } from "../types";
 import { sethPlayback } from "./playback";
 
 /**
@@ -14,16 +9,21 @@ import { sethPlayback } from "./playback";
  * Think of users playing specific albums, artists, playlists...
  * @param nowPlayingTracks
  * @param shuffle
+ *
+ * NOTE: The only one that can "reset" and "add" TrackPlayer is setNowPlayingTracks
+ * so that TrackPlayer's playing list == nowPlayingLists
  */
 export const setNowPlayingTracks = (
   nowPlayingTracks: TrackProps[],
-  shouldPlay?: boolean
+  shouldPlay?: boolean,
+  startingTrack?: TrackProps
 ) => async (
   dispatch: Dispatch<NowPlayingTracksAction | SetCurrentTrackAction>
 ) => {
   try {
+    let _nowPlayingTracks = nowPlayingTracks;
     await TrackPlayer.reset();
-    await TrackPlayer.add(nowPlayingTracks);
+    await TrackPlayer.add(_nowPlayingTracks);
     // let reIndexedTracks = [];
     // for (let i = 0; i < nowPlayingTracks.length; i++) {
     //   reIndexedTracks[i] = { ...nowPlayingTracks[i], index: i };
@@ -31,11 +31,12 @@ export const setNowPlayingTracks = (
     // }
     dispatch({
       type: "now_playing_tracks",
-      payload: nowPlayingTracks,
+      payload: _nowPlayingTracks,
     });
 
     if (shouldPlay) {
-      dispatch({ type: "current_track", payload: nowPlayingTracks[0] });
+      const _startingTrack = startingTrack || _nowPlayingTracks[0];
+      dispatch({ type: "current_track", payload: _startingTrack });
       dispatch(sethPlayback({ type: "play" }));
       // dispatch({ type: "" });
     }

@@ -26,6 +26,7 @@ import { dIconOptions, dIconPrimr, enum_IconPkg } from "./primr-icon.props";
  */
 export const iconOptions = {
   admin: { type: "fa5", icon: "user-tie" } as dIconOptions,
+  archive: { type: "fa5", icon: "archive" } as dIconOptions,
   arrow_left: {
     type: "fa5",
     icon: Platform.OS == "android" ? "arrow-left" : "chevron-left",
@@ -77,6 +78,7 @@ export const iconOptions = {
     icon: "numeric-1-box",
   } as dIconOptions,
   minus: { type: "fa5", icon: "minus" } as dIconOptions,
+  music: { type: "fa5", icon: "music" } as dIconOptions,
   pause: { type: "fa5", icon: "pause" } as dIconOptions,
   pen: { type: "fa5", icon: "pen" } as dIconOptions,
   placeholder: { type: "fa5", icon: "kickstarter-k" } as dIconOptions,
@@ -89,6 +91,7 @@ export const iconOptions = {
 
   plus: { type: "fa5", icon: "plus" } as dIconOptions,
   rocket: { type: "fa5", icon: "rocket" } as dIconOptions,
+  search: { type: "fa5", icon: "search" } as dIconOptions,
   share: { type: "fa5", icon: "share-alt" } as dIconOptions,
   shuffle: { type: "entypo", icon: "shuffle", scale: 1.1 } as dIconOptions,
   sms: { type: "fa5", icon: "sms" } as dIconOptions,
