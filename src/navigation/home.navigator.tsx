@@ -1,14 +1,20 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Icon } from "components";
+import { IconPrimr } from "assets";
 import R from "ramda";
 import React from "react";
 import { ViewStyle } from "react-native";
-import { SearchScreen, SettingsScreen, TracksScreen } from "screens";
+import {
+  SearchScreen,
+  SettingsScreen,
+  TestScreen,
+  TracksScreen
+} from "screens";
 import { withTheme } from "styled-components/native";
 import { getBottomSpace, KeyOf } from "utils";
 import TopMaterialTabNav from "./libraries.navigator";
 
 const stackOptions = {
+  "test-scr": { component: TestScreen },
   "tracks-scr": { component: TracksScreen },
   "search-scr": { component: SearchScreen },
   "libraries-scr": { component: TopMaterialTabNav },
@@ -38,38 +44,47 @@ function HomeBottomTab(props) {
   function iconProvider(route: enum_HomeBottomTab) {
     return ({ focused, color }) => {
       switch (route) {
+        case "test-scr":
+          return (
+            <IconPrimr
+              preset={`safe`}
+              name={"placeholder"}
+              size={focused ? 24 : 21}
+              color={color}
+            />
+          );
         case "tracks-scr":
           return (
-            <Icon
-              name="music"
-              type="fa5"
+            <IconPrimr
+              preset={`safe`}
+              name={"music"}
               size={focused ? 24 : 21}
               color={color}
             />
           );
         case "search-scr":
           return (
-            <Icon
-              name="search"
-              type="fa5"
+            <IconPrimr
+              preset={`safe`}
+              name={"search"}
               size={focused ? 24 : 21}
               color={color}
             />
           );
         case "libraries-scr":
           return (
-            <Icon
-              name="archive"
-              type="fa5"
+            <IconPrimr
+              preset={`safe`}
+              name={"archive"}
               size={focused ? 24 : 21}
               color={color}
             />
           );
         case "settings-scr":
           return (
-            <Icon
-              name="cog"
-              type="fa5"
+            <IconPrimr
+              preset={`safe`}
+              name={"cog"}
               size={focused ? 24 : 21}
               color={color}
             />
@@ -80,7 +95,8 @@ function HomeBottomTab(props) {
 
   return (
     <BottomTabs.Navigator
-      initialRouteName="tracks-scr"
+      // initialRouteName="tracks-scr"
+      initialRouteName="test-scr"
       backBehavior="initialRoute"
       tabBarOptions={tabBarOptions}
       lazy={false}

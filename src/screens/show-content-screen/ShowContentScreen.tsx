@@ -34,7 +34,11 @@ function ShowFolderScreen(props: dSCR_ShowFolder) {
       <FlatList
         keyExtractor={(asset) => asset.id.toString()}
         renderItem={({ item }) => (
-          <RenderTrack item={item} setOptions={setModal} />
+          <RenderTrack
+            parent="contents-scr"
+            item={item}
+            setOptions={setModal}
+          />
         )}
         data={route.params.content}
         getItemLayout={flatListItemLayout}

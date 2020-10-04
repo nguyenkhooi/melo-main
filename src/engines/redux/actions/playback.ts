@@ -1,15 +1,52 @@
 import R from "ramda";
 import TrackPlayer from "react-native-track-player";
 import { Dispatch } from "redux";
-import { errorReporter, getRandomNumber, TrackProps } from "utils";
+import { errorReporter, TrackProps } from "utils";
 import {
-  GetMediaAction,
   NowPlayingTracksAction,
   SetCurrentTrackAction,
   SetPlayerAction,
   ToggleLoopAction,
-  ToggleShuffleAction,
+  ToggleShuffleAction
 } from "../types";
+
+/**
+ * Set current track to play.
+ * Think of users pressing specific track to play it
+ * @param currentTrack
+ */
+export const setCurrentTrackk = (currentTrack?: TrackProps) => async (
+  dispatch: Dispatch<SetCurrentTrackAction | SetPlayerAction>
+) => {
+  try {
+    // await TrackPlayer.reset();
+    // await TrackPlayer.add(currentTrack);
+    // dispatch({
+    //   type: "current_track",
+    //   payload: currentTrack,
+    // });
+    // TrackPlayer.play();
+    // dispatch({
+    //   type: "set_playback",
+    //   payload: true,
+    // });
+
+    const currentTrack = await TrackPlayer.getTrack(
+      await TrackPlayer.getCurrentTrack()
+    );
+    dispatch({
+      type: "current_track",
+      payload: currentTrack,
+    });
+    TrackPlayer.play();
+    dispatch({
+      type: "set_playback",
+      payload: true,
+    });
+  } catch (e) {
+    errorReporter(e);
+  }
+};
 
 /**
  * Set current track to play.
@@ -68,21 +105,31 @@ export const sethPlayback = ({
           "the end?",
           currentTrack.id === nowPlayingTracks[nowPlayingTracks.length - 1].id
         );
-        let nextTrack =
-          currentTrack.id === nowPlayingTracks[nowPlayingTracks.length - 1].id
-            ? nowPlayingTracks[0]
-            : nowPlayingTracks[currentTrackPosition + 1];
+        // let nextTrack =
+        //   currentTrack.id === nowPlayingTracks[nowPlayingTracks.length - 1].id
+        //     ? nowPlayingTracks[0]
+        //     : nowPlayingTracks[currentTrackPosition + 1];
 
-        return dispatch(setCurrentTrack(nextTrack));
+        currentTrack.id === nowPlayingTracks[nowPlayingTracks.length - 1].id
+          ? TrackPlayer.skip(nowPlayingTracks[0].id)
+          : TrackPlayer.skipToNext();
+
+        // return dispatch(setCurrentTrack(nextTrack));
+        return dispatch(setCurrentTrack());
         break;
       case "bwd":
         console.log("the start?", currentTrack.id === nowPlayingTracks[0].id);
-        let prevTrack =
-          currentTrack.id === nowPlayingTracks[0].id
-            ? nowPlayingTracks[nowPlayingTracks.length - 1]
-            : nowPlayingTracks[currentTrackPosition - 1];
+        // let prevTrack =
+        //   currentTrack.id === nowPlayingTracks[0].id
+        //     ? nowPlayingTracks[nowPlayingTracks.length - 1]
+        //     : nowPlayingTracks[currentTrackPosition - 1];
 
-        return dispatch(setCurrentTrack(prevTrack));
+        currentTrack.id === nowPlayingTracks[0].id
+          ? TrackPlayer.skip(nowPlayingTracks[nowPlayingTracks.length - 1].id)
+          : TrackPlayer.skipToPrevious();
+
+        // return dispatch(setCurrentTrack(prevTrack));
+        return dispatch(setCurrentTrack());
         break;
     }
   } catch (error) {

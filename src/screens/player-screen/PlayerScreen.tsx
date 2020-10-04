@@ -1,24 +1,22 @@
 import { CIRCULAR, IconPrimr } from "assets";
-import { sstyled, RenderTrack } from "components";
+import { sstyled } from "components";
 import { connector, dRedux } from "engines";
 import React, { useEffect } from "react";
 import {
   Dimensions,
   ImageBackground,
-  View,
-  Text,
-  ScrollView,
+
+  Text, View
 } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
-import QuickScrollList from "react-native-quick-scroll";
+import { Modalize } from "react-native-modalize";
 import Carousel from "react-native-snap-carousel";
 import { withTheme } from "styled-components/native";
 import { contrastColor, contrastTransColor } from "themes";
-import { dSCR, flatListItemLayout, spacing, TrackProps } from "utils";
+import { dSCR, spacing, TrackProps } from "utils";
+import { S_CoversCarousel } from "./s-cover-carousel";
 import S_PlaybackControl from "./s-playback-control";
 import S_ProgressSlider from "./s-progress-slider";
-import { S_CoversCarousel } from "./s-cover-carousel";
-import { Modalize } from "react-native-modalize";
 
 const PlayerWidth = Dimensions.get("window").width * 0.82;
 

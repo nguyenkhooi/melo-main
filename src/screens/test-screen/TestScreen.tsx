@@ -1,15 +1,22 @@
 import { CIRCULAR } from "assets";
-import { Kitt, OptionsModal, RenderTrack, ScreenTitle } from "components";
+import { Kitt, RenderToast, ScreenTitle, Txt } from "components";
 import RenderActivityIndicator from "components/RenderActivityIndicator";
 import { scanMessage } from "constants";
-import { connector, dRedux } from "engines";
+import { connector, dRedux, fn } from "engines";
 import R from "ramda";
 import React, { useEffect, useState } from "react";
-import { Animated, Dimensions, StatusBar, View, ViewStyle } from "react-native";
-import QuickScrollList from "react-native-quick-scroll";
+import {
+  Animated,
+  Dimensions,
+  ScrollView,
+  StatusBar,
+  ViewStyle
+} from "react-native";
+import TrackPlayer from "react-native-track-player";
+import { setupPlayer } from "services";
 import styled from "styled-components/native";
 import { contrastColor } from "themes";
-import { dSCR, flatListItemLayout, getStatusBarHeight } from "utils";
+import { dSCR, getStatusBarHeight } from "utils";
 
 const ScreenHeight = Dimensions.get("window").height;
 const StatusBarHeight = StatusBar.currentHeight;
@@ -36,28 +43,26 @@ function TracksScreen(props: dSCR_Tracks) {
   const indexedTracks = R.sortBy(R.prop("index"))(mediaFiles);
 
   const [scrollY] = useState(new Animated.Value(0));
-  const [modal, setModal] = useState({ visible: false, item: {} });
+  const [_log, setLog] = useState("Get Result");
   const [_isFetched, shouldFetch] = React.useState(false);
 
   useEffect(() => {
     let unsubscribe = navigation.addListener("focus", showFooter);
     return unsubscribe;
   }, [navigation]);
-  // useEffect(() => {
-  //   setupPlayer().then(() => {
-  //     !!currentTrack.id &&
-  //       currentTrack.id !== "000" &&
-  //       TrackPlayer.add(currentTrack);
-  //   });
-  // }, []);
-
-  function fetchMedia() {
-    shouldFetch(true);
-    getMedia();
-    setTimeout(() => {
-      shouldFetch(false);
-    }, 1000);
-  }
+  useEffect(() => {
+    setupPlayer();
+  }, []);
+  const getResult = async () => {
+    const tpS = await TrackPlayer.getState();
+    const tpCT = await TrackPlayer.getCurrentTrack();
+    const tpV = await TrackPlayer.getVolume();
+    const tpQ = await TrackPlayer.getQueue();
+    setLog(tpS + " - " + tpCT + " - " + tpV);
+    // !!currentTrack.id &&
+    //   currentTrack.id !== "000" &&
+    //   TrackPlayer.add(currentTrack);
+  };
 
   const renderMargin =
     !!currentTrack.id && currentTrack.id !== "000"
@@ -69,12 +74,12 @@ function TracksScreen(props: dSCR_Tracks) {
       // if (1 == 1) {
       //   if (1 == 1) {
       return (
-        <View
+        <ScrollView
           style={{ paddingTop: getStatusBarHeight("safe"), ...renderMargin }}
         >
           <ScreenTitle
             title={
-              "Your Melo" +
+              "Test" +
               ": " +
               mediaFiles.length +
               " - " +
@@ -91,54 +96,75 @@ function TracksScreen(props: dSCR_Tracks) {
           >
             Shuffle 'Em All
           </Kitt.Button>
+          <Kitt.Button
+            onPress={async () => {
+              RenderToast({ title: "running..." });
+              await TrackPlayer.reset();
+              await TrackPlayer.add(nowPlayingTracks)
+                .then((r) => RenderToast({ title: "succesful" }))
+                .catch((error) => {
+                  console.warn("errrrrr: ", error.message);
+                  RenderToast({ title: "Error" });
+                });
+            }}
+          >
+            Set TrackPlayer
+          </Kitt.Button>
+          <Kitt.Button
+            onPress={async () => {
+              RenderToast({ title: "resetting..." });
+              await TrackPlayer.reset();
+              RenderToast({ title: "succesful" });
+            }}
+          >
+            Reset TrackPlayer
+          </Kitt.Button>
+          <Kitt.Button
+            onPress={async () => {
+              getResult();
+            }}
+          >
+            {JSON.stringify(_log)}
+          </Kitt.Button>
+          <Kitt.Button
+            onPress={async () => {
+              await TrackPlayer.play();
+            }}
+          >
+            {"▶️"}
+          </Kitt.Button>
+          <Kitt.Button
+            onPress={async () => {
+              await TrackPlayer.pause();
+            }}
+          >
+            {"⏸️"}
+          </Kitt.Button>
+          <Kitt.Button
+            onPress={async () => {
+              await TrackPlayer.skipToNext().catch((error) =>
+                RenderToast({ message: error.message })
+              );
+            }}
+          >
+            {"⏩"}
+          </Kitt.Button>
+          <Kitt.Button
+            onPress={async () => {
+              await TrackPlayer.skipToPrevious().catch((error) =>
+                RenderToast({ message: error.message })
+              );
+            }}
+          >
+            {"◀️"}
+          </Kitt.Button>
+          <Txt>{JSON.stringify(fn.js.vLookup(nowPlayingTracks, "title"))}</Txt>
           {/* <Text>{R.pluck("title")(nowPlayingTracks)}</Text> */}
-          <QuickScrollList
+          {/* <QuickScrollList
             keyExtractor={(asset) => asset.id.toString()}
             data={indexedTracks}
             refreshing={_isFetched}
             onRefresh={fetchMedia}
-            // data={[
-            //   {
-            //     id: "1111",
-            //     url:
-            //       "https://drive.google.com/uc?export=download&id=1AjPwylDJgR8DOnmJWeRgZzjsohi-7ekj",
-            //     title: "Longing",
-            //     artist: "David Chavez",
-            //     artwork:
-            //       "https://cms-assets.tutsplus.com/uploads/users/114/posts/34296/image/Final-image.jpg",
-            //     duration: 143,
-            //   },
-            //   {
-            //     id: "2222",
-            //     url:
-            //       "https://drive.google.com/uc?export=download&id=1VM9_umeyzJn0v1pRzR1BSm9y3IhZ3c0E",
-            //     title: "Soul Searching (Demo)",
-            //     artist: "David Chavez",
-            //     artwork:
-            //       "https://images-na.ssl-images-amazon.com/images/I/717VbeZb0bL._AC_SL1500_.jpg",
-            //     duration: 77,
-            //   },
-            //   {
-            //     id: "3333",
-            //     url:
-            //       "https://drive.google.com/uc?export=download&id=1bmvPOy2IVbkUROgm0dqiZry_miiL4OqI",
-            //     title: "Lullaby (Demo)",
-            //     artist: "David Chavez",
-            //     artwork:
-            //       "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/59dd3a65996579.5b073c5b3628d.gif",
-            //     duration: 71,
-            //   },
-            //   {
-            //     id: "4444",
-            //     url:
-            //       "https://drive.google.com/uc?export=download&id=1V-c_WmanMA9i5BwfkmTs-605BQDsfyzC",
-            //     title: "Rhythm City (Demo)",
-            //     artist: "David Chavez",
-            //     artwork:
-            //       "https://www.digitalmusicnews.com/wp-content/uploads/2020/04/DaBaby-Blame-It-On-Baby.jpg",
-            //     duration: 106,
-            //   },
-            // ]}
             renderItem={({ item }) => (
               <RenderTrack
                 parent="track-scr"
@@ -166,8 +192,8 @@ function TracksScreen(props: dSCR_Tracks) {
             selectedTrack={modal.item}
             isVisible={modal.visible}
             onPressCancel={() => setModal({ ...modal, visible: false })}
-          />
-        </View>
+          /> */}
+        </ScrollView>
       );
     }
     return (
