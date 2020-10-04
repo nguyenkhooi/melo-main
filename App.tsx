@@ -4,7 +4,7 @@ import RootNavigator, {
   navigationRef,
   setRootNavigation,
   useBackButtonHandler,
-  useNavigationPersistence,
+  useNavigationPersistence
 } from "navigation";
 import React, { useEffect, useState } from "react";
 import { YellowBox } from "react-native";
@@ -19,7 +19,7 @@ export default function App() {
   const [timePassed, setTimePassed] = useState(false);
 
   useEffect(() => {
-    setTimeout(() => setTimePassed(true), 750);
+    // setTimeout(() => setTimePassed(true), 750);
     store.dispatch({ type: "set_playback", payload: false }); // To make sure currentTrack is paused at startup
     store.dispatch({ type: "set_shuffle", payload: false }); // Tempor disable shuffle at startup since getMedia() will return `indexedTracks`
     // if (Text.defaultProps == null) Text.defaultProps = {};
@@ -44,7 +44,7 @@ export default function App() {
         />
       );
     }
-    return <SplashScreen />;
+    return <SplashScreen isMediaReady={(b) => setTimePassed(b)} />;
   }
 
   return (

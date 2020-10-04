@@ -6,9 +6,9 @@ import {
   checkStoragePermissions,
   cleanupMedia,
   errorReporter,
-  IS_ANDROID,
+  IS_ANDROID
 } from "utils";
-import { NowPlayingTracksAction, GetMediaAction } from "../types";
+import { GetMediaAction, NowPlayingTracksAction } from "../types";
 
 // import MusicFiles from 'react-native-get-music-files-v3dev-test';
 
@@ -72,7 +72,7 @@ const options = {
  * Get media from device then
  * distribute them to `now_playing_tracks` and `mediaFiles`
  */
-export const getMedia = () => async (
+export const getMedia = (callback) => async (
   dispatch: Dispatch<GetMediaAction | NowPlayingTracksAction>
 ) => {
   try {
@@ -101,7 +101,9 @@ export const getMedia = () => async (
       dispatch({ type: "get_media_success", payload: trackWithCovers });
       dispatch({ type: "now_playing_tracks", payload: trackWithCovers });
     }
+    callback(true);
   } catch (e) {
+    callback(false);
     errorReporter(e);
   }
 };

@@ -1,14 +1,14 @@
 import TrackPlayer from "react-native-track-player";
-import { store } from "../store";
 import { getRandomNumber } from "utils";
+import { store } from "../store";
 
 let flag = false;
 
 async function backgroundPlayback(track) {
   console.log("bg playtrack...");
-//   if (flag) return;
-//   flag = true;
-//   setTimeout(() => (flag = false), 250);
+  //   if (flag) return;
+  //   flag = true;
+  //   setTimeout(() => (flag = false), 250);
   await TrackPlayer.reset();
   await TrackPlayer.add(track);
   store.dispatch({ type: "current_track", payload: track });
@@ -61,7 +61,7 @@ async function bgService() {
     console.log("remote-queue-end...");
     let { playback, media } = store.getState();
     let { currentTrack, shuffle, loop } = playback;
-    let { mediaFiles, nowPlayingTracks  } = media;
+    let { mediaFiles, nowPlayingTracks } = media;
     // console.log("current state: ", playback);
     // console.warn("current media: ", mediaFiles.length);
     if (position > 0) {
@@ -71,10 +71,10 @@ async function bgService() {
       } else {
         backgroundPlayback(
           shuffle
-            ? mediaFiles[getRandomNumber(0, mediaFiles.length)]
-            : currentTrack.index === mediaFiles.length - 1
-            ? mediaFiles[0]
-            : mediaFiles[currentTrack.index + 1]
+            ? nowPlayingTracks[getRandomNumber(0, nowPlayingTracks.length)]
+            : currentTrack.index === nowPlayingTracks.length - 1
+            ? nowPlayingTracks[0]
+            : nowPlayingTracks[currentTrack.index + 1]
         );
       }
     }

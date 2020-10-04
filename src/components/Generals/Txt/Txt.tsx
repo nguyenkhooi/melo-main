@@ -4,51 +4,51 @@ import { sstyled } from "../../Sstyled";
 const scale = (number: number) => number;
 
 const H1: typeof Text = sstyled(Text)({
-  fontSize: scale(36) * 2,
+  fontSize: scale(36),
   fontWeight: "800",
 });
 const H2: typeof Text = sstyled(Text)({
-  fontSize: scale(32) * 2,
+  fontSize: scale(32),
   fontWeight: "800",
 });
 const H3: typeof Text = sstyled(Text)({
-  fontSize: scale(30) * 2,
+  fontSize: scale(30),
   fontWeight: "800",
 });
 const H4: typeof Text = sstyled(Text)({
-  fontSize: scale(26) * 2,
+  fontSize: scale(26),
   fontWeight: "800",
 });
 const H5: typeof Text = sstyled(Text)({
-  fontSize: scale(22) * 2,
+  fontSize: scale(22),
   fontWeight: "800",
 });
 const H6: typeof Text = sstyled(Text)({
-  fontSize: scale(18) * 2,
+  fontSize: scale(18),
   fontWeight: "800",
 });
 const S1: typeof Text = sstyled(Text)({
-  fontSize: scale(15) * 2,
+  fontSize: scale(15),
   fontWeight: "600",
 });
 const S2: typeof Text = sstyled(Text)({
-  fontSize: scale(13) * 2,
+  fontSize: scale(13),
   fontWeight: "600",
 });
 const P1: typeof Text = sstyled(Text)({
-  fontSize: scale(15) * 2,
+  fontSize: scale(15),
   fontWeight: "400",
 });
 const P2: typeof Text = sstyled(Text)({
-  fontSize: scale(13) * 2,
+  fontSize: scale(13),
   fontWeight: "400",
 });
 const C1: typeof Text = sstyled(Text)({
-  fontSize: scale(12) * 2,
+  fontSize: scale(12),
   fontWeight: "800",
 });
 const C2: typeof Text = sstyled(Text)({
-  fontSize: scale(12) * 2,
+  fontSize: scale(12),
   fontWeight: "800",
 });
 

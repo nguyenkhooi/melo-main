@@ -6,8 +6,7 @@ import { ViewStyle } from "react-native";
 import {
   SearchScreen,
   SettingsScreen,
-  TestScreen,
-  TracksScreen
+  TestScreen
 } from "screens";
 import { withTheme } from "styled-components/native";
 import { getBottomSpace, KeyOf } from "utils";
@@ -15,7 +14,7 @@ import TopMaterialTabNav from "./libraries.navigator";
 
 const stackOptions = {
   "test-scr": { component: TestScreen },
-  "tracks-scr": { component: TracksScreen },
+  "tracks-scr": { component: SearchScreen },
   "search-scr": { component: SearchScreen },
   "libraries-scr": { component: TopMaterialTabNav },
   "settings-scr": { component: SettingsScreen },
