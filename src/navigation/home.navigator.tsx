@@ -14,7 +14,7 @@ import { getBottomSpace, KeyOf } from "utils";
 import TopMaterialTabNav from "./libraries.navigator";
 
 const stackOptions = {
-  "test-scr": { component: TestScreen },
+  // "test-scr": { component: TestScreen },
   "tracks-scr": { component: TracksScreen },
   "search-scr": { component: SearchScreen },
   "libraries-scr": { component: TopMaterialTabNav },

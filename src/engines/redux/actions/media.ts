@@ -2,7 +2,7 @@ import TrackPlayer from "react-native-track-player";
 import { Dispatch } from "redux";
 import { errorReporter, TrackProps } from "utils";
 import { NowPlayingTracksAction, SetCurrentTrackAction } from "../types";
-import { sethPlayback } from "./playback";
+import { setCurrentTrackID, sethPlayback } from "./playback";
 
 /**
  * Set a `nowPlayingTracks` list, for index reference.
@@ -16,8 +16,12 @@ import { sethPlayback } from "./playback";
  * so that TrackPlayer's playing list == nowPlayingLists
  */
 export const setNowPlayingTracks = (
+  
   nowPlayingTracks: TrackProps[],
+  /**  Should we play this list? */
   shouldPlay?: boolean,
+
+  /** Specific starting track, if needed */
   startingTrack?: TrackProps
 ) => async (
   dispatch: Dispatch<NowPlayingTracksAction | SetCurrentTrackAction>
@@ -33,8 +37,9 @@ export const setNowPlayingTracks = (
 
     if (shouldPlay) {
       const _startingTrack = startingTrack || nowPlayingTracks[0];
-      dispatch({ type: "current_track", payload: _startingTrack });
-      dispatch(sethPlayback({ type: "play" }));
+      dispatch(setCurrentTrackID(_startingTrack.id));
+      // dispatch({ type: "current_track", payload: _startingTrack });
+      // dispatch(sethPlayback({ type: "play" }));
     }
     //* NOTE below is for reference, is deprecated now
     // /**

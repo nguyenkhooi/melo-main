@@ -1,8 +1,9 @@
 import { OptionsModal, RenderTrack } from "components";
+import Buttoon from "components/Generals/Buttoon/Buttoon";
 import { connector, dRedux } from "engines";
 import React, { useEffect, useState } from "react";
 import { Button, FlatList, View } from "react-native";
-import { dSCR, flatListItemLayout } from "utils";
+import { dSCR, flatListItemLayout, scale, spacing } from "utils";
 
 interface dSCR_ShowFolder extends dSCR, dRedux {}
 function ShowFolderScreen(props: dSCR_ShowFolder) {
@@ -24,13 +25,6 @@ function ShowFolderScreen(props: dSCR_ShowFolder) {
 
   return (
     <View style={{ flex: 1 }}>
-      <Button
-        title={mediaFiles.length + " - " + nowPlayingTracks.length}
-        onPress={() => {
-          setNowPlayingTracks(route.params.content, true);
-        }}
-      />
-
       <FlatList
         keyExtractor={(asset) => asset.id.toString()}
         renderItem={({ item }) => (
@@ -48,6 +42,28 @@ function ShowFolderScreen(props: dSCR_ShowFolder) {
         isVisible={modal.visible}
         onPressCancel={() => setModal({ ...modal, visible: false })}
       />
+      <View
+        style={{
+          position: "absolute",
+          bottom: scale(25),
+          right: spacing[5],
+        }}
+      >
+        <Buttoon
+          style={{ padding: 30, borderRadius: 100 }}
+          compact
+          size="giant"
+          progress={true}
+          icon={{ name: "play" }}
+          onPress={(xong) => {
+            setNowPlayingTracks(route.params.content, true);
+            navigation.navigate("player-scr");
+            setTimeout(() => {
+              xong();
+            }, 1000);
+          }}
+        ></Buttoon>
+      </View>
     </View>
   );
 }

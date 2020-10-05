@@ -1,4 +1,6 @@
 import { Button, ButtonProps } from "@ui-kitten/components";
+import { dIconPrimr, IconPrimr } from "assets";
+import { dAccessory } from "components";
 // import { IconPrimr, PROPS_IconPrimr } from "assets/";
 import R from "ramda";
 import * as React from "react";
@@ -6,7 +8,7 @@ import { ActivityIndicator, Keyboard } from "react-native";
 import { scale } from "utils";
 
 interface P extends ButtonProps {
-  icon?: PROPS_IconPrimr & {
+  icon?: dIconPrimr & {
     /** Is icon on the right? */
     right?: boolean;
   };
@@ -21,7 +23,21 @@ interface P extends ButtonProps {
 
 /**
  * This is button component
- * @param props
+ * 
+ * @example
+ * <Buttoon
+    progress={true}
+    onPress={(xong) => {
+      setTimeout(() => {
+        xong();
+      }, 1000);
+    }}
+    icon={{ name: "play" }}
+  >
+    Play
+  </Buttoon>
+ * 
+ * @version 0.10.5 
  */
 export default function Buttoon(props: P) {
   const {
@@ -46,7 +62,7 @@ export default function Buttoon(props: P) {
       onPress={_onPress}
       style={[
         props.style,
-        compact && { alignSelf: "center" },
+        !!compact && { alignSelf: "center" },
         appearance == "icon" && {
           borderRadius: scale(100),
           borderWidth: 0,
@@ -61,7 +77,7 @@ export default function Buttoon(props: P) {
         ) : (
           !R.isNil(icon) && R.isNil(icon.right) && (
             <IconPrimr
-              preset={`safe`}
+              preset={"default"}
               name={`arrow_left`}
               size={props.style.width * 0.8}
               color={props.style.tintColor}

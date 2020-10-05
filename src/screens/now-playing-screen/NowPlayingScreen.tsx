@@ -15,17 +15,17 @@ function NowPlayingScreen(props: dSCR_Tracks) {
     playback: { currentTrack },
     // setCurrentList,
   } = props;
-  React.useEffect(() => {
-    let unsubscribe = navigation.addListener("focus", () =>
-      {
-        
-        refList.current?.scrollToIndex({
-        animated: true,
-        index: currentTrack.index,
-      })}
-    );
-    return unsubscribe;
-  }, [navigation]);
+  // React.useEffect(() => {
+  //   let unsubscribe = navigation.addListener("focus", () =>
+  //     {
+
+  //       refList.current?.scrollToIndex({
+  //       animated: true,
+  //       index: currentTrack.index,
+  //     })}
+  //   );
+  //   return unsubscribe;
+  // }, [navigation]);
 
   const [modal, setModal] = useState({ visible: false, item: {} });
   const refList = React.useRef<FlatList>();

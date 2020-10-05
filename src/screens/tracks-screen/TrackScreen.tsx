@@ -23,9 +23,11 @@ import {
   getBottomSpace,
   getStatusBarHeight,
   scale,
+  spacing,
   TrackProps,
 } from "utils";
 import { FlatList } from "react-native-gesture-handler";
+import Buttoon from "components/Generals/Buttoon/Buttoon";
 
 const ScreenHeight = Dimensions.get("window").height;
 const StatusBarHeight = StatusBar.currentHeight;
@@ -40,6 +42,7 @@ function TracksScreen(props: dSCR_Tracks) {
   const {
     navigation,
     //* redux state
+    footer: { footerVisible },
     playback: { currentTrack, shuffle },
     media: { mediaLoaded, mediaFiles, nowPlayingTracks },
     //* redux actions
@@ -77,67 +80,13 @@ function TracksScreen(props: dSCR_Tracks) {
       return (
         <View style={{ paddingTop: getStatusBarHeight("safe"), flex: 1 }}>
           <ScreenTitle title={"Your Melo"} />
-          <Kitt.Button
-            appearance="ghost"
-            style={{ alignItems: "flex-start" }}
-            size="small"
-            onPress={async () => {
-              await setShuffle(true, mediaFiles);
-              await sethPlayback({ type: "fwd" });
-            }}
-          >
-            {`Shuffle 'Em Alls: ${mediaFiles.length} - ${
-              nowPlayingTracks.length
-            }${shuffle ? "*" : ""}`}
-          </Kitt.Button>
+
           {/* <Txt.P1>{R.pluck("title")(nowPlayingTracks)}</Txt.P1> */}
-          <FlatList
+          <QuickScrollList
             keyExtractor={(asset) => asset.id.toString()}
             data={indexedTracks}
             refreshing={_isFetched}
             onRefresh={fetchMedia}
-            // data={[
-            //   {
-            //     id: "1111",
-            //     url:
-            //       "https://drive.google.com/uc?export=download&id=1AjPwylDJgR8DOnmJWeRgZzjsohi-7ekj",
-            //     title: "Longing",
-            //     artist: "David Chavez",
-            //     artwork:
-            //       "https://cms-assets.tutsplus.com/uploads/users/114/posts/34296/image/Final-image.jpg",
-            //     duration: 143,
-            //   },
-            //   {
-            //     id: "2222",
-            //     url:
-            //       "https://drive.google.com/uc?export=download&id=1VM9_umeyzJn0v1pRzR1BSm9y3IhZ3c0E",
-            //     title: "Soul Searching (Demo)",
-            //     artist: "David Chavez",
-            //     artwork:
-            //       "https://images-na.ssl-images-amazon.com/images/I/717VbeZb0bL._AC_SL1500_.jpg",
-            //     duration: 77,
-            //   },
-            //   {
-            //     id: "3333",
-            //     url:
-            //       "https://drive.google.com/uc?export=download&id=1bmvPOy2IVbkUROgm0dqiZry_miiL4OqI",
-            //     title: "Lullaby (Demo)",
-            //     artist: "David Chavez",
-            //     artwork:
-            //       "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/59dd3a65996579.5b073c5b3628d.gif",
-            //     duration: 71,
-            //   },
-            //   {
-            //     id: "4444",
-            //     url:
-            //       "https://drive.google.com/uc?export=download&id=1V-c_WmanMA9i5BwfkmTs-605BQDsfyzC",
-            //     title: "Rhythm City (Demo)",
-            //     artist: "David Chavez",
-            //     artwork:
-            //       "https://www.digitalmusicnews.com/wp-content/uploads/2020/04/DaBaby-Blame-It-On-Baby.jpg",
-            //     duration: 106,
-            //   },
-            // ]}
             renderItem={({ item }: { item: TrackProps }) => (
               <RenderTrack
                 parent="track-scr"
@@ -153,16 +102,41 @@ function TracksScreen(props: dSCR_Tracks) {
               width: "100%",
               height: getBottomSpace() + scale(500),
             }}
-            // itemHeight={itemHeight}
-            // viewportHeight={ViewportHeight}
-            // rightOffset={10}
-            // thumbStyle={styles.thumbStyle}
+            itemHeight={itemHeight}
+            viewportHeight={ViewportHeight}
+            rightOffset={10}
+            thumbStyle={styles.thumbStyle}
           />
           <OptionsModal
             selectedTrack={modal.item}
             isVisible={modal.visible}
             onPressCancel={() => setModal({ ...modal, visible: false })}
           />
+          <View
+            style={{
+              position: "absolute",
+              bottom: footerVisible ? scale(65) : scale(25),
+              right: spacing[5],
+            }}
+          >
+            <Buttoon
+              style={{ padding: 30, borderRadius: 100 }}
+              compact
+              size="giant"
+              progress={true}
+              icon={{ name: "shuffle" }}
+              onPress={async (xong) => {
+                await TrackPlayer.pause();
+                await setShuffle(true, mediaFiles);
+                await sethPlayback({ type: "fwd" });
+                xong();
+              }}
+            >
+              {/* {`Shuffle 'Em Alls: ${mediaFiles.length} - ${
+                nowPlayingTracks.length
+              }${shuffle ? "*" : ""}`} */}
+            </Buttoon>
+          </View>
         </View>
       );
     }

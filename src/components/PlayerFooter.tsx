@@ -319,7 +319,7 @@ const CtnrFooter = (props: dFooterCtnr) => {
           disabled={!footerVisible}
           onPress={() => sethPlayback({ type: "fwd" })}
         />
-        <ActionIcon
+        {/* <ActionIcon
           {...props}
           name="backward"
           disabled={!footerVisible}
@@ -331,7 +331,7 @@ const CtnrFooter = (props: dFooterCtnr) => {
           color={shuffle ? "dodgerblue" : "grey"}
           disabled={!footerVisible}
           onPress={() => setShuffle(!shuffle, nowPlayingTracks)}
-        />
+        /> */}
       </Animated.View>
     </View>
   );

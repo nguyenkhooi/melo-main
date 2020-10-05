@@ -82,9 +82,13 @@ export const RenderTrack: React.FC<dTrackComp> = connector(
         >
           <Thumbnail {...props} source={coverSrc} />
           <CtnrTrackInfo>
-            <Title numberOfLines={1} current={item.id === currentTrack.id}>
-              {/* {item.title} */}
-              {item.id}
+            <Title
+              {...props}
+              numberOfLines={1}
+              current={item.id === currentTrack.id}
+            >
+              {item.title}
+              {/* {item.id} */}
             </Title>
             <Artist {...props} numberOfLines={1}>
               {item.artist}
@@ -135,10 +139,11 @@ const CtnrTrackInfo = sstyled(View)({
   marginLeft: spacing[2],
 });
 
-const Title = sstyled(Txt.P1)({
+const Title = sstyled(Txt.P1)((p) => ({
   fontFamily: CIRCULAR,
   width: DEVICE_WIDTH / 2,
-});
+  color: p.current ? foregroundColor(p) : contrastColor(p),
+}));
 
 const Artist = sstyled(Txt.P2)((p) => ({
   fontFamily: CIRCULAR,
