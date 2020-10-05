@@ -1,4 +1,4 @@
-import { InputDialog, PROPS_Icon, ScreenTitle } from "components";
+import { InputDialog, PROPS_Icon, RenderToast, ScreenTitle } from "components";
 import ConfirmDialog from "components/ConfirmDialog";
 import ListItem from "components/ListItem";
 import { settings } from "constants";
@@ -68,12 +68,22 @@ function SettingsScreen(props: dSCR_Settings) {
     <ScrollView style={{ flex: 1, paddingTop: getStatusBarHeight("safe") }}>
       <ScreenTitle title={"Settings"} />
       <ListItem
-        onPress={() => setTheme(current === "dark" ? "light" : "dark")}
+        onPress={() => {
+          RenderToast({
+            title: "Setting theme...",
+            type: "info",
+            visibilityTime: 500,
+          });
+          setTimeout(() => {
+            setTheme(current === "dark" ? "light" : "dark");
+          }, 300);
+        }}
         iconProps={icons.darkMode}
         title={settings.darkMode.title}
         subtitle={settings.darkMode.subtitle}
         rightElement={
           <Switch
+            disabled={true}
             thumbColor={darkModeThumbColor}
             value={current === "dark"}
             trackColor={{ true: `${fgTrans}0.5)` }}

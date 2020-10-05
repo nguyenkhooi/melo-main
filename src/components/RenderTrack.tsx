@@ -75,8 +75,12 @@ export const RenderTrack: React.FC<dTrackComp> = connector(
 
       const coverSrc = item.artwork ? { uri: item.artwork } : img.placeholder;
       return (
-        <Touchable onPress={onTrackPress} activeOpacity={0.4}>
-          <Thumbnail source={coverSrc} />
+        <Touchable
+          onPress={onTrackPress}
+          onLongPress={() => setOptions({ visible: true, item })}
+          activeOpacity={0.4}
+        >
+          <Thumbnail {...props} source={coverSrc} />
           <CtnrTrackInfo>
             <Title numberOfLines={1} current={item.id === currentTrack.id}>
               {/* {item.title} */}
@@ -116,11 +120,12 @@ const Touchable = sstyled(TouchableOpacity)({
   paddingLeft: spacing[2],
 });
 
-const Thumbnail = sstyled(Image)({
+const Thumbnail = sstyled(Image)((p) => ({
   height: scale(50),
   width: scale(50),
   borderRadius: scale(3),
-});
+  backgroundColor: p.theme.elevatedBG,
+}));
 
 const CtnrTrackInfo = sstyled(View)({
   flexDirection: "column",
