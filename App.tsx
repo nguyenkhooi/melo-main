@@ -14,7 +14,6 @@ import { PersistGate } from "redux-persist/integration/react";
 import { persistor, store } from "store";
 import { setupPlayer } from "services";
 import SplashScreen from "./src/screens/SplashScreen";
-import { dRedux, setCurrentTrackID, setShuffle } from "engines";
 // import { Toasty } from "components";
 
 export default function App() {

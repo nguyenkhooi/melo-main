@@ -19,6 +19,7 @@ import { useTrackPlayerProgress } from "react-native-track-player/lib/hooks";
 import styled, { withTheme } from "styled-components/native";
 import { contrastColor, contrastTransColor } from "themes";
 import { DEVICE_WIDTH, dSCR, getBottomSpace, spacing } from "utils";
+import { Txt } from "./Generals";
 import ProgressBar from "./ProgressBar";
 import { sstyled } from "./Sstyled";
 
@@ -140,6 +141,17 @@ const CtnrFooter = (props: dFooterCtnr) => {
   const _opacityFooter = panY.interpolate({
     inputRange: [-60, 0, 60],
     outputRange: [0, 1, 0],
+    extrapolate: "clamp",
+  });
+
+  const _opacityFwd = panX.interpolate({
+    inputRange: [-50, 0, 50],
+    outputRange: [1, 0, 0],
+    extrapolate: "clamp",
+  });
+  const _opacityBwd = panX.interpolate({
+    inputRange: [-50, 0, 50],
+    outputRange: [0, 0, 1],
     extrapolate: "clamp",
   });
 
@@ -276,7 +288,7 @@ const CtnrFooter = (props: dFooterCtnr) => {
         <Animated.View
           {...XpanResponder.panHandlers}
           style={{
-            transform: [{ translateX: panX }],
+            // transform: [{ translateX: panX }],
             opacity: _opacityTrackInfo,
             justifyContent: "space-around",
           }}
@@ -286,6 +298,33 @@ const CtnrFooter = (props: dFooterCtnr) => {
           {/* </TouchableOpacity> */}
         </Animated.View>
       </Animated.View>
+      {/* <Animated.View
+        style={{
+          // transform: [{ translateY: _transY }],
+          opacity: _opacityFwd,
+          position: "absolute",
+          left: 30,
+          flexDirection: "row",
+          bottom: 0,
+        }}
+      >
+        <ActionIcon {...props} name="forward" disabled={!footerVisible} />
+        <Txt.P1>{"   "}Moving next...</Txt.P1>
+      </Animated.View>
+      <Animated.View
+        style={{
+          // transform: [{ translateY: _transY }],
+          opacity: _opacityBwd,
+          position: "absolute",
+          left: 30,
+          flexDirection: "row",
+          bottom: 0,
+        }}
+      >
+        <ActionIcon {...props} name="backward" disabled={!footerVisible} />
+        <Txt.P1>{"   "}Moving back...</Txt.P1>
+      </Animated.View> */}
+
       <Animated.View
         style={{
           transform: [{ translateY: _transY }],
