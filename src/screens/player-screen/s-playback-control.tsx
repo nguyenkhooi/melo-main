@@ -36,12 +36,7 @@ function S_PlaybackControl(props: dPlaybackControl) {
         name="backward"
         onPress={() => {
           onBack();
-          sethPlayback({
-            type: "bwd",
-            currentTrack,
-            nowPlayingTracks,
-            isShuffle: shuffle,
-          });
+          sethPlayback({ type: "bwd" });
         }}
       />
       <ActionIcon
@@ -60,12 +55,7 @@ function S_PlaybackControl(props: dPlaybackControl) {
         name="forward"
         onPress={() => {
           onNext();
-          sethPlayback({
-            type: "fwd",
-            currentTrack,
-            nowPlayingTracks,
-            isShuffle: shuffle,
-          });
+          sethPlayback({ type: "fwd" });
         }}
       />
       <ActionIcon

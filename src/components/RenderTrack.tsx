@@ -5,7 +5,6 @@ import { Dimensions } from "react-native";
 import styled, { withTheme } from "styled-components/native";
 import { contrastColor, contrastTransColor, foregroundColor } from "themes";
 import { TrackProps } from "utils";
-import Icon from "./Icon";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
@@ -85,7 +84,6 @@ export const RenderTrack: React.FC<dTrackComp> = connector(
             preset={`safe`}
             name={"dots_vertical"}
             size={20}
-            // color={"dodgerblue"}
             color={contrastTransColor(0.75)(props)}
             onPress={() => setOptions({ visible: true, item })}
           />

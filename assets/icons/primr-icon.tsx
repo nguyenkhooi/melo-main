@@ -59,8 +59,14 @@ export const iconOptions = {
   compass: { type: "fa5", icon: "compass" } as dIconOptions,
   cog: { type: "fa5", icon: "cog" } as dIconOptions,
   contacts: { type: "fa5", icon: "address-book" } as dIconOptions,
-  dots_horizontal: { type: "fa5", icon: "ellipsis-h" } as dIconOptions,
-  dots_vertical: { type: "fa5", icon: "ellipsis-v" } as dIconOptions,
+  dots_horizontal: {
+    type: "entypo",
+    icon: "dots-three-horizontal",
+  } as dIconOptions,
+  dots_vertical: {
+    type: "entypo",
+    icon: "dots-three-vertical",
+  } as dIconOptions,
   home: { type: "fa5", icon: "home" } as dIconOptions,
   exclamation_circle: {
     type: "fa5",
@@ -121,7 +127,7 @@ export const iconOptions = {
  *
  * @version 1.10.4
  * @example
- *  <IconPrimr preset={`safe`} name={`arrow_left`} size={30} color={"black"} />
+ *  <IconPrimr preset={"safe"} name={"arrow_left"} size={30} color={"dodgerblue"} />
  */
 export default function IconPrimr(props: dIconPrimr) {
   const {

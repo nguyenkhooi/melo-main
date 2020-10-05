@@ -1,16 +1,27 @@
 import { CIRCULAR } from "assets";
-import { Kitt, OptionsModal, RenderTrack, ScreenTitle } from "components";
+import {
+  Kitt,
+  OptionsModal,
+  RenderTrack,
+  ScreenTitle,
+  sstyled,
+  Txt,
+} from "components";
 import RenderActivityIndicator from "components/RenderActivityIndicator";
 import { scanMessage } from "constants";
 import { connector, dRedux, sethPlayback } from "engines";
 import R from "ramda";
 import React, { useEffect, useState } from "react";
 import { Animated, Dimensions, StatusBar, View, ViewStyle } from "react-native";
-import { FlatList } from "react-native-gesture-handler";
 import QuickScrollList from "react-native-quick-scroll";
-import styled from "styled-components/native";
+import styled, { withTheme } from "styled-components/native";
 import { contrastColor } from "themes";
-import { dSCR, flatListItemLayout, getStatusBarHeight } from "utils";
+import {
+  dSCR,
+  flatListItemLayout,
+  getStatusBarHeight,
+  TrackProps,
+} from "utils";
 
 const ScreenHeight = Dimensions.get("window").height;
 const StatusBarHeight = StatusBar.currentHeight;
@@ -31,7 +42,6 @@ function TracksScreen(props: dSCR_Tracks) {
     getMedia,
     setShuffle,
     showFooter,
-    setNowPlayingTracks,
     // setCurrentList,
   } = props;
   const indexedTracks = R.sortBy(R.prop("index"))(mediaFiles);
@@ -53,21 +63,16 @@ function TracksScreen(props: dSCR_Tracks) {
     }, 1000);
   }
 
-  const renderMargin =
-    !!currentTrack.id && currentTrack.id !== "000"
-      ? { marginBottom: 60, flex: 1 }
-      : { flex: 1 };
-
   if (mediaLoaded) {
     if (mediaFiles.length > 0) {
       // if (1 == 1) {
-      //   if (1 == 1) {
+      // if (1 == 1) {
       return (
         <View style={{ paddingTop: getStatusBarHeight("safe"), flex: 1 }}>
           <ScreenTitle title={"Your Melo"} />
           <Kitt.Button
             appearance="ghost"
-            style={{ alignItems : "flex-start" }}
+            style={{ alignItems: "flex-start" }}
             size="small"
             onPress={async () => {
               await setShuffle(true, mediaFiles);
@@ -126,7 +131,7 @@ function TracksScreen(props: dSCR_Tracks) {
             //     duration: 106,
             //   },
             // ]}
-            renderItem={({ item }) => (
+            renderItem={({ item }: { item: TrackProps }) => (
               <RenderTrack
                 parent="track-scr"
                 item={item}
@@ -142,7 +147,7 @@ function TracksScreen(props: dSCR_Tracks) {
             )}
             scrollEventThrottle={16}
             contentContainerStyle={styles.flatlistContent}
-            // initialScrollIndex={currentTrack.index || undefined}
+            initialScrollIndex={currentTrack.index || undefined}
             itemHeight={itemHeight}
             viewportHeight={ViewportHeight}
             rightOffset={10}
@@ -157,32 +162,29 @@ function TracksScreen(props: dSCR_Tracks) {
       );
     }
     return (
-      <MessageWrapper>
-        <Message numberOfLines={2}>
+      <CtnrMessage>
+        <TxtMessage {...props} numberOfLines={2}>
           {"Oops! Melo couldn't find any music on your device"}
-        </Message>
-      </MessageWrapper>
+        </TxtMessage>
+      </CtnrMessage>
     );
   }
 
   return <RenderActivityIndicator text={scanMessage} />;
 }
 
-export default connector(TracksScreen);
+export default connector(withTheme(TracksScreen));
 
-const MessageWrapper = styled.View`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-`;
-
-const Message = styled.Text`
-  font-family: ${CIRCULAR};
-  font-size: 16px;
-  color: ${contrastColor};
-  margin: 0 55px 0 55px;
-  text-align: center;
-`;
+const CtnrMessage = sstyled(View)({
+  flex: 1,
+  justifyContent: "center",
+  alignItems: "center",
+});
+const TxtMessage = sstyled(Txt.C1)((p) => ({
+  fontFamily: CIRCULAR,
+  color: contrastColor(p),
+  textAlign: "center",
+}));
 
 const styles = {
   header: {

@@ -18,7 +18,7 @@ import {
 import { useTrackPlayerProgress } from "react-native-track-player/lib/hooks";
 import styled, { withTheme } from "styled-components/native";
 import { contrastColor, contrastTransColor } from "themes";
-import { C, DEVICE_WIDTH, dSCR, getBottomSpace, spacing } from "utils";
+import { DEVICE_WIDTH, dSCR, getBottomSpace, spacing } from "utils";
 import ProgressBar from "./ProgressBar";
 import { sstyled } from "./Sstyled";
 

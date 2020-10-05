@@ -2,7 +2,7 @@ import { IconPrimr, CIRCULAR } from "assets";
 import { OptionsModal, RenderTrack, sstyled } from "components";
 import { connector, dRedux } from "engines";
 import React, { useState } from "react";
-import { FlatList, Text, View } from "react-native";
+import { Animated, FlatList, Text, View } from "react-native";
 import { withTheme } from "styled-components";
 import { contrastTransColor } from "themes";
 import { dSCR, spacing } from "utils";
@@ -12,15 +12,35 @@ function NowPlayingScreen(props: dSCR_Tracks) {
   const {
     navigation,
     media: { nowPlayingTracks },
+    playback: { currentTrack },
     // setCurrentList,
   } = props;
+  React.useEffect(() => {
+    let unsubscribe = navigation.addListener("focus", () =>
+      refList.current?.scrollToIndex({
+        animated: true,
+        index: currentTrack.index,
+      })
+    );
+    return unsubscribe;
+  }, [navigation]);
 
   const [modal, setModal] = useState({ visible: false, item: {} });
-
+  const refList = React.useRef<FlatList>();
   return (
     <View style={{}}>
       <CtnrNowPlaying {...props}>
-        <TxtSub {...props}>Coming up next • {nowPlayingTracks.length}</TxtSub>
+        <TxtSub
+          {...props}
+          onPress={() =>
+            refList.current.scrollToIndex({
+              animated: true,
+              index: currentTrack.index,
+            })
+          }
+        >
+          Coming up next • {nowPlayingTracks.length}
+        </TxtSub>
         <IconPrimr
           preset={"safe"}
           name={"chevron_down"}
@@ -31,11 +51,21 @@ function NowPlayingScreen(props: dSCR_Tracks) {
       </CtnrNowPlaying>
 
       <FlatList
+        ref={refList}
         keyExtractor={(asset) => asset.id.toString()}
         data={nowPlayingTracks}
         renderItem={({ item }) => (
           <RenderTrack item={item} setOptions={setModal} />
         )}
+        onScrollToIndexFailed={(info) => {
+          const wait = new Promise((resolve) => setTimeout(resolve, 500));
+          wait.then(() => {
+            refList.current?.scrollToIndex({
+              index: info.index,
+              animated: true,
+            });
+          });
+        }}
       />
 
       <OptionsModal
