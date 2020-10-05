@@ -25,7 +25,7 @@ function S_PlaybackControl(props: dPlaybackControl) {
         {...props}
         type="sub"
         name="shuffle"
-        onPress={() => setShuffle(!shuffle, nowPlayingTracks, currentTrack)}
+        onPress={() => setShuffle(!shuffle, nowPlayingTracks)}
         color={
           shuffle ? foregroundColor(props) : contrastTransColor(0.35)(props)
         }

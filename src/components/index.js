@@ -9,10 +9,9 @@ export { default as OptionsModal } from "./Modals/OptionsModal";
 export { default as PlayerFooter } from "./PlayerFooter";
 export * from "./Players";
 export { default as RenderToast } from "./RenderToast";
-export * from "./RenderTrack";
+export { default as RenderTrack } from "./RenderTrack";
 export * from "./ScreenLayout/ScreenHeader";
 export * from "./Sstyled";
-
 
 /**
 const getPodcastResult = async () => {

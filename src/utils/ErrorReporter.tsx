@@ -1,8 +1,9 @@
+import { ErrorInfo } from "react";
 // import RenderToast from "components/RenderToast";
 import { Alert, Linking } from "react-native";
 
-export function errorReporter(e) {
-  console.log("ERR: ", e);
+export function errorReporter(e: string, customMessage?: string) {
+  console.log("ERR " + customMessage + ": ", e);
   //   RenderToast({
   //     title: "Error",
   //     message: "Send error log to developers?",

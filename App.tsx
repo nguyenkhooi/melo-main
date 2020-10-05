@@ -4,7 +4,7 @@ import RootNavigator, {
   navigationRef,
   setRootNavigation,
   useBackButtonHandler,
-  useNavigationPersistence
+  useNavigationPersistence,
 } from "navigation";
 import React, { useEffect, useState } from "react";
 import { YellowBox } from "react-native";
@@ -12,6 +12,7 @@ import Toasty from "react-native-toast-message";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistor, store } from "store";
+import { setupPlayer } from "services";
 import SplashScreen from "./src/screens/SplashScreen";
 // import { Toasty } from "components";
 
@@ -19,9 +20,10 @@ export default function App() {
   const [timePassed, setTimePassed] = useState(false);
 
   useEffect(() => {
-    // setTimeout(() => setTimePassed(true), 750);
+    setTimeout(() => setTimePassed(true), 750);
     store.dispatch({ type: "set_playback", payload: false }); // To make sure currentTrack is paused at startup
     store.dispatch({ type: "set_shuffle", payload: false }); // Tempor disable shuffle at startup since getMedia() will return `indexedTracks`
+    setupPlayer();
     // if (Text.defaultProps == null) Text.defaultProps = {};
     // Text.defaultProps.allowFontScaling = false;
     console.disableYellowBox = true;

@@ -219,22 +219,12 @@ const CtnrFooter = (props: dFooterCtnr) => {
 
           if (gestureState.dx < -X_SWIPE_DELTA) {
             shouldXSwipeable(false);
-            sethPlayback({
-              type: "fwd",
-              nowPlayingTracks,
-              currentTrack,
-              isShuffle: shuffle,
-            });
+            sethPlayback({ type: "fwd" });
             // setAction("next");
           } else if (gestureState.dx > X_SWIPE_DELTA) {
             /** If scroll right pass threshold... */
             shouldXSwipeable(false);
-            sethPlayback({
-              type: "bwd",
-              nowPlayingTracks,
-              currentTrack,
-              isShuffle: shuffle,
-            });
+            sethPlayback({ type: "bwd" });
             // setAction("back");
           }
           setTimeout(() => {
@@ -325,35 +315,21 @@ const CtnrFooter = (props: dFooterCtnr) => {
           {...props}
           name="forward"
           disabled={!footerVisible}
-          onPress={() =>
-            sethPlayback({
-              type: "fwd",
-              nowPlayingTracks,
-              currentTrack,
-              isShuffle: shuffle,
-            })
-          }
+          onPress={() => sethPlayback({ type: "fwd" })}
         />
-        {/* <ActionIcon
+        <ActionIcon
           {...props}
           name="backward"
           disabled={!footerVisible}
-          onPress={() =>
-            sethPlayback({
-              type: "bwd",
-              nowPlayingTracks,
-              currentTrack,
-              isShuffle: shuffle,
-            })
-          }
+          onPress={() => sethPlayback({ type: "bwd" })}
         />
         <ActionIcon
           {...props}
           name="shuffle"
           color={shuffle ? "dodgerblue" : "grey"}
           disabled={!footerVisible}
-          onPress={() => setShuffle(!shuffle, nowPlayingTracks, currentTrack)}
-        /> */}
+          onPress={() => setShuffle(!shuffle, nowPlayingTracks)}
+        />
       </Animated.View>
     </View>
   );

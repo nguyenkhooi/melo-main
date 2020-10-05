@@ -6,7 +6,8 @@ import { ViewStyle } from "react-native";
 import {
   SearchScreen,
   SettingsScreen,
-  TestScreen
+  TestScreen,
+  TracksScreen,
 } from "screens";
 import { withTheme } from "styled-components/native";
 import { getBottomSpace, KeyOf } from "utils";
@@ -14,7 +15,7 @@ import TopMaterialTabNav from "./libraries.navigator";
 
 const stackOptions = {
   "test-scr": { component: TestScreen },
-  "tracks-scr": { component: SearchScreen },
+  "tracks-scr": { component: TracksScreen },
   "search-scr": { component: SearchScreen },
   "libraries-scr": { component: TopMaterialTabNav },
   "settings-scr": { component: SettingsScreen },
@@ -94,8 +95,8 @@ function HomeBottomTab(props) {
 
   return (
     <BottomTabs.Navigator
-      // initialRouteName="tracks-scr"
-      initialRouteName="test-scr"
+      initialRouteName="tracks-scr"
+      // initialRouteName="test-scr"
       backBehavior="initialRoute"
       tabBarOptions={tabBarOptions}
       lazy={false}

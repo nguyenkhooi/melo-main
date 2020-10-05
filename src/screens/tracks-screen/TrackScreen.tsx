@@ -2,10 +2,11 @@ import { CIRCULAR } from "assets";
 import { Kitt, OptionsModal, RenderTrack, ScreenTitle } from "components";
 import RenderActivityIndicator from "components/RenderActivityIndicator";
 import { scanMessage } from "constants";
-import { connector, dRedux } from "engines";
+import { connector, dRedux, sethPlayback } from "engines";
 import R from "ramda";
 import React, { useEffect, useState } from "react";
 import { Animated, Dimensions, StatusBar, View, ViewStyle } from "react-native";
+import { FlatList } from "react-native-gesture-handler";
 import QuickScrollList from "react-native-quick-scroll";
 import styled from "styled-components/native";
 import { contrastColor } from "themes";
@@ -43,13 +44,6 @@ function TracksScreen(props: dSCR_Tracks) {
     let unsubscribe = navigation.addListener("focus", showFooter);
     return unsubscribe;
   }, [navigation]);
-  // useEffect(() => {
-  //   setupPlayer().then(() => {
-  //     !!currentTrack.id &&
-  //       currentTrack.id !== "000" &&
-  //       TrackPlayer.add(currentTrack);
-  //   });
-  // }, []);
 
   function fetchMedia() {
     shouldFetch(true);
@@ -69,27 +63,20 @@ function TracksScreen(props: dSCR_Tracks) {
       // if (1 == 1) {
       //   if (1 == 1) {
       return (
-        <View
-          style={{ paddingTop: getStatusBarHeight("safe"), ...renderMargin }}
-        >
-          <ScreenTitle
-            title={
-              "Your Melo" +
-              ": " +
-              mediaFiles.length +
-              " - " +
-              nowPlayingTracks.length
-            }
-          />
+        <View style={{ paddingTop: getStatusBarHeight("safe"), flex: 1 }}>
+          <ScreenTitle title={"Your Melo"} />
           <Kitt.Button
             appearance="ghost"
-            style={{ alignSelf: "flex-start" }}
+            style={{ alignItems : "flex-start" }}
             size="small"
             onPress={async () => {
-              setShuffle(true, nowPlayingTracks);
+              await setShuffle(true, mediaFiles);
+              await sethPlayback({ type: "fwd" });
             }}
           >
-            Shuffle 'Em All
+            {`Shuffle 'Em All: ${mediaFiles.length} - ${
+              nowPlayingTracks.length
+            }${shuffle ? "*" : ""}`}
           </Kitt.Button>
           {/* <Text>{R.pluck("title")(nowPlayingTracks)}</Text> */}
           <QuickScrollList
@@ -161,7 +148,6 @@ function TracksScreen(props: dSCR_Tracks) {
             rightOffset={10}
             thumbStyle={styles.thumbStyle}
           />
-
           <OptionsModal
             selectedTrack={modal.item}
             isVisible={modal.visible}

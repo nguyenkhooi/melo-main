@@ -8,11 +8,11 @@ import { C, colors, dSCR } from "utils";
 
 interface dSCR_Splash extends dSCR, dRedux {}
 function SplashScreen(props: dSCR_Splash) {
-  const { getMedia, isMediaReady } = props;
+  const { getMedia } = props;
   const [_isMediaLoaded, shouldMediaLoaded] = React.useState(false);
   React.useEffect(function fetchMedia() {
-    // getMedia(isMediaReady);
-    isMediaReady(true);
+    getMedia();
+    // isMediaReady(true);
   }, []);
   return (
     <Wrapper>

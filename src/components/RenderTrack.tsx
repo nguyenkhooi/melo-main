@@ -2,7 +2,7 @@ import { CIRCULAR, IconPrimr, img } from "assets";
 import { connector, dRedux } from "engines";
 import React from "react";
 import { Dimensions } from "react-native";
-import styled from "styled-components/native";
+import styled, { withTheme } from "styled-components/native";
 import { contrastColor, contrastTransColor, foregroundColor } from "themes";
 import { TrackProps } from "utils";
 import Icon from "./Icon";
@@ -29,10 +29,10 @@ export const RenderTrack: React.FC<dTrackComp> = connector(
     (props: dTrackComp) => {
       const {
         item,
-        playback: { currentTrack },
-        media: { mediaFiles, nowPlayingTracks },
-        setCurrentTrack,
-        setNowPlayingTracks,
+        playback: { currentTrack, shuffle },
+        media: { mediaFiles },
+        setCurrentTrackID,
+        setShuffle,
         setOptions,
         parent,
       } = props;
@@ -41,26 +41,26 @@ export const RenderTrack: React.FC<dTrackComp> = connector(
         if (item.id !== currentTrack.id) {
           switch (parent) {
             case "track-scr":
-              /** If track is pressed, set `nowPlayingTracks == mediaFiles`
+              /** If track is pressed,
+               * set `nowPlayingTracks` using `setShuffle()`
                * NOTE should think more about this
                */
-              // setNowPlayingTracks(mediaFiles, true, item);
-              setCurrentTrack(item);
+              setShuffle(shuffle, mediaFiles);
+              setCurrentTrackID(item.id);
               return;
               break;
-            case "track-scr":
+            case "search-scr":
+              setShuffle(shuffle, mediaFiles);
+              setCurrentTrackID(item.id);
               return;
               break;
-            case "track-scr":
+            case "playlist-scr":
               return;
               break;
-            case "track-scr":
+            case "now-playing-scr":
               return;
               break;
-            case "track-scr":
-              return;
-              break;
-            case "track-scr":
+            case "contents-scr":
               return;
               break;
             default:
@@ -85,7 +85,8 @@ export const RenderTrack: React.FC<dTrackComp> = connector(
             preset={`safe`}
             name={"dots_vertical"}
             size={20}
-            color={"dodgerblue"}
+            // color={"dodgerblue"}
+            color={contrastTransColor(0.75)(props)}
             onPress={() => setOptions({ visible: true, item })}
           />
         </Touchable>
@@ -100,7 +101,7 @@ export const RenderTrack: React.FC<dTrackComp> = connector(
   )
 );
 
-export default RenderTrack;
+export default withTheme(RenderTrack);
 
 const Touchable = styled.TouchableOpacity`
   flex-direction: row;
@@ -138,14 +139,3 @@ const Artist = styled.Text`
   width: ${SCREEN_WIDTH / 2}px;
   color: ${contrastTransColor(0.75)};
 `;
-
-const StyledIcon = styled(Icon)`
-  color: ${contrastTransColor(0.75)};
-  padding: 10px;
-`;
-
-const optionsIcon = {
-  name: "ellipsis-v",
-  type: "fa5",
-  size: 20,
-};

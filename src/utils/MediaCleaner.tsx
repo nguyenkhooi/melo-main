@@ -1,3 +1,4 @@
+import { dRedux } from "engines";
 import { store } from "store";
 // import { PITCH_ALGORITHM_MUSIC } from 'react-native-track-player';
 
@@ -8,7 +9,7 @@ import { store } from "store";
 // 	let folderName = '';
 // 	let {
 // 		settings: { foldersToSkip }
-// 	} = store.getState();
+// 	}: dRedux = store.getState();
 // 	let mediaFiles = media.filter(
 // 		(val) => !foldersToSkip.includes(getFolder(val.path).toLowerCase())
 // 	);
@@ -37,7 +38,7 @@ export function cleanupMedia(media) {
   let folderName = "";
   let {
     settings: { foldersToSkip },
-  } = store.getState();
+  }: dRedux = store.getState();
   let mediaFiles = media.filter(
     (val) => !foldersToSkip.includes(getFolder(val.path).toLowerCase())
   );

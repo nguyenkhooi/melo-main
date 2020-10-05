@@ -68,6 +68,7 @@ function SettingsScreen(props: dSCR_Settings) {
     <ScrollView style={{ flex: 1, paddingTop: getStatusBarHeight("safe") }}>
       <ScreenTitle title={"Settings"} />
       <ListItem
+        onPress={() => setTheme(current === "dark" ? "light" : "dark")}
         iconProps={icons.darkMode}
         title={settings.darkMode.title}
         subtitle={settings.darkMode.subtitle}

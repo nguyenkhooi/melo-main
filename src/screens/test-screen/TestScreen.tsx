@@ -1,35 +1,19 @@
-import { connector, fn } from "engines";
+import { connector, dRedux, fn } from "engines";
 import React, { useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import TrackPlayer, { usePlaybackState } from "react-native-track-player";
+import { dSCR } from "utils";
 import Player from "./Player";
 import playlistData from "./playlist.json";
 
-function TestScreen() {
+interface dSCR_Tracks extends dSCR, dRedux {}
+function TestScreen(props: dSCR_Tracks) {
+  const {
+    media: { nowPlayingTracks, mediaFiles },
+  } = props;
   const playbackState = usePlaybackState();
-  const [_tracks, setTracks] = React.useState(playlistData);
+  const [_tracks, setTracks] = React.useState(mediaFiles);
   const [_isShuffled, setShuffle] = React.useState(false);
-  useEffect(() => {
-    setup();
-  }, []);
-
-  async function setup() {
-    await TrackPlayer.setupPlayer({});
-    await TrackPlayer.updateOptions({
-      stopWithApp: true,
-      capabilities: [
-        TrackPlayer.CAPABILITY_PLAY,
-        TrackPlayer.CAPABILITY_PAUSE,
-        TrackPlayer.CAPABILITY_SKIP_TO_NEXT,
-        TrackPlayer.CAPABILITY_SKIP_TO_PREVIOUS,
-        TrackPlayer.CAPABILITY_STOP,
-      ],
-      compactCapabilities: [
-        TrackPlayer.CAPABILITY_PLAY,
-        TrackPlayer.CAPABILITY_PAUSE,
-      ],
-    });
-  }
 
   async function togglePlayback() {
     const currentTrack = await TrackPlayer.getCurrentTrack();
@@ -68,29 +52,30 @@ function TestScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView>
+      <View style={styles.container}>
+        <Player
+          onNext={skipToNext}
+          style={styles.player}
+          onPrevious={skipToPrevious}
+          onTogglePlayback={togglePlayback}
+        />
+        <Text style={styles.state}>{getStateName(playbackState)}</Text>
+        <Text
+          style={styles.state}
+          onPress={() => {
+            const newTracks = shuffle(_tracks);
+            setTracks(newTracks);
+            setShuffle(!_isShuffled);
+          }}
+        >
+          {"Shuffle: " + _isShuffled}
+        </Text>
+      </View>
       {_tracks.map((track) => (
         <Text style={styles.description}>{track.title}</Text>
       ))}
-
-      <Player
-        onNext={skipToNext}
-        style={styles.player}
-        onPrevious={skipToPrevious}
-        onTogglePlayback={togglePlayback}
-      />
-      <Text style={styles.state}>{getStateName(playbackState)}</Text>
-      <Text
-        style={styles.state}
-        onPress={() => {
-          const newTracks = shuffle(_tracks);
-          setTracks(newTracks);
-          setShuffle(!_isShuffled);
-        }}
-      >
-        {"Shuffle: " + _isShuffled}
-      </Text>
-    </View>
+    </ScrollView>
   );
 }
 
