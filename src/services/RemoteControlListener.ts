@@ -9,18 +9,18 @@ let flag = false;
  * Background fn to dispatch current_track (not )
  * @param track
  */
-async function backgroundPlayback(track: TrackProps) {
-  console.log("bg playtrack...");
-  //   if (flag) return;
-  //   flag = true;
-  //   setTimeout(() => (flag = false), 250);
-  await TrackPlayer.reset();
-  await TrackPlayer.add(track);
-  store.dispatch(setCurrentTrackID(track.id));
-  store.dispatch({ type: "current_track", payload: track });
-  TrackPlayer.play();
-  store.dispatch({ type: "set_playback", payload: true });
-}
+// async function backgroundPlayback(track: TrackProps) {
+//   console.log("bg playtrack...");
+//   //   if (flag) return;
+//   //   flag = true;
+//   //   setTimeout(() => (flag = false), 250);
+//   await TrackPlayer.reset();
+//   await TrackPlayer.add(track);
+//   store.dispatch(setCurrentTrackID(track.id));
+//   store.dispatch({ type: "current_track", payload: track });
+//   TrackPlayer.play();
+//   store.dispatch({ type: "set_playback", payload: true });
+// }
 
 async function bgService() {
   TrackPlayer.addEventListener("remote-play", () => {

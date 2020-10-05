@@ -5,7 +5,7 @@ import {
   IconPrimr,
   img,
 } from "assets";
-import { connector, dRedux } from "engines";
+import { connector, dRedux, setCurrentTrackID } from "engines";
 import { navigate } from "navigation";
 import React, { useRef } from "react";
 import {
@@ -307,7 +307,9 @@ const CtnrFooter = (props: dFooterCtnr) => {
           <ActionIcon
             {...props}
             name="play"
-            onPress={() => sethPlayback({ type: "play" })}
+            onPress={() => {
+              sethPlayback({ type: "play" });
+            }}
             disabled={!footerVisible}
           />
         )}

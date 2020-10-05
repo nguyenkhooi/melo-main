@@ -16,12 +16,16 @@ import { Animated, Dimensions, StatusBar, View, ViewStyle } from "react-native";
 import QuickScrollList from "react-native-quick-scroll";
 import styled, { withTheme } from "styled-components/native";
 import { contrastColor } from "themes";
+import TrackPlayer from "react-native-track-player";
 import {
   dSCR,
   flatListItemLayout,
+  getBottomSpace,
   getStatusBarHeight,
+  scale,
   TrackProps,
 } from "utils";
+import { FlatList } from "react-native-gesture-handler";
 
 const ScreenHeight = Dimensions.get("window").height;
 const StatusBarHeight = StatusBar.currentHeight;
@@ -51,7 +55,10 @@ function TracksScreen(props: dSCR_Tracks) {
   const [_isFetched, shouldFetch] = React.useState(false);
 
   useEffect(() => {
-    let unsubscribe = navigation.addListener("focus", showFooter);
+    let unsubscribe = navigation.addListener("focus", () => {
+      getMedia(); //* fetch media without showing indicator
+      showFooter();
+    });
     return unsubscribe;
   }, [navigation]);
 
@@ -79,12 +86,12 @@ function TracksScreen(props: dSCR_Tracks) {
               await sethPlayback({ type: "fwd" });
             }}
           >
-            {`Shuffle 'Em All: ${mediaFiles.length} - ${
+            {`Shuffle 'Em Alls: ${mediaFiles.length} - ${
               nowPlayingTracks.length
             }${shuffle ? "*" : ""}`}
           </Kitt.Button>
-          {/* <Text>{R.pluck("title")(nowPlayingTracks)}</Text> */}
-          <QuickScrollList
+          {/* <Txt.P1>{R.pluck("title")(nowPlayingTracks)}</Txt.P1> */}
+          <FlatList
             keyExtractor={(asset) => asset.id.toString()}
             data={indexedTracks}
             refreshing={_isFetched}
@@ -139,19 +146,17 @@ function TracksScreen(props: dSCR_Tracks) {
               />
             )}
             getItemLayout={flatListItemLayout}
-            onScroll={Animated.event(
-              [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-              {
-                useNativeDriver: false,
-              }
-            )}
             scrollEventThrottle={16}
             contentContainerStyle={styles.flatlistContent}
             initialScrollIndex={currentTrack.index || undefined}
-            itemHeight={itemHeight}
-            viewportHeight={ViewportHeight}
-            rightOffset={10}
-            thumbStyle={styles.thumbStyle}
+            ListFooterComponentStyle={{
+              width: "100%",
+              height: getBottomSpace() + scale(500),
+            }}
+            // itemHeight={itemHeight}
+            // viewportHeight={ViewportHeight}
+            // rightOffset={10}
+            // thumbStyle={styles.thumbStyle}
           />
           <OptionsModal
             selectedTrack={modal.item}
@@ -205,6 +210,6 @@ const styles = {
   },
   flatlistContent: {
     marginTop: 20,
-    paddingBottom: 20,
+    paddingBottom: getBottomSpace() + scale(120),
   },
 };

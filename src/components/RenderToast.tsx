@@ -3,7 +3,7 @@ import Toasty from "react-native-toast-message";
 interface dToast {
   title: string;
   message: string;
-  type?: "success" | "error" | "info";
+  type?: "success" | "error" | "info" | "error-log";
   position?: "top" | "bottom";
   visibilityTime?: number;
   autoHide?: boolean;

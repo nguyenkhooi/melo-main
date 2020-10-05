@@ -14,6 +14,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import { persistor, store } from "store";
 import { setupPlayer } from "services";
 import SplashScreen from "./src/screens/SplashScreen";
+import { dRedux, setCurrentTrackID, setShuffle } from "engines";
 // import { Toasty } from "components";
 
 export default function App() {
@@ -22,7 +23,7 @@ export default function App() {
   useEffect(() => {
     setTimeout(() => setTimePassed(true), 750);
     store.dispatch({ type: "set_playback", payload: false }); // To make sure currentTrack is paused at startup
-    store.dispatch({ type: "set_shuffle", payload: false }); // Tempor disable shuffle at startup since getMedia() will return `indexedTracks`
+    // store.dispatch(setShuffle(false)); // Tempor disable shuffle at startup since getMedia() will return `indexedTracks`
     setupPlayer();
     // if (Text.defaultProps == null) Text.defaultProps = {};
     // Text.defaultProps.allowFontScaling = false;

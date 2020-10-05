@@ -1,7 +1,8 @@
 import { connector, dRedux, fn } from "engines";
-import React, { useEffect } from "react";
+import React from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import TrackPlayer, { usePlaybackState } from "react-native-track-player";
+import TrackPlayer from "react-native-track-player";
+import { usePlaybackState } from "react-native-track-player/lib/hooks";
 import { dSCR } from "utils";
 import Player from "./Player";
 import playlistData from "./playlist.json";
@@ -14,6 +15,7 @@ function TestScreen(props: dSCR_Tracks) {
   const playbackState = usePlaybackState();
   const [_tracks, setTracks] = React.useState(mediaFiles);
   const [_isShuffled, setShuffle] = React.useState(false);
+  const [_queue, setQueue] = React.useState([]);
 
   async function togglePlayback() {
     const currentTrack = await TrackPlayer.getCurrentTrack();
@@ -61,6 +63,15 @@ function TestScreen(props: dSCR_Tracks) {
           onTogglePlayback={togglePlayback}
         />
         <Text style={styles.state}>{getStateName(playbackState)}</Text>
+        <Text
+          style={styles.state}
+          onPress={async () => {
+            const queue = await TrackPlayer.getQueue();
+            setQueue(queue);
+          }}
+        >
+          Queue: {JSON.stringify(_queue)} (should == [])
+        </Text>
         <Text
           style={styles.state}
           onPress={() => {

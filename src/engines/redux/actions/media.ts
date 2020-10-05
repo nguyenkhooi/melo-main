@@ -23,8 +23,8 @@ export const setNowPlayingTracks = (
   dispatch: Dispatch<NowPlayingTracksAction | SetCurrentTrackAction>
 ) => {
   try {
-    await TrackPlayer.reset();
-    await TrackPlayer.add([...nowPlayingTracks]);
+    // await TrackPlayer.reset();
+    // await TrackPlayer.add([...nowPlayingTracks]);
 
     dispatch({
       type: "now_playing_tracks",

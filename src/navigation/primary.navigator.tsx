@@ -36,7 +36,7 @@ const screenOptions: StackNavigationOptions = {
   gestureEnabled: true,
   cardOverlayEnabled: true,
   /** Modal swipe distance */
-  gestureResponseDistance: { vertical: DEVICE_HEIGHT * 0.6 },
+  gestureResponseDistance: { vertical: DEVICE_HEIGHT * 0.4 },
 };
 
 function PrimaryStack() {

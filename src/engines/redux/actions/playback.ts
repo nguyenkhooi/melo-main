@@ -48,14 +48,15 @@ export const setCurrentTrackk = (currentTrack?: TrackProps) => async (
       payload: true,
     });
   } catch (e) {
-    errorReporter(e, "setCurrentTrackk");
+    errorReporter(e, "3121");
   }
 };
 
 /**
  * Set current track (by its ID) and play it.
  * Think of users choose specific track to play
- * @param targetedTrackID
+ * @version 0.10.5
+ *
  */
 export const setCurrentTrackID = (targetedTrackID: string) => async (
   dispatch: Dispatch<SetCurrentTrackAction | SetPlayerAction>
@@ -64,21 +65,22 @@ export const setCurrentTrackID = (targetedTrackID: string) => async (
     media: { mediaFiles },
   }: dRedux = store.getState();
   try {
-    const _currentTrack = await TrackPlayer.getCurrentTrack();
-    if (!!_currentTrack) {
-      /** If _currentTrack exists,
-       * skip to targeted track
-       */
-      await TrackPlayer.skip(targetedTrackID);
-    } else {
-      /** If _currentTrack no exists,
-       * reset and refill the TrackPlayer,
-       * then skip to targeted track
-       */
-      await TrackPlayer.reset();
-      await TrackPlayer.add([...mediaFiles]);
-      await TrackPlayer.skip(targetedTrackID);
-    }
+    // const _currentTrack = await TrackPlayer.getCurrentTrack();
+    // if (!!_currentTrack) {
+    //   /** If _currentTrack exists,
+    //    * skip to targeted track
+    //    */
+    //   await TrackPlayer.skip(targetedTrackID);
+    // } else {
+    //   /** If _currentTrack no exists,
+    //    * reset and refill the TrackPlayer,
+    //    * then skip to targeted track
+    //    */
+    //   await TrackPlayer.reset();
+    //   await TrackPlayer.add([...mediaFiles]);
+    //   await TrackPlayer.skip(targetedTrackID);
+    // }
+    console.log("targetedTrackID: ", targetedTrackID);
     const targetedTrack: TrackProps = fn.js.hLookup(
       "id",
       targetedTrackID,
@@ -88,13 +90,15 @@ export const setCurrentTrackID = (targetedTrackID: string) => async (
       type: "current_track",
       payload: targetedTrack,
     });
+    await TrackPlayer.reset();
+    await TrackPlayer.add(targetedTrack);
     TrackPlayer.play();
     dispatch({
       type: "set_playback",
       payload: true,
     });
   } catch (e) {
-    errorReporter(e, "setCurrentTrackID");
+    errorReporter(e, "3122");
   }
 };
 
@@ -108,14 +112,14 @@ type dSethPlayback = {
 export const sethPlayback = ({ type }: dSethPlayback) => async (dispatch) => {
   try {
     const {
-      media: { nowPlayingTracks },
+      media: { nowPlayingTracks, mediaFiles },
       playback: { currentTrack },
     }: dRedux = store.getState();
 
     const nowPlayingIDs: string[] = fn.js.vLookup(nowPlayingTracks, "id"); //* List of now playing's id, in order
-    const currentTrackID = await TrackPlayer.getCurrentTrack(); //* Get currentTrack's ID
+    // const currentTrackID = await TrackPlayer.getCurrentTrack(); //* Get currentTrack's ID
+    const currentTrackID = currentTrack.id; //* Get currentTrack's ID from Redux
     const currentTrackPosition = nowPlayingIDs.indexOf(currentTrackID); //* Find currentTrack's position in `nowPlayingTracks`
-    console.log("currentTrack pos: ", currentTrackPosition);
 
     switch (type) {
       case "play":
@@ -145,6 +149,9 @@ export const sethPlayback = ({ type }: dSethPlayback) => async (dispatch) => {
             : nowPlayingIDs[currentTrackPosition + 1];
 
         return dispatch(setCurrentTrackID(targetedTrackID));
+        // await TrackPlayer.skip(targetedTrackID);
+        // TrackPlayer.play();
+        // return dispatch({ type: "set_playback", payload: true });
         break;
       case "bwd":
         /** Check if current track is at the start of `nowPlayingTracks`:
@@ -159,10 +166,22 @@ export const sethPlayback = ({ type }: dSethPlayback) => async (dispatch) => {
             : nowPlayingIDs[currentTrackPosition - 1];
 
         return dispatch(setCurrentTrackID(targetedTrackID1));
+        // await TrackPlayer.skip(targetedTrackID1);
+        // TrackPlayer.play();
+        // return dispatch({ type: "set_playback", payload: true });
         break;
+
+        console.log(
+          "currentTrack ID: ",
+          currentTrackID +
+            " @ " +
+            currentTrackPosition +
+            " position of nowPlayingTracks" +
+            nowPlayingIDs.length
+        );
     }
   } catch (error) {
-    errorReporter(error, "sethPlayback");
+    errorReporter(error, "3123");
   }
 };
 
@@ -184,15 +203,20 @@ export const setLoop = (isLoop: boolean): ToggleLoopAction => {
  *
  * @version 0.10.5
  */
-export const setShuffle = (isShuffle: boolean, tracks: TrackProps[]) => async (
+export const setShuffle = (isShuffle: boolean, tracks?: TrackProps[]) => async (
   dispatch: Dispatch<
     ToggleShuffleAction | NowPlayingTracksAction | SetCurrentTrackAction
   >
 ) => {
   try {
+    const {
+      media: { mediaFiles },
+    } = store.getState();
+
+    const _tracks = tracks || mediaFiles;
     const targetedTracks = isShuffle
-      ? knuthShuffle([...tracks])
-      : R.sortBy(R.prop("index"))([...tracks]);
+      ? knuthShuffle([..._tracks], "knuth")
+      : R.sortBy(R.prop("index"))([..._tracks]);
     const playbackState = await TrackPlayer.getState();
 
     // const newTracks = isShuffle ? shuffledTracks : indexedTracked;
@@ -206,33 +230,42 @@ export const setShuffle = (isShuffle: boolean, tracks: TrackProps[]) => async (
     dispatch({ type: "now_playing_tracks", payload: targetedTracks });
     playbackState != TrackPlayer.STATE_PLAYING &&
       dispatch(setCurrentTrackID(targetedTracks[0].id));
+
+    console.log("is shuffled?", isShuffle);
     return dispatch({ type: "set_shuffle", payload: isShuffle });
   } catch (error) {
-    errorReporter(error, "setShuffle");
+    errorReporter(error, "3124");
     return null;
   }
 };
 
-function shuffle(array: any[]) {
-  return array.sort(() => Math.random() - 0.5);
-}
+function knuthShuffle(array: any[], type: "knuth" | "normal" = "knuth") {
+  try {
+    switch (type) {
+      case "knuth":
+        var currentIndex = array.length,
+          temporaryValue,
+          randomIndex;
 
-function knuthShuffle(array: any[]) {
-  var currentIndex = array.length,
-    temporaryValue,
-    randomIndex;
+        // While there remain elements to shuffle...
+        while (0 !== currentIndex) {
+          // Pick a remaining element...
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex -= 1;
 
-  // While there remain elements to shuffle...
-  while (0 !== currentIndex) {
-    // Pick a remaining element...
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex -= 1;
-
-    // And swap it with the current element.
-    temporaryValue = array[currentIndex];
-    array[currentIndex] = array[randomIndex];
-    array[randomIndex] = temporaryValue;
+          // And swap it with the current element.
+          temporaryValue = array[currentIndex];
+          array[currentIndex] = array[randomIndex];
+          array[randomIndex] = temporaryValue;
+        }
+        return array;
+        break;
+      case "normal":
+        return array.sort(() => Math.random() - 0.5);
+        break;
+    }
+  } catch (error) {
+    errorReporter(error, "3125");
+    return null;
   }
-
-  return array;
 }

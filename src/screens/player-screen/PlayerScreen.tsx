@@ -2,12 +2,7 @@ import { CIRCULAR, IconPrimr } from "assets";
 import { sstyled } from "components";
 import { connector, dRedux } from "engines";
 import React, { useEffect } from "react";
-import {
-  Dimensions,
-  ImageBackground,
-
-  Text, View
-} from "react-native";
+import { Dimensions, ImageBackground, Text, View } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import { Modalize } from "react-native-modalize";
 import Carousel from "react-native-snap-carousel";
@@ -26,8 +21,7 @@ function PlayerScreen(props: dSCR_Player) {
     theme,
     navigation,
     //* redux state
-    playback: { currentTrack, shuffle },
-    media: { nowPlayingTracks },
+    playback: { currentTrack },
     hideFooter,
   } = props;
 
@@ -37,7 +31,6 @@ function PlayerScreen(props: dSCR_Player) {
     return unsubscribe;
   }, [navigation]);
   const refCarou = React.useRef<Carousel<TrackProps>>();
-  const ref$$NowPlaying = React.useRef<Modalize>();
   return (
     <ImageBackground
       source={{ uri: theme.current == "light" ? null : currentTrack.artwork }}

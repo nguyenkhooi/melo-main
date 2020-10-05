@@ -17,10 +17,12 @@ function NowPlayingScreen(props: dSCR_Tracks) {
   } = props;
   React.useEffect(() => {
     let unsubscribe = navigation.addListener("focus", () =>
-      refList.current?.scrollToIndex({
+      {
+        
+        refList.current?.scrollToIndex({
         animated: true,
         index: currentTrack.index,
-      })
+      })}
     );
     return unsubscribe;
   }, [navigation]);

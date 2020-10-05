@@ -1,22 +1,16 @@
 //@ts-check
 import { img } from "assets";
+import { sstyled } from "components";
 import { connector, dRedux } from "engines";
 import React from "react";
-import { Image, StatusBar } from "react-native";
-import styled from "styled-components/native";
-import { C, colors, dSCR } from "utils";
+import { Image, StatusBar, Text, View } from "react-native";
+import { colors, dSCR } from "utils";
 
 interface dSCR_Splash extends dSCR, dRedux {}
-function SplashScreen(props: dSCR_Splash) {
-  const { getMedia } = props;
-  const [_isMediaLoaded, shouldMediaLoaded] = React.useState(false);
-  React.useEffect(function fetchMedia() {
-    getMedia();
-    // isMediaReady(true);
-  }, []);
+function SplashScreen() {
   return (
-    <Wrapper>
-      <StatusBar backgroundColor={C.surface} animated />
+    <Ctnr>
+      <StatusBar backgroundColor={colors.elevatedBG} animated />
       <Image
         source={img.meloLogo}
         resizeMode="center"
@@ -24,20 +18,23 @@ function SplashScreen(props: dSCR_Splash) {
         // width={150}
         // height={150}
       />
-    </Wrapper>
+      <Text>Loading your music library...</Text>
+    </Ctnr>
   );
 }
 
 export default connector(SplashScreen);
 
-const Wrapper = styled.View`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-  background-color: ${colors.elevatedBG};
-`;
+const Ctnr = sstyled(View)({
+  flex: 1,
+  justifyContent: "center",
+  alignItems: "center",
+  backgroundColor: colors.elevatedBG,
+});
 
-const Logo = styled.Image`
-  height: 150px;
-  width: 150px;
-`;
+// const Wrapper = styled.View`
+//   flex: 1;
+//   justify-content: center;
+//   align-items: center;
+//   background-color: ${colors.elevatedBG};
+// `;
