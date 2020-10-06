@@ -76,7 +76,7 @@ export const getMedia = () => async (
   dispatch: Dispatch<GetMediaAction | NowPlayingTracksAction>
 ) => {
   try {
-    // let granted = await checkStoragePermissions();
+    // let granted = await checkStoragePermissionsOG();
     // if (!granted) await getStoragePermission();
 
     let granted = await checkStoragePermissions();

@@ -37,7 +37,7 @@ export const RenderTrack: React.FC<dTrackComp> = connector(
         setCurrentTrackID,
         setShuffle,
         setOptions,
-        parent,
+        parent = "track-scr",
       } = props;
 
       async function onTrackPress() {
@@ -53,17 +53,19 @@ export const RenderTrack: React.FC<dTrackComp> = connector(
               return;
               break;
             case "search-scr":
-              setShuffle(shuffle, mediaFiles);
-              setCurrentTrackID(item.id);
+              await setCurrentTrackID(item.id);
               return;
               break;
             case "playlist-scr":
+              await setCurrentTrackID(item.id);
               return;
               break;
             case "now-playing-scr":
+              await setCurrentTrackID(item.id);
               return;
               break;
             case "contents-scr":
+              await setCurrentTrackID(item.id);
               return;
               break;
             default:

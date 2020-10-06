@@ -29,6 +29,7 @@ function ShowFolderScreen(props: dSCR_ShowFolder) {
         keyExtractor={(asset) => asset.id.toString()}
         renderItem={({ item }) => (
           <RenderTrack
+            {...props}
             parent="contents-scr"
             item={item}
             setOptions={setModal}

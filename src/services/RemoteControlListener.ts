@@ -37,7 +37,10 @@ async function bgService() {
 
   TrackPlayer.addEventListener("remote-next", () => {
     console.log("remote-next...");
-    // let { playback, media }: dRedux = store.getState();
+    // let {
+    //   playback: { currentTrack, shuffle },
+    //   media: { mediaFiles },
+    // }: dRedux = store.getState();
     // let { currentTrack, shuffle } = playback;
     // let { mediaFiles } = media;
     // backgroundPlayback(
@@ -67,9 +70,10 @@ async function bgService() {
 
   TrackPlayer.addEventListener("playback-queue-ended", ({ position }) => {
     console.log("remote-queue-end...");
-    let { playback, media }: dRedux = store.getState();
-    let { currentTrack, shuffle, loop } = playback;
-    let { mediaFiles, nowPlayingTracks } = media;
+    let {
+      playback: { currentTrack, loop },
+      media: { mediaFiles },
+    }: dRedux = store.getState();
     // console.log("current state: ", playback);
     // console.warn("current media: ", mediaFiles.length);
     if (position > 0) {

@@ -19,7 +19,6 @@ import { useTrackPlayerProgress } from "react-native-track-player/lib/hooks";
 import styled, { withTheme } from "styled-components/native";
 import { contrastColor, contrastTransColor } from "themes";
 import { DEVICE_WIDTH, dSCR, getBottomSpace, spacing } from "utils";
-import { Txt } from "./Generals";
 import ProgressBar from "./ProgressBar";
 import { sstyled } from "./Sstyled";
 
@@ -309,7 +308,6 @@ const CtnrFooter = (props: dFooterCtnr) => {
         }}
       >
         <ActionIcon {...props} name="forward" disabled={!footerVisible} />
-        <Txt.P1>{"   "}Moving next...</Txt.P1>
       </Animated.View>
       <Animated.View
         style={{
@@ -322,7 +320,6 @@ const CtnrFooter = (props: dFooterCtnr) => {
         }}
       >
         <ActionIcon {...props} name="backward" disabled={!footerVisible} />
-        <Txt.P1>{"   "}Moving back...</Txt.P1>
       </Animated.View> */}
 
       <Animated.View

@@ -18,7 +18,7 @@ function SplashScreen() {
         // width={150}
         // height={150}
       />
-      <Text>Loading your music library...</Text>
+      {/* <Text>Loading your music library...</Text> */}
     </Ctnr>
   );
 }

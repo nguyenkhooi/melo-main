@@ -36,7 +36,12 @@ function ShowPlaylistScreen(props: dSCR_ShowPlaylist) {
         data={listData}
         keyExtractor={(asset) => asset.id.toString()}
         renderItem={({ item }) => (
-          <RenderTrack item={item} setOptions={setModal} />
+          <RenderTrack
+            {...props}
+            parent="playlist-scr"
+            item={item}
+            setOptions={setModal}
+          />
         )}
         getItemLayout={flatListItemLayout}
       />

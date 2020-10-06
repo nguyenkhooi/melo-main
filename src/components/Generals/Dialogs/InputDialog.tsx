@@ -5,7 +5,7 @@ import styled, { withTheme } from "styled-components/native";
 import { foregroundColor } from "themes";
 import { evaLight, IS_ANDROID } from "utils";
 
-interface dCOMP_InputDialog extends dRedux {
+interface dCOMP_InputDialog {
   isVisible: boolean;
   name: string;
   inputPlaceholder: string;
@@ -90,7 +90,7 @@ function InputDialog(props: dCOMP_InputDialog) {
   );
 }
 
-export default connector(withTheme(InputDialog));
+export default withTheme(InputDialog);
 
 const DialogInput = styled(Dialog.Input)`
   color: ${evaLight["color-basic-800"]};

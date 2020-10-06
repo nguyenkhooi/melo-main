@@ -45,13 +45,10 @@ export async function setupPlayer() {
      * so we should not see TrackPlayer.add("other_track_list")
      * anywhere else
      */
-    // await store.dispatch(getMedia());
     const {
-      media: { mediaFiles },
       playback: { currentTrack },
     }: dRedux = store.getState();
-
-    await TrackPlayer.add(currentTrack);
+    currentTrack.id !== "000" && (await TrackPlayer.add(currentTrack));
 
     // const _currentTrack = await TrackPlayer.getCurrentTrack();
     // if (!!currentTrack && !_currentTrack) {

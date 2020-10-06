@@ -57,7 +57,12 @@ function NowPlayingScreen(props: dSCR_Tracks) {
         keyExtractor={(asset) => asset.id.toString()}
         data={nowPlayingTracks}
         renderItem={({ item }) => (
-          <RenderTrack item={item} setOptions={setModal} />
+          <RenderTrack
+            {...props}
+            parent="now-playing-scr"
+            item={item}
+            setOptions={setModal}
+          />
         )}
         onScrollToIndexFailed={(info) => {
           const wait = new Promise((resolve) => setTimeout(resolve, 500));

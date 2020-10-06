@@ -123,12 +123,12 @@ export const sethPlayback = ({ type }: dSethPlayback) => async (dispatch) => {
 
     switch (type) {
       case "play":
-        TrackPlayer.play();
-        return dispatch({ type: "set_playback", payload: true });
+        dispatch({ type: "set_playback", payload: true });
+        await TrackPlayer.play();
         break;
       case "pause":
-        TrackPlayer.pause();
-        return dispatch({ type: "set_playback", payload: false });
+        dispatch({ type: "set_playback", payload: false });
+        await TrackPlayer.pause();
         break;
       /**
        * case "fwd":

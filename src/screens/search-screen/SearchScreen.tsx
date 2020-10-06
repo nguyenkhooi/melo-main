@@ -9,7 +9,7 @@ import styled from "styled-components/native";
 import {
   backgroundColor,
   contrastColor,
-  contrastTransColor
+  contrastTransColor,
 } from "themes/styles";
 import { dSCR, getStatusBarHeight } from "utils";
 
@@ -56,7 +56,12 @@ function SearchScreen(props: dSCR_Search) {
       <FlatList
         data={listFilter()}
         renderItem={({ item }) => (
-          <RenderTrack item={item} setOptions={setModal} />
+          <RenderTrack
+            {...props}
+            parent="search-scr"
+            item={item}
+            setOptions={setModal}
+          />
         )}
         // ListHeaderComponent={() => (
         //   <SearchWrapper onPress={() => inputRef.current.focus()}>
@@ -77,7 +82,7 @@ function SearchScreen(props: dSCR_Search) {
     //   <FlatList
     //     data={listFilter()}
     //     renderItem={({ item }) => (
-    //       <RenderTrack item={item} setOptions={setModal} />
+    //       <RenderTrack parent="search-scr" item={item} setOptions={setModal} />
     //     )}
     //     keyExtractor={(asset) => asset.id.toString()}
     //     style={[styles.resultsWrapper, renderMargin]}

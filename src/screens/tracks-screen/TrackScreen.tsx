@@ -89,6 +89,7 @@ function TracksScreen(props: dSCR_Tracks) {
             onRefresh={fetchMedia}
             renderItem={({ item }: { item: TrackProps }) => (
               <RenderTrack
+                {...props}
                 parent="track-scr"
                 item={item}
                 setOptions={setModal}
@@ -115,7 +116,10 @@ function TracksScreen(props: dSCR_Tracks) {
           <View
             style={{
               position: "absolute",
-              bottom: footerVisible ? scale(65) : scale(25),
+              bottom:
+                footerVisible && currentTrack.id != "000"
+                  ? scale(65)
+                  : scale(25),
               right: spacing[5],
             }}
           >
@@ -149,7 +153,12 @@ function TracksScreen(props: dSCR_Tracks) {
     );
   }
 
-  return <RenderActivityIndicator text={scanMessage} />;
+  return (
+    <>
+      {/* <Txt.H1 onPress={() => getMedia()}>Press here</Txt.H1> */}
+      <RenderActivityIndicator text={scanMessage} />
+    </>
+  );
 }
 
 export default connector(withTheme(TracksScreen));
