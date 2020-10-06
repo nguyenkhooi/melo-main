@@ -10,12 +10,6 @@ import { version } from "../../../package.json";
 
 interface dSCR_About extends dSCR, dRedux {}
 function AboutScreen(props: dSCR_About) {
-  const { navigation, hideFooter } = props;
-  useEffect(() => {
-    let unsubscribe = navigation.addListener("focus", hideFooter);
-    return unsubscribe;
-  }, [navigation]);
-
   return (
     <Wrapper>
       <Heading>Melo</Heading>

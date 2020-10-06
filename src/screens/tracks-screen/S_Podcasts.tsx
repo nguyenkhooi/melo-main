@@ -23,12 +23,14 @@ function TracksScreen(props: dSCR_Tracks) {
     //* redux actions
     setShuffle,
     getMedia,
-    showFooter,
+    toggleFooter,
     setCurrentList,
   } = props;
 
   useEffect(() => {
-    let unsubscribe = navigation.addListener("focus", showFooter);
+    let unsubscribe = navigation.addListener("focus", () =>
+      toggleFooter("show")
+    );
     return unsubscribe;
   }, [navigation]);
   const [_podcast, setPodcast] = React.useState(null);

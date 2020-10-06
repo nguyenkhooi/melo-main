@@ -14,10 +14,12 @@ function AlbumsScreen(props: dSCR_Albums) {
     //* redux states
     media: { mediaFiles },
     playback: { currentTrack },
-    showFooter,
+    toggleFooter,
   } = props;
   useEffect(() => {
-    let unsubscribe = navigation.addListener("focus", showFooter);
+    let unsubscribe = navigation.addListener("focus", () =>
+      toggleFooter("show")
+    );
     return unsubscribe;
   }, [navigation]);
 

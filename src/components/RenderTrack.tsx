@@ -1,14 +1,11 @@
 import { CIRCULAR, IconPrimr, img } from "assets";
-import { connector, dRedux, sethPlayback } from "engines";
+import { connector, dRedux } from "engines";
 import React from "react";
 import { Dimensions, Image, TouchableOpacity, View } from "react-native";
-import styled, { withTheme } from "styled-components/native";
+import { withTheme } from "styled-components/native";
 import { contrastColor, contrastTransColor, foregroundColor } from "themes";
 import { DEVICE_WIDTH, scale, spacing, TrackProps } from "utils";
-import { Txt } from "./Generals";
-import { sstyled } from "./Sstyled";
-
-const SCREEN_WIDTH = Dimensions.get("window").width;
+import { Txt, sstyled } from "./Generals";
 
 interface dTrackComp extends dRedux {
   item: TrackProps;
@@ -32,10 +29,8 @@ export const RenderTrack: React.FC<dTrackComp> = connector(
     (props: dTrackComp) => {
       const {
         item,
-        playback: { currentTrack, shuffle },
-        media: { mediaFiles },
+        playback: { currentTrack },
         setCurrentTrackID,
-        setShuffle,
         setOptions,
         parent = "track-scr",
       } = props;

@@ -1,6 +1,6 @@
 import { Text } from "@ui-kitten/components";
 // import { scale } from "utils";
-import { sstyled } from "../../Sstyled";
+import { sstyled } from "../Sstyled/Sstyled";
 const scale = (number: number) => number;
 
 const H1: typeof Text = sstyled(Text)({

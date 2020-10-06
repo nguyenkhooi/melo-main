@@ -5,8 +5,7 @@ import { withTheme } from "styled-components/native";
 import { elevatedBGColor, contrastColor, contrastTransColor } from "themes";
 import { scale } from "utils";
 
-import { Txt } from "./Generals";
-import { sstyled } from "./Sstyled";
+import { Txt, sstyled } from "./Generals";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const itemWidth = SCREEN_WIDTH / 2 - 25;

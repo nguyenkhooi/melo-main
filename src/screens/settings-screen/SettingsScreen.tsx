@@ -24,13 +24,15 @@ function SettingsScreen(props: dSCR_Settings) {
     settings: { foldersToSkip },
     getMedia,
     setSkipFolders,
-    showFooter,
+    toggleFooter,
   } = props;
 
   const [isInputVisible, setInputVisible] = useState(false);
   const [isDialogVisible, setDialogVisible] = useState(false);
   useEffect(() => {
-    let unsubscribe = navigation.addListener("focus", showFooter);
+    let unsubscribe = navigation.addListener("focus", () =>
+      toggleFooter("show")
+    );
     return unsubscribe;
   }, [navigation]);
 
@@ -109,7 +111,9 @@ function SettingsScreen(props: dSCR_Settings) {
       <ListItem
         iconProps={icons.rearrange}
         title={settings.changeOrder.title}
-        onPress={() => navigation.navigate("tab-order-scr")}
+        onPress={() => {
+          toggleFooter("hide", () => navigation.navigate("tab-order-scr"));
+        }}
         subtitle={settings.changeOrder.subtitle}
       />
 
@@ -129,7 +133,9 @@ function SettingsScreen(props: dSCR_Settings) {
       <ListItem
         iconProps={icons.about}
         title={settings.about.title}
-        onPress={() => navigation.navigate("about-scr")}
+        onPress={() => {
+          toggleFooter("hide", () => navigation.navigate("about-scr"));
+        }}
         subtitle={settings.about.subtitle}
       />
 

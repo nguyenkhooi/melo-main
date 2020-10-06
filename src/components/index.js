@@ -11,7 +11,7 @@ export * from "./Players";
 export { default as RenderToast } from "./RenderToast";
 export { default as RenderTrack } from "./RenderTrack";
 export * from "./ScreenLayout/ScreenHeader";
-export * from "./Sstyled";
+// export * from "./Generals/Sstyled"; //* Move to generals
 
 /**
 const getPodcastResult = async () => {

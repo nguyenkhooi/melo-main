@@ -10,9 +10,11 @@ import { dSCR } from "utils";
 
 interface dSCR_AddToPlaylist extends dSCR, dRedux {}
 function AddToPlaylist(props: dSCR_AddToPlaylist) {
-  const { navigation, route, playlists, hideFooter, addToPlaylist } = props;
+  const { navigation, route, playlists, toggleFooter, addToPlaylist } = props;
   useEffect(() => {
-    let unsubscribe = navigation.addListener("focus", hideFooter);
+    let unsubscribe = navigation.addListener("focus", () =>
+      toggleFooter("hide")
+    );
     return unsubscribe;
   }, [navigation]);
 

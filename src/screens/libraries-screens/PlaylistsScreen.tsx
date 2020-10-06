@@ -19,7 +19,7 @@ function PlaylistsScreen(props: dSCR_Playlists) {
     media: { mediaFiles },
     playback: { currentTrack },
     playlists,
-    showFooter,
+    toggleFooter,
     createPlaylist,
   } = props;
   const [isModalVisible, setModal] = useState(false);
@@ -29,7 +29,9 @@ function PlaylistsScreen(props: dSCR_Playlists) {
   });
 
   useEffect(() => {
-    let unsubscribe = navigation.addListener("focus", showFooter);
+    let unsubscribe = navigation.addListener("focus", () =>
+      toggleFooter("show")
+    );
     return unsubscribe;
   }, [navigation]);
 
@@ -56,7 +58,9 @@ function PlaylistsScreen(props: dSCR_Playlists) {
   }
 
   function onListItemPress(title, content) {
-    navigation.navigate("playlist-scr", { title, content });
+    toggleFooter("hide", () =>
+      navigation.navigate("playlist-scr", { title, content })
+    );
   }
 
   function onOptionsPress(name) {

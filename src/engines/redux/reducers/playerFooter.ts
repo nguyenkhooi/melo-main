@@ -1,11 +1,14 @@
-const INITIAL_STATE = { footerVisible: true };
+import { dConfigActions, dConfigState } from "../types";
 
-export function footer(state = INITIAL_STATE, action) {
+const INITIAL_STATE: dConfigState = { footerVisible: true };
+
+export function footer(
+  state: dConfigState = INITIAL_STATE,
+  action: dConfigActions
+) {
   switch (action.type) {
-    case "show_footer":
-      return { footerVisible: true };
-    case "hide_footer":
-      return { footerVisible: false };
+    case "toggle_footer":
+      return { ...state, footerVisible: action.payload };
     default:
       return state;
   }

@@ -11,10 +11,12 @@ function FoldersScreen(props: dSCR_Folders) {
     navigation,
     //* redux states
     media: { mediaFiles },
-    showFooter,
+    toggleFooter,
   } = props;
   useEffect(() => {
-    let unsubscribe = navigation.addListener("focus", showFooter);
+    let unsubscribe = navigation.addListener("focus", () =>
+      toggleFooter("show")
+    );
     return unsubscribe;
   }, [navigation]);
 

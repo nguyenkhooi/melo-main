@@ -5,9 +5,14 @@ import { connector, dRedux } from "engines";
 import React from "react";
 import { TouchableOpacity as Touchable } from "react-native";
 import Share from "react-native-share";
+import { TrackProps } from "utils";
 import RenderToast from "../RenderToast";
 
-interface dOptionsMenu extends dRedux {}
+interface dOptionsMenu extends dRedux {
+  lyrics: { currentLyrics: any };
+  target: React.Component;
+  currentItem: TrackProps;
+}
 export const OptionsMenu = connector((props: dOptionsMenu) => {
   const {
     lyrics: { currentLyrics },

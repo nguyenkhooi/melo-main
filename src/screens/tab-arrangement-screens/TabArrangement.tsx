@@ -16,10 +16,12 @@ function TabArrangementScreen(props: dSCR_TabArrangement) {
     //* redux states
     settings: { topTabs },
     setTopTabs,
-    hideFooter,
+    toggleFooter,
   } = props;
   useEffect(() => {
-    let unsubscribe = navigation.addListener("focus", hideFooter);
+    let unsubscribe = navigation.addListener("focus", () =>
+      toggleFooter("hide")
+    );
     return unsubscribe;
   }, [navigation]);
 

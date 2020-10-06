@@ -1,16 +1,17 @@
 import {
   createStackNavigator,
   HeaderBackButton,
-  TransitionPresets
+  TransitionPresets,
 } from "@react-navigation/stack";
 import { CIRCULAR_BOLD } from "assets";
+import { connector } from "engines";
 import R from "ramda";
 import React from "react";
 import {
   AboutScreen,
   ShowContentScreen,
-
-  ShowPlaylistScreen, TabArrangementScreen
+  ShowPlaylistScreen,
+  TabArrangementScreen,
 } from "screens";
 import { withTheme } from "styled-components/native";
 import { KeyOf } from "utils";

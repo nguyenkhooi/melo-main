@@ -12,10 +12,12 @@ function ArtistsScreen(props: dSCR_Artists) {
     //* redux states
     media: { mediaFiles },
     playback: { currentTrack },
-    showFooter,
+    toggleFooter,
   } = props;
   useEffect(() => {
-    let unsubscribe = navigation.addListener("focus", showFooter);
+    let unsubscribe = navigation.addListener("focus", () =>
+      toggleFooter("show")
+    );
     return unsubscribe;
   }, [navigation]);
 
@@ -34,7 +36,9 @@ function ArtistsScreen(props: dSCR_Artists) {
         image={cover}
         index={index}
         numOfTracks={item.data.length}
-        onPress={() => onArtistPress(item.title, item.data)}
+        onPress={() => {
+          toggleFooter("hide", () => onArtistPress(item.title, item.data));
+        }}
       />
     );
   }

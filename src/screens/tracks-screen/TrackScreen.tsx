@@ -48,7 +48,7 @@ function TracksScreen(props: dSCR_Tracks) {
     //* redux actions
     getMedia,
     setShuffle,
-    showFooter,
+    toggleFooter,
     // setCurrentList,
   } = props;
   const indexedTracks = R.sortBy(R.prop("index"))(mediaFiles);
@@ -60,7 +60,7 @@ function TracksScreen(props: dSCR_Tracks) {
   useEffect(() => {
     let unsubscribe = navigation.addListener("focus", () => {
       getMedia(); //* fetch media without showing indicator
-      showFooter();
+      toggleFooter("show");
     });
     return unsubscribe;
   }, [navigation]);
@@ -116,10 +116,10 @@ function TracksScreen(props: dSCR_Tracks) {
           <View
             style={{
               position: "absolute",
-              bottom:
-                footerVisible && currentTrack.id != "000"
-                  ? scale(65)
-                  : scale(25),
+              top: scale(25),
+              // footerVisible && currentTrack.id != "000"
+              //   ? scale(65)
+              //   : scale(25),
               right: spacing[5],
             }}
           >

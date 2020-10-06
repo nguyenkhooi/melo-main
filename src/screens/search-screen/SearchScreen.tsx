@@ -20,7 +20,7 @@ function SearchScreen(props: dSCR_Search) {
     //* redux state
     playback: { currentTrack },
     media: { mediaFiles },
-    showFooter,
+    toggleFooter,
   } = props;
 
   const [searchInput, setInput] = useState("");
@@ -29,7 +29,9 @@ function SearchScreen(props: dSCR_Search) {
   const inputRef = useRef();
 
   useEffect(() => {
-    let unsubscribe1 = navigation.addListener("focus", showFooter);
+    let unsubscribe1 = navigation.addListener("focus", () =>
+      toggleFooter("show")
+    );
     let unsubscribe2 = navigation.addListener("blur", () => setInput(""));
     return () => {
       unsubscribe1();

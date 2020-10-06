@@ -20,7 +20,7 @@ import styled, { withTheme } from "styled-components/native";
 import { contrastColor, contrastTransColor } from "themes";
 import { DEVICE_WIDTH, dSCR, getBottomSpace, spacing } from "utils";
 import ProgressBar from "./ProgressBar";
-import { sstyled } from "./Sstyled";
+import { sstyled } from "./Generals";
 
 interface dCOMP_PlayerFooter extends dSCR, dRedux {}
 
@@ -33,14 +33,13 @@ interface dCOMP_PlayerFooter extends dSCR, dRedux {}
  * -  Swipe horizontally to skip/return track
  * -  Swipe vertically to open SS_PlayerScreen
  *
- * @version 1.1.0
- * @param props
+ * @version 0.10.6
  */
 function PlayerFooter(props: dCOMP_PlayerFooter) {
   const {
     playback: { currentTrack },
     media: { mediaFiles },
-    hideFooter,
+    toggleFooter,
     theme,
   } = props;
   const { position, duration } = useTrackPlayerProgress(100);
@@ -60,8 +59,7 @@ function PlayerFooter(props: dCOMP_PlayerFooter) {
           <Thumbnail
             source={coverSrc}
             onPress={async () => {
-              await hideFooter();
-              navigate("player-scr");
+              toggleFooter("hide", () => navigate("player-scr"));
             }}
           />
           <CtnrTrackInfo>
@@ -82,7 +80,7 @@ function PlayerFooter(props: dCOMP_PlayerFooter) {
   );
 }
 
-const Y_SWIPE_DELTA = 100;
+const Y_SWIPE_DELTA = 160;
 const X_SWIPE_DELTA = 70;
 
 interface dFooterCtnr extends dCOMP_PlayerFooter {
@@ -104,19 +102,10 @@ const CtnrFooter = (props: dFooterCtnr) => {
     playback: { currentTrack, shuffle },
     sethPlayback,
     setShuffle,
+    toggleFooter,
     theme,
     children,
   } = props;
-
-  /**
-   * Run `_onToggleFooter()` ani every time `footerVisible` changes
-   */
-  React.useEffect(
-    function toggleFooter() {
-      _onToggleFooter(footerVisible);
-    },
-    [footerVisible]
-  );
 
   /**
    * ANI FUNCTIONS
@@ -125,21 +114,22 @@ const CtnrFooter = (props: dFooterCtnr) => {
   const panY = useRef(new Animated.Value(0)).current;
 
   const [_isYSwipeable, shouldYSwipeable] = React.useState(true);
-  const [, shouldXSwipeable] = React.useState(true);
+  const [_isXSwipeable, shouldXSwipeable] = React.useState(true);
 
   /**
    * Reverse transition for the footer:
    * user swipes up, the footer slides down
    */
   const _transY = panY.interpolate({
-    inputRange: [-100, 0, 100],
-    outputRange: [100, 0, -100],
+    inputRange: [-160, -60, 0, 100],
+    outputRange: [120, 0, 0, -100],
     extrapolate: "clamp",
   });
 
   const _opacityFooter = panY.interpolate({
-    inputRange: [-60, 0, 60],
-    outputRange: [0, 1, 0],
+    inputRange: [-100, -60, 0, 60],
+    // outputRange: [0, 1, 1, 0],
+    outputRange: [1, 1, 1, 1],
     extrapolate: "clamp",
   });
 
@@ -160,6 +150,16 @@ const CtnrFooter = (props: dFooterCtnr) => {
     extrapolate: "clamp",
   });
 
+  /**
+   * Run `_onToggleFooter()` ani every time `footerVisible` changes
+   */
+  React.useEffect(
+    function toggleFooter() {
+      _onToggleFooter(footerVisible);
+    },
+    [footerVisible]
+  );
+
   const YpanResponder = useRef(
     PanResponder.create({
       /** If user swipes horizontally more than vertically, disable `YpanResponder` */
@@ -168,16 +168,21 @@ const CtnrFooter = (props: dFooterCtnr) => {
           return false;
         } else return gestureState.dy < 0 && _isYSwipeable ? true : false;
       },
-      onPanResponderGrant: () => {},
+      onPanResponderGrant: () => {
+        shouldXSwipeable(false);
+      },
       /** If user swipes down, don't track; else, track `dy` w `panY` */
       onPanResponderMove: (evt, gestureState) => {
         if (gestureState.dy > 0) {
           return null;
         }
-        if (gestureState.dy < 0) {
+        if (gestureState.dy < -0) {
           panY.setValue(gestureState.dy);
           // gestureState.dy < -100 && alert('Fire!!');
         }
+        // if (gestureState.dy < -Y_SWIPE_DELTA) {
+        //   navigate("player-scr");
+        // }
       },
       /**
        * moveY: current Y pos
@@ -187,14 +192,19 @@ const CtnrFooter = (props: dFooterCtnr) => {
         /** If scroll up pass threshold, open `player-scr` */
         if (gestureState.dy < -Y_SWIPE_DELTA) {
           shouldYSwipeable(false);
-          Animated.timing(panY, {
-            toValue: -150,
-            duration: 100,
-            useNativeDriver: true,
-          }).start(() => {
-            navigate("player-scr");
-            shouldYSwipeable(true);
-          });
+          navigate("player-scr");
+          setTimeout(() => {
+            toggleFooter("hide");
+          }, 400);
+          // Animated.timing(panY, {
+          //   toValue: -(100 + 60),
+          //   duration: 500,
+          //   useNativeDriver: true,
+          // }).start(() => {
+          //   // navigate("player-scr");
+          //   shouldXSwipeable(true);
+          //   shouldYSwipeable(true);
+          // });
         }
         /** If scroll not pass threshold, return to initial pos */
         if (gestureState.dy > -Y_SWIPE_DELTA && gestureState.dy < 0) {
@@ -203,7 +213,10 @@ const CtnrFooter = (props: dFooterCtnr) => {
             toValue: 0,
             tension: 1,
             useNativeDriver: true,
-          }).start(() => shouldYSwipeable(true));
+          }).start(() => {
+            shouldXSwipeable(true);
+            shouldYSwipeable(true);
+          });
         }
       },
     })
@@ -219,15 +232,16 @@ const CtnrFooter = (props: dFooterCtnr) => {
       PanResponder.create({
         onMoveShouldSetPanResponder: () => {
           // return gestureState.dy < 0 && _isXSwipeable ? true : false;
-          return true;
+          return _isXSwipeable;
         },
-        onPanResponderGrant: () => {},
+        onPanResponderGrant: () => {
+          shouldYSwipeable(false);
+        },
         onPanResponderMove: (evt, gestureState) => {
           panX.setValue(gestureState.dx);
         },
         onPanResponderRelease: (evt, gestureState) => {
           /** If scroll left pass threshold... */
-
           if (gestureState.dx < -X_SWIPE_DELTA) {
             shouldXSwipeable(false);
             sethPlayback({ type: "fwd" });
@@ -243,7 +257,10 @@ const CtnrFooter = (props: dFooterCtnr) => {
               toValue: 0,
               tension: 1,
               useNativeDriver: true,
-            }).start(() => shouldXSwipeable(true));
+            }).start(() => {
+              shouldXSwipeable(true);
+              shouldYSwipeable(true);
+            });
           }, 200);
         },
       }),
@@ -251,19 +268,24 @@ const CtnrFooter = (props: dFooterCtnr) => {
   );
 
   function _onToggleFooter(isFooterShown: boolean) {
+    console.log("toggling...");
     if (isFooterShown) {
       Animated.timing(panY, {
+        delay: 100,
         toValue: 0,
         duration: 100,
         useNativeDriver: true,
-      }).start();
+      }).start(() => {
+        shouldXSwipeable(true);
+        shouldYSwipeable(true);
+      });
     } else {
-      // onHideFooter();
-      Animated.timing(panY, {
+      const aniHide = Animated.timing(panY, {
         toValue: -150,
         duration: 100,
         useNativeDriver: true,
-      }).start();
+      });
+      _isYSwipeable && aniHide.start();
     }
   }
 

@@ -1,27 +1,14 @@
 import { OptionsModal, RenderTrack } from "components";
 import Buttoon from "components/Generals/Buttoon/Buttoon";
 import { connector, dRedux } from "engines";
-import React, { useEffect, useState } from "react";
-import { Button, FlatList, View } from "react-native";
+import React, { useState } from "react";
+import { FlatList, View } from "react-native";
 import { dSCR, flatListItemLayout, scale, spacing } from "utils";
 
 interface dSCR_ShowFolder extends dSCR, dRedux {}
 function ShowFolderScreen(props: dSCR_ShowFolder) {
-  const {
-    navigation,
-    route,
-    media: { mediaFiles, nowPlayingTracks },
-    playback: { shuffle },
-    setNowPlayingTracks,
-    hideFooter,
-  } = props;
+  const { navigation, route, setNowPlayingTracks } = props;
   const [modal, setModal] = useState({ visible: false, item: {} });
-
-  useEffect(() => {
-    // console.log(">>>", route.params.content);
-    let unsubscribe = navigation.addListener("focus", hideFooter);
-    return unsubscribe;
-  }, [navigation]);
 
   return (
     <View style={{ flex: 1 }}>

@@ -1,8 +1,6 @@
 import React from "react";
 import Dialog from "react-native-dialog";
-import styled, { withTheme } from "styled-components/native";
-import { foreground2Color, contrastColor } from "../themes/styles";
-import { PRODUCT_SANS } from "assets";
+import { withTheme } from "styled-components/native";
 import { evaLight } from "utils";
 
 function ConfirmDialog(props) {
@@ -14,7 +12,7 @@ function ConfirmDialog(props) {
     onCancel,
     cancelButton,
   } = props;
-  const { foreground, contrast, elevatedBG } = props.theme;
+  const { foreground } = props.theme;
   return (
     <Dialog.Container
       visible={isVisible}
@@ -47,13 +45,3 @@ function ConfirmDialog(props) {
 }
 
 export default withTheme(ConfirmDialog);
-
-const DialogTitle = styled(Dialog.Title)`
-  margin-left: 10px;
-  color: ${evaLight["color-basic-800"]};
-`;
-
-const DialogDescription = styled(Dialog.Description)`
-  padding: 10px;
-  color: ${evaLight["color-basic-800"]};
-`;

@@ -22,14 +22,8 @@ function PlayerScreen(props: dSCR_Player) {
     navigation,
     //* redux state
     playback: { currentTrack },
-    hideFooter,
   } = props;
 
-  // const { navigation, currentTrack, theme } = props;
-  useEffect(() => {
-    let unsubscribe = navigation.addListener("focus", hideFooter);
-    return unsubscribe;
-  }, [navigation]);
   const refCarou = React.useRef<Carousel<TrackProps>>();
   return (
     <ImageBackground

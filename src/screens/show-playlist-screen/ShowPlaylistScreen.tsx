@@ -14,14 +14,8 @@ function ShowPlaylistScreen(props: dSCR_ShowPlaylist) {
     route,
     playback: { shuffle },
     setCurrentList,
-    hideFooter,
   } = props;
   const [modal, setModal] = useState({ visible: false, item: {} });
-
-  useEffect(() => {
-    let unsubscribe = navigation.addListener("focus", hideFooter);
-    return unsubscribe;
-  }, [navigation]);
 
   let listData = route.params.content;
   return listData.length > 0 ? (
