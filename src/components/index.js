@@ -6,11 +6,11 @@ export { default as Icon, PROPS_Icon } from "./Icon";
 export * from "./Menus/OptionsMenu";
 export * from "./Modals/$$_Player";
 export { default as OptionsModal } from "./Modals/OptionsModal";
-export { default as PlayerFooter } from "./PlayerFooter";
-export * from "./Players";
+
 export { default as RenderToast } from "./RenderToast";
 export { default as RenderTrack } from "./RenderTrack";
 export * from "./ScreenLayout/ScreenHeader";
+export * from "./Players";
 // export * from "./Generals/Sstyled"; //* Move to generals
 
 /**

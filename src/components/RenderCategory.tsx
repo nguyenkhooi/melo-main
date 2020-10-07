@@ -1,9 +1,16 @@
 import { CIRCULAR, CIRCULAR_BOLD, img } from "assets";
 import React from "react";
-import { Dimensions, TouchableNativeFeedback, View, Image } from "react-native";
+import {
+  Dimensions,
+  TouchableNativeFeedback,
+  View,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import { withTheme } from "styled-components/native";
 import { elevatedBGColor, contrastColor, contrastTransColor } from "themes";
 import { scale } from "utils";
+import { Kitt } from "./Externals";
 
 import { Txt, sstyled } from "./Generals";
 
@@ -19,9 +26,18 @@ function RenderCategory(props) {
   const subText = `${props.numOfTracks} ${
     props.numOfTracks > 1 ? "tracks" : "track"
   }`;
+  const [_loading, setLoading] = React.useState(false);
   return (
-    <TouchableNativeFeedback onPress={props.onPress}>
-      <View style={itemMargin}>
+    <TouchableOpacity
+      onPress={() => {
+        setLoading(true);
+        setTimeout(() => {
+          props.onPress();
+          setLoading(false);
+        }, 300);
+      }}
+    >
+      <View style={[itemMargin, {}]}>
         <Thumbnail {...props} source={imageSource} />
         <CtnrTrackInfo {...props}>
           <TxtArtist {...props} numberOfLines={1}>
@@ -29,8 +45,21 @@ function RenderCategory(props) {
           </TxtArtist>
           <TxtSubtitle {...props}>{subText}</TxtSubtitle>
         </CtnrTrackInfo>
+        {_loading && (
+          <View
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Kitt.Spinner />
+          </View>
+        )}
       </View>
-    </TouchableNativeFeedback>
+    </TouchableOpacity>
   );
 }
 
