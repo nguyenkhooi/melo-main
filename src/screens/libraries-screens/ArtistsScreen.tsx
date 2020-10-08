@@ -4,6 +4,7 @@ import _ from "lodash";
 import RenderCategory from "components/RenderCategory";
 import { dSCR, flatListCardLayout } from "utils";
 import { connector, dRedux } from "engines";
+import { PlayerFooter } from "components";
 
 interface dSCR_Artists extends dSCR, dRedux {}
 function ArtistsScreen(props: dSCR_Artists) {
@@ -12,11 +13,11 @@ function ArtistsScreen(props: dSCR_Artists) {
     //* redux states
     media: { mediaFiles },
     playback: { currentTrack },
-    toggleFooter,
+    
   } = props;
   useEffect(() => {
     let unsubscribe = navigation.addListener("focus", () =>
-      toggleFooter("show")
+      PlayerFooter.open()
     );
     return unsubscribe;
   }, [navigation]);
@@ -37,7 +38,8 @@ function ArtistsScreen(props: dSCR_Artists) {
         index={index}
         numOfTracks={item.data.length}
         onPress={() => {
-          toggleFooter("hide", () => onArtistPress(item.title, item.data));
+          PlayerFooter.close();
+          onArtistPress(item.title, item.data);
         }}
       />
     );

@@ -96,7 +96,7 @@ interface dFooterCtnr extends dCOMP_PlayerFooter {
  */
 const CtnrFooter = (props: dFooterCtnr) => {
   const {
-    footer: { footerVisible },
+    
     player: { isPlaying },
     media: { mediaFiles, nowPlayingTracks },
     playback: { currentTrack, shuffle },
@@ -155,6 +155,7 @@ const CtnrFooter = (props: dFooterCtnr) => {
    */
   React.useEffect(
     function toggleFooter() {
+      // console.log("toggle!");
       _onToggleFooter(footerVisible);
     },
     [footerVisible]
@@ -268,7 +269,7 @@ const CtnrFooter = (props: dFooterCtnr) => {
   );
 
   function _onToggleFooter(isFooterShown: boolean) {
-    console.log("toggling...");
+    // console.log("toggling...");
     if (isFooterShown) {
       Animated.timing(panY, {
         delay: 100,
@@ -412,7 +413,13 @@ const Thumbnail = (props) => {
     <TouchableOpacity onPress={onPress}>
       <Image
         source={source}
-        style={{ height: 42, width: 42, borderRadius: 21, marginLeft: 15 }}
+        style={{
+          height: 42,
+          width: 42,
+          borderRadius: 21,
+          marginLeft: 15,
+          backgroundColor: "#CCCCFF",
+        }}
       />
     </TouchableOpacity>
   );
@@ -431,19 +438,7 @@ const CtnrTrackInfo = sstyled(View)({
   justifyContent: "space-evenly",
   marginLeft: 15,
 });
-// const TextWrapper = styled.View`
-//   height: 75%;
-//   flex: 1;
-//   flex-direction: column;
-//   justify-content: space-evenly;
-//   margin-left: 15px;
-// `;
 
-// const Title= sstyled(Text)(({theme})=>({
-//   fontFamile: CIRCULAR_BOLD,
-//   fontSize: 14,
-//   color: theme.current
-// }))
 const Title = styled.Text`
   font-family: ${CIRCULAR_BOLD};
   font-size: 14px;
@@ -470,3 +465,209 @@ const Progress = styled(ProgressBar)`
 `;
 
 export default connector(withTheme(PlayerFooter));
+
+// import React, { Component } from "react";
+// import {
+//   StyleSheet,
+//   View,
+//   NativeModules,
+//   Text,
+//   Dimensions,
+// } from "react-native";
+// import { PanGestureHandler, State } from "react-native-gesture-handler";
+// import { clamp, onGestureEvent, timing, withSpring } from "react-native-redash";
+
+// import Reanimated from "react-native-reanimated";
+// import { getBottomSpace } from "utils";
+
+// const { UIManager } = NativeModules;
+
+// const {
+//   event,
+//   Value,
+//   Clock,
+//   lessThan,
+//   greaterThan,
+//   divide,
+//   diff,
+//   abs,
+//   startClock,
+//   stopClock,
+//   cond,
+//   add,
+//   sub,
+//   multiply,
+//   eq,
+//   set,
+//   useCode,
+//   block,
+//   not,
+//   clockRunning,
+//   interpolate,
+//   diffClamp,
+//   Extrapolate,
+// } = Reanimated;
+
+// const { height } = Dimensions.get("window");
+// const TABBAR_HEIGHT = getBottomSpace() + 50;
+// const MINIMIZED_PLAYER_HEIGHT = 42;
+// const SNAP_TOP = 0;
+// const SNAP_BOTTOM = height - TABBAR_HEIGHT - MINIMIZED_PLAYER_HEIGHT;
+// const config = {
+//   damping: 15,
+//   mass: 1,
+//   stiffness: 150,
+//   overshootClamping: false,
+//   restSpeedThreshold: 0.1,
+//   restDisplacementThreshold: 0.1,
+// };
+
+// function spring(dt, position, velocity, anchor, mass = 1, tension = 300) {
+//   const dist = sub(position, anchor);
+//   const acc = divide(multiply(-1, tension, dist), mass);
+//   return set(velocity, add(velocity, multiply(dt, acc)));
+// }
+
+// function damping(dt, velocity, mass = 1, damping = 12) {
+//   const acc = divide(multiply(-1, damping, velocity), mass);
+//   return set(velocity, add(velocity, multiply(dt, acc)));
+// }
+
+// function interaction(gestureTranslation, gestureState) {
+//   const dragging = new Value(0);
+//   const start = new Value(0);
+//   const position = new Value(0);
+//   const anchor = new Value(0);
+//   const velocity = new Value(0);
+
+//   const clock = new Clock();
+//   const dt = divide(diff(clock), 1000);
+
+//   return cond(
+//     eq(gestureState, State.ACTIVE),
+//     [
+//       cond(dragging, 0, [set(dragging, 1), set(start, position)]),
+//       set(anchor, add(start, gestureTranslation)),
+
+//       // spring attached to pan gesture "anchor"
+//       spring(dt, position, velocity, anchor),
+//       damping(dt, velocity),
+
+//       // spring attached to the center position (0)
+//       spring(dt, position, velocity, 0),
+//       damping(dt, velocity),
+
+//       set(position, add(position, multiply(velocity, dt))),
+//     ],
+//     [
+//       set(dragging, 0),
+//       startClock(clock),
+//       spring(dt, position, velocity, 0),
+//       damping(dt, velocity),
+//       set(position, add(position, multiply(velocity, dt))),
+//     ]
+//   );
+// }
+
+// interface P1 {
+//   children;
+// }
+
+// class CtnrFooter extends React.Component<P1> {
+//   _onGestureEvent: (...args: any[]) => void;
+//   _transX: Reanimated.Node<number>;
+//   _transY: Reanimated.Node<number>;
+//   constructor(props) {
+//     super(props);
+
+//     const gestureX = new Value(0);
+//     const gestureY = new Value(0);
+//     // const state = new Value(-1);
+
+//     this._onGestureEvent = event([
+//       {
+//         nativeEvent: {
+//           translationX: gestureX,
+//           translationY: gestureY,
+//           state: state,
+//         },
+//       },
+//     ]);
+
+//     this._transX = interaction(gestureX, state);
+//     this._transY = interaction(gestureY, state);
+
+//     const translationY = new Value(0);
+//     const velocityY = new Value(0);
+//     const state = new Value(State.UNDETERMINED);
+//     const offset = new Value(SNAP_BOTTOM);
+//     const goUp: Reanimated.Value<0 | 1> = new Value(0);
+//     const goDown: Reanimated.Value<0 | 1> = new Value(0);
+//     const _onGestureEvent = onGestureEvent({
+//       state,
+//       translationY,
+//       velocityY,
+//     });
+//   }
+//   render() {
+//     return (
+//       <PanGestureHandler
+//         onGestureEvent={this._onGestureEvent}
+//         onHandlerStateChange={this._onGestureEvent}
+//       >
+//         <Reanimated.View
+//           style={[
+//             styles.box,
+//             {
+//               transform: [
+//                 // { translateX: this._transX },
+//                 { translateY: this._transY },
+//               ],
+//             },
+//           ]}
+//         >
+//           {/* <Reanimated.View
+//             style={[
+//               styles.box,
+//               { backgroundColor: "dodgerblue", width: "80%" },
+//               {
+//                 transform: [
+//                   { translateX: this._transX },
+//                   // { translateY: this._transY },
+//                 ],
+//               },
+//             ]}
+//           /> */}
+//         </Reanimated.View>
+//       </PanGestureHandler>
+//     );
+//   }
+// }
+
+// export default class PlayerFooter extends Component {
+//   render() {
+//     return (
+//       <View style={styles.container}>
+//         <CtnrFooter></CtnrFooter>
+//       </View>
+//     );
+//   }
+// }
+
+// const BOX_SIZE = 100;
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: "center",
+//     alignItems: "center",
+//     backgroundColor: "#F5FCFF",
+//   },
+//   box: {
+//     width: "90%",
+//     height: BOX_SIZE,
+//     alignSelf: "center",
+//     backgroundColor: "teal",
+//     margin: BOX_SIZE / 2,
+//   },
+// });

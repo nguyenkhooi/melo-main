@@ -1,4 +1,10 @@
-import { InputDialog, PROPS_Icon, RenderToast, ScreenTitle } from "components";
+import {
+  InputDialog,
+  PlayerFooter,
+  PROPS_Icon,
+  RenderToast,
+  ScreenTitle,
+} from "components";
 import ConfirmDialog from "components/ConfirmDialog";
 import ListItem from "components/ListItem";
 import { settings } from "constants";
@@ -24,14 +30,16 @@ function SettingsScreen(props: dSCR_Settings) {
     settings: { foldersToSkip },
     getMedia,
     setSkipFolders,
-    toggleFooter,
+    
   } = props;
 
   const [isInputVisible, setInputVisible] = useState(false);
   const [isDialogVisible, setDialogVisible] = useState(false);
   useEffect(() => {
-    let unsubscribe = navigation.addListener("focus", () =>
-      toggleFooter("show")
+    let unsubscribe = navigation.addListener(
+      "focus",
+      () => PlayerFooter.open()
+      // toggleFooter("show")
     );
     return unsubscribe;
   }, [navigation]);
@@ -68,7 +76,7 @@ function SettingsScreen(props: dSCR_Settings) {
   const skippedFolders = foldersToSkip.join(", ");
   return (
     <ScrollView style={{ flex: 1, paddingTop: getStatusBarHeight("safe") }}>
-      <ScreenTitle title={"Settings"} />
+      {/* <ScreenTitle title={"Settings"} /> */}
       <ListItem
         onPress={() => {
           RenderToast({
@@ -112,7 +120,8 @@ function SettingsScreen(props: dSCR_Settings) {
         iconProps={icons.rearrange}
         title={settings.changeOrder.title}
         onPress={() => {
-          toggleFooter("hide", () => navigation.navigate("tab-order-scr"));
+          PlayerFooter.close();
+          navigation.navigate("tab-order-scr");
         }}
         subtitle={settings.changeOrder.subtitle}
       />
@@ -134,7 +143,8 @@ function SettingsScreen(props: dSCR_Settings) {
         iconProps={icons.about}
         title={settings.about.title}
         onPress={() => {
-          toggleFooter("hide", () => navigation.navigate("about-scr"));
+          PlayerFooter.close();
+          navigation.navigate("about-scr");
         }}
         subtitle={settings.about.subtitle}
       />

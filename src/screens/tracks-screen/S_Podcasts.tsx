@@ -23,13 +23,13 @@ function TracksScreen(props: dSCR_Tracks) {
     //* redux actions
     setShuffle,
     getMedia,
-    toggleFooter,
+    
     setCurrentList,
   } = props;
 
   useEffect(() => {
     let unsubscribe = navigation.addListener("focus", () =>
-      toggleFooter("show")
+      PlayerFooter.open()
     );
     return unsubscribe;
   }, [navigation]);

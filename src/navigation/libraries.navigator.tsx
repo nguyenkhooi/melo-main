@@ -57,8 +57,8 @@ function LibrariesTopTab(props: {
   };
 
   return (
-    <View style={{ paddingTop: getStatusBarHeight("safe"), flex: 1 }}>
-      <ScreenTitle title="Libraries" />
+   <View style={{flex: 1}}>
+      {/* <ScreenTitle title="Libraries" /> */}
       <TopTabs.Navigator tabBarOptions={tabBarOptions}>
         {props.tabOrder.map((tab) => (
           <TopTabs.Screen name={tab} {...stackOptions[tab]} key={tab} />

@@ -722,6 +722,14 @@
   resolved "https://registry.yarnpkg.com/@eva-design/processor/-/processor-2.0.0.tgz#b291fd94e11fd342fb06af6c333b2be99f4696a9"
   integrity sha512-k+WUjj877u9SoRbSuQ4DO15AF5FkIqIhGzraBNQKDki8J8Xq/4VpOv1YiKEkRF6XjbZU89GKq+e/ipL+VZxI3Q==
 
+"@gorhom/animated-tabbar@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@gorhom/animated-tabbar/-/animated-tabbar-2.0.1.tgz#b82857d04764768e091eda2db0328632c42dd5a6"
+  integrity sha512-KRamjVep3m4QDyNNcV+CYnf2a91yPWhcnGbV9O1dRfw71snHlG4nGzlzR72f+gAyPMwb3IjZNy4ImxoLleh3mw==
+  dependencies:
+    lodash.isequal "^4.5.0"
+    react-native-redash "^14.2.1"
+
 "@hapi/address@2.x.x":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@hapi/address/-/address-2.1.4.tgz#5d67ed43f3fd41a69d4b9ff7b56e7c0d1d0a81e5"
@@ -5292,7 +5300,7 @@ react-native-reanimated@^1.7.1:
   dependencies:
     fbjs "^1.0.0"
 
-react-native-redash@^14.1.1:
+react-native-redash@^14.1.1, react-native-redash@^14.2.1:
   version "14.2.4"
   resolved "https://registry.yarnpkg.com/react-native-redash/-/react-native-redash-14.2.4.tgz#5dbb4b2f1a7441bb304fe3494b89e0dc9010c8ef"
   integrity sha512-/1R9UxXv3ffKcrbxolqa2B247Cgd3ikyEm2q1VlBng77Es6PAD4LAOXQ83pBavvwNfOsbhF3ebkbMpJcLaVt3Q==

@@ -4,6 +4,7 @@ import _ from "lodash";
 import ListItem from "components/ListItem";
 import { connector, dRedux } from "engines";
 import { dSCR } from "utils";
+import { PlayerFooter } from "components";
 
 interface dSCR_Folders extends dSCR, dRedux {}
 function FoldersScreen(props: dSCR_Folders) {
@@ -11,11 +12,11 @@ function FoldersScreen(props: dSCR_Folders) {
     navigation,
     //* redux states
     media: { mediaFiles },
-    toggleFooter,
+    
   } = props;
   useEffect(() => {
     let unsubscribe = navigation.addListener("focus", () =>
-      toggleFooter("show")
+      PlayerFooter.open()
     );
     return unsubscribe;
   }, [navigation]);

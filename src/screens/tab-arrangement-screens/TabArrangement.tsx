@@ -1,5 +1,5 @@
 import { PRODUCT_SANS_BOLD } from "assets";
-import { PROPS_Icon } from "components";
+import { PlayerFooter, PROPS_Icon } from "components";
 import ListItem from "components/ListItem";
 import { connector, dRedux } from "engines";
 import React, { useEffect } from "react";
@@ -16,11 +16,11 @@ function TabArrangementScreen(props: dSCR_TabArrangement) {
     //* redux states
     settings: { topTabs },
     setTopTabs,
-    toggleFooter,
+    
   } = props;
   useEffect(() => {
     let unsubscribe = navigation.addListener("focus", () =>
-      toggleFooter("hide")
+      PlayerFooter.close()
     );
     return unsubscribe;
   }, [navigation]);

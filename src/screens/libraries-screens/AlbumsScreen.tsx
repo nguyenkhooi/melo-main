@@ -5,6 +5,7 @@ import _ from "lodash";
 import RenderCategory from "components/RenderCategory";
 import { dSCR, flatListCardLayout } from "utils";
 import { connector, dRedux } from "engines";
+import { PlayerFooter } from "components";
 
 interface dSCR_Albums extends dSCR, dRedux {}
 
@@ -14,11 +15,11 @@ function AlbumsScreen(props: dSCR_Albums) {
     //* redux states
     media: { mediaFiles },
     playback: { currentTrack },
-    toggleFooter,
+    
   } = props;
   useEffect(() => {
     let unsubscribe = navigation.addListener("focus", () =>
-      toggleFooter("show")
+      PlayerFooter.open()
     );
     return unsubscribe;
   }, [navigation]);

@@ -2,6 +2,7 @@ import { CIRCULAR } from "assets";
 import {
   Kitt,
   OptionsModal,
+  PlayerFooter,
   RenderTrack,
   ScreenTitle,
   sstyled,
@@ -13,7 +14,7 @@ import { connector, dRedux, sethPlayback } from "engines";
 import R from "ramda";
 import React, { useEffect, useState } from "react";
 import { Animated, Dimensions, StatusBar, View, ViewStyle } from "react-native";
-import QuickScrollList from "react-native-quick-scroll";
+// import QuickScrollList from "react-native-quick-scroll";
 import styled, { withTheme } from "styled-components/native";
 import { contrastColor } from "themes";
 import TrackPlayer from "react-native-track-player";
@@ -29,6 +30,8 @@ import {
 import { FlatList } from "react-native-gesture-handler";
 import Buttoon from "components/Generals/Buttoon/Buttoon";
 
+const QuickScrollList = FlatList;
+
 const ScreenHeight = Dimensions.get("window").height;
 const StatusBarHeight = StatusBar.currentHeight;
 const FooterHeight = 60;
@@ -42,13 +45,13 @@ function TracksScreen(props: dSCR_Tracks) {
   const {
     navigation,
     //* redux state
-    footer: { footerVisible },
+
     playback: { currentTrack, shuffle },
     media: { mediaLoaded, mediaFiles, nowPlayingTracks },
     //* redux actions
     getMedia,
     setShuffle,
-    toggleFooter,
+
     // setCurrentList,
   } = props;
   const indexedTracks = R.sortBy(R.prop("index"))(mediaFiles);
@@ -60,7 +63,7 @@ function TracksScreen(props: dSCR_Tracks) {
   useEffect(() => {
     let unsubscribe = navigation.addListener("focus", () => {
       getMedia(); //* fetch media without showing indicator
-      toggleFooter("show");
+      PlayerFooter.open();
     });
     return unsubscribe;
   }, [navigation]);
@@ -78,8 +81,8 @@ function TracksScreen(props: dSCR_Tracks) {
       // if (1 == 1) {
       // if (1 == 1) {
       return (
-        <View style={{ paddingTop: getStatusBarHeight("safe"), flex: 1 }}>
-          <ScreenTitle title={"Your Melo"} />
+        <View style={{ flex: 1 }}>
+          {/* <ScreenTitle title={"Your Melo"} /> */}
 
           {/* <Txt.P1>{R.pluck("title")(nowPlayingTracks)}</Txt.P1> */}
           <QuickScrollList
@@ -97,6 +100,7 @@ function TracksScreen(props: dSCR_Tracks) {
             )}
             getItemLayout={flatListItemLayout}
             scrollEventThrottle={16}
+            maxToRenderPerBatch={30}
             contentContainerStyle={styles.flatlistContent}
             initialScrollIndex={currentTrack.index || undefined}
             ListFooterComponentStyle={{

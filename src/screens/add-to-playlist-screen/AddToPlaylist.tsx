@@ -1,4 +1,5 @@
 import { CIRCULAR } from "assets";
+import { PlayerFooter } from "components";
 import ListItem from "components/ListItem";
 import RenderToast from "components/RenderToast";
 import { connector, dRedux } from "engines";
@@ -10,10 +11,10 @@ import { dSCR } from "utils";
 
 interface dSCR_AddToPlaylist extends dSCR, dRedux {}
 function AddToPlaylist(props: dSCR_AddToPlaylist) {
-  const { navigation, route, playlists, toggleFooter, addToPlaylist } = props;
+  const { navigation, route, playlists,  addToPlaylist } = props;
   useEffect(() => {
     let unsubscribe = navigation.addListener("focus", () =>
-      toggleFooter("hide")
+      PlayerFooter.close()
     );
     return unsubscribe;
   }, [navigation]);

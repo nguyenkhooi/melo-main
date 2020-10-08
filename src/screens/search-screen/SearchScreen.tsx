@@ -1,5 +1,10 @@
 import { CIRCULAR_BOLD } from "assets";
-import { OptionsModal, RenderTrack, ScreenTitle } from "components";
+import {
+  OptionsModal,
+  PlayerFooter,
+  RenderTrack,
+  ScreenTitle,
+} from "components";
 import Icon from "components/Icon";
 import SearchInput from "components/SearchInput";
 import { connector, dRedux } from "engines";
@@ -20,7 +25,6 @@ function SearchScreen(props: dSCR_Search) {
     //* redux state
     playback: { currentTrack },
     media: { mediaFiles },
-    toggleFooter,
   } = props;
 
   const [searchInput, setInput] = useState("");
@@ -30,7 +34,7 @@ function SearchScreen(props: dSCR_Search) {
 
   useEffect(() => {
     let unsubscribe1 = navigation.addListener("focus", () =>
-      toggleFooter("show")
+      PlayerFooter.open()
     );
     let unsubscribe2 = navigation.addListener("blur", () => setInput(""));
     return () => {
@@ -100,7 +104,7 @@ function SearchScreen(props: dSCR_Search) {
 
   return (
     <Wrapper>
-      <ScreenTitle title="Search" />
+      {/* <ScreenTitle title="Search" /> */}
       <SearchWrapper onPress={() => inputRef.current.focus()}>
         <SearchInput
           ref={inputRef}
@@ -147,7 +151,6 @@ const Title = styled.Text`
 `;
 
 const SearchWrapper = styled.TouchableOpacity`
-  margin-top: 24px;
   align-items: center;
 `;
 

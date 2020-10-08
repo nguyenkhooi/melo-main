@@ -1,5 +1,5 @@
 import { IconPrimr } from "assets";
-import { dAccessory, InputDialog, Kitt } from "components";
+import { dAccessory, InputDialog, Kitt, PlayerFooter } from "components";
 import Icon, { PROPS_Icon } from "components/Icon";
 import ListItem from "components/ListItem";
 import PlaylistOptions from "components/PlaylistOptions";
@@ -19,7 +19,7 @@ function PlaylistsScreen(props: dSCR_Playlists) {
     media: { mediaFiles },
     playback: { currentTrack },
     playlists,
-    toggleFooter,
+    
     createPlaylist,
   } = props;
   const [isModalVisible, setModal] = useState(false);
@@ -30,7 +30,7 @@ function PlaylistsScreen(props: dSCR_Playlists) {
 
   useEffect(() => {
     let unsubscribe = navigation.addListener("focus", () =>
-      toggleFooter("show")
+      PlayerFooter.open()
     );
     return unsubscribe;
   }, [navigation]);
@@ -58,9 +58,8 @@ function PlaylistsScreen(props: dSCR_Playlists) {
   }
 
   function onListItemPress(title, content) {
-    toggleFooter("hide", () =>
-      navigation.navigate("playlist-scr", { title, content })
-    );
+    PlayerFooter.close();
+    navigation.navigate("playlist-scr", { title, content });
   }
 
   function onOptionsPress(name) {

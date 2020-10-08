@@ -84,7 +84,7 @@ export const iconOptions = {
     icon: "numeric-1-box",
   } as dIconOptions,
   minus: { type: "fa5", icon: "minus" } as dIconOptions,
-  music: { type: "fa5", icon: "music" } as dIconOptions,
+  music: { type: "fa5", icon: "ello" } as dIconOptions,
   pause: { type: "fa5", icon: "pause" } as dIconOptions,
   pen: { type: "fa5", icon: "pen" } as dIconOptions,
   placeholder: { type: "fa5", icon: "kickstarter-k" } as dIconOptions,

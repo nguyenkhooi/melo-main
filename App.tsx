@@ -1,5 +1,6 @@
 //@ts-check
-import RootNavigator, {
+import {
+  RootNavigator,
   canExit,
   navigationRef,
   setRootNavigation,
