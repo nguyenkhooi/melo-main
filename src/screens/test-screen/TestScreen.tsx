@@ -10,7 +10,7 @@ import playlistData from "./playlist.json";
 interface dSCR_Tracks extends dSCR, dRedux {}
 function TestScreen(props: dSCR_Tracks) {
   const {
-    media: { nowPlayingTracks, mediaFiles },
+    media: { nowPlayingIDs: nowPlayingTracks, mediaFiles },
   } = props;
   const playbackState = usePlaybackState();
   const [_tracks, setTracks] = React.useState(mediaFiles);

@@ -3,7 +3,7 @@ import R from "ramda";
 import TrackPlayer from "react-native-track-player";
 import { Dispatch } from "redux";
 import { store } from "store";
-import { errorReporter, TrackProps } from "utils";
+import { errorReporter, trackID, TrackProps } from "utils";
 import {
   dRedux,
   NowPlayingTracksAction,
@@ -19,7 +19,7 @@ import {
  * @param currentTrack
  * @deprecated
  */
-export const setCurrentTrackk = (currentTrack?: TrackProps) => async (
+export const setCurrentTrackk = () => async (
   dispatch: Dispatch<SetCurrentTrackAction | SetPlayerAction>
 ) => {
   try {
@@ -112,11 +112,11 @@ type dSethPlayback = {
 export const sethPlayback = ({ type }: dSethPlayback) => async (dispatch) => {
   try {
     const {
-      media: { nowPlayingTracks, mediaFiles },
+      media: { nowPlayingIDs },
       playback: { currentTrack },
     }: dRedux = store.getState();
 
-    const nowPlayingIDs: string[] = fn.js.vLookup(nowPlayingTracks, "id"); //* List of now playing's id, in order
+    // const nowPlayingIDs: string[] = fn.js.vLookup(nowPlayingIDs, "id"); //* List of now playing's id, in order
     // const currentTrackID = await TrackPlayer.getCurrentTrack(); //* Get currentTrack's ID
     const currentTrackID = currentTrack.id; //* Get currentTrack's ID from Redux
     const currentTrackPosition = nowPlayingIDs.indexOf(currentTrackID); //* Find currentTrack's position in `nowPlayingTracks`
@@ -144,8 +144,8 @@ export const sethPlayback = ({ type }: dSethPlayback) => async (dispatch) => {
         // currentTrack.id === nowPlayingTracks[nowPlayingTracks.length - 1].id &&
         //   console.log("End of list");
         const targetedTrackID: string =
-          currentTrack.id === nowPlayingTracks[nowPlayingTracks.length - 1].id
-            ? nowPlayingTracks[0].id
+          currentTrack.id === nowPlayingIDs[nowPlayingIDs.length - 1]
+            ? nowPlayingIDs[0]
             : nowPlayingIDs[currentTrackPosition + 1];
 
         return dispatch(setCurrentTrackID(targetedTrackID));
@@ -161,8 +161,8 @@ export const sethPlayback = ({ type }: dSethPlayback) => async (dispatch) => {
         // currentTrack.id === nowPlayingTracks[0].id &&
         //   console.log("Start of list");
         const targetedTrackID1: string =
-          currentTrack.id === nowPlayingTracks[0].id
-            ? nowPlayingTracks[nowPlayingTracks.length - 1].id
+          currentTrack.id === nowPlayingIDs[0]
+            ? nowPlayingIDs[nowPlayingIDs.length - 1]
             : nowPlayingIDs[currentTrackPosition - 1];
 
         return dispatch(setCurrentTrackID(targetedTrackID1));
@@ -203,7 +203,7 @@ export const setLoop = (isLoop: boolean): ToggleLoopAction => {
  *
  * @version 0.10.5
  */
-export const setShuffle = (isShuffle: boolean, tracks?: TrackProps[]) => async (
+export const setShuffle = (isShuffle: boolean, trackIDs?: trackID[]) => async (
   dispatch: Dispatch<
     ToggleShuffleAction | NowPlayingTracksAction | SetCurrentTrackAction
   >
@@ -212,11 +212,11 @@ export const setShuffle = (isShuffle: boolean, tracks?: TrackProps[]) => async (
     const {
       media: { mediaFiles },
     } = store.getState();
-
-    const _tracks = tracks || mediaFiles;
-    const targetedTracks = isShuffle
-      ? knuthShuffle([..._tracks], "knuth")
-      : R.sortBy(R.prop("index"))([..._tracks]);
+    const __trackIDs = fn.js.vLookup(mediaFiles, "id") as trackID[];
+    const _trackIDs = trackIDs || __trackIDs;
+    const targetedIDs = isShuffle
+      ? (knuthShuffle([..._trackIDs], "knuth") as trackID[])
+      : (__trackIDs as trackID[]);
     const playbackState = await TrackPlayer.getState();
 
     // const newTracks = isShuffle ? shuffledTracks : indexedTracked;
@@ -227,9 +227,10 @@ export const setShuffle = (isShuffle: boolean, tracks?: TrackProps[]) => async (
     //   "index og vs new: ",
     //   currentTrack.index + " - " + currentTrackPosition
     // );
-    dispatch({ type: "now_playing_tracks", payload: targetedTracks });
+    dispatch({ type: "now_playing_tracks", payload: targetedIDs });
     playbackState != TrackPlayer.STATE_PLAYING &&
-      dispatch(setCurrentTrackID(targetedTracks[0].id));
+      //@ts-ignore
+      dispatch(setCurrentTrackID(targetedIDs[0]));
 
     console.log("is shuffled?", isShuffle);
     return dispatch({ type: "set_shuffle", payload: isShuffle });

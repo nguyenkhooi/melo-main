@@ -47,7 +47,7 @@ function TracksScreen(props: dSCR_Tracks) {
     //* redux state
 
     playback: { currentTrack, shuffle },
-    media: { mediaLoaded, mediaFiles, nowPlayingTracks },
+    media: { mediaLoaded, mediaFiles, nowPlayingIDs: nowPlayingTracks },
     //* redux actions
     getMedia,
     setShuffle,
@@ -135,7 +135,7 @@ function TracksScreen(props: dSCR_Tracks) {
               icon={{ name: "shuffle" }}
               onPress={async (xong) => {
                 await TrackPlayer.pause();
-                await setShuffle(true, mediaFiles);
+                await setShuffle(true);
                 await sethPlayback({ type: "fwd" });
                 xong();
               }}

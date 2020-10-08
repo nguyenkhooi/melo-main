@@ -4,14 +4,19 @@ import styled, { withTheme } from "styled-components/native";
 import Icon from "./Icon";
 import { contrastColor, contrastTransColor } from "../themes/styles";
 import { PRODUCT_SANS, PRODUCT_SANS_LIGHT } from "assets";
+import { Kitt } from "./Externals";
 
 const ScreenWidth = Dimensions.get("window").width;
 
 function ListItem(props) {
+  const { onCheck } = props;
   const rippleColor =
     props.theme.current === "dark"
       ? "rgba(255, 255, 255, 0.1)"
       : "rgba(18, 18, 18, 0.1)";
+
+  const [checked, setChecked] = React.useState(false);
+
   return (
     <Touchable
       onPress={props.onPress}
@@ -20,6 +25,12 @@ function ListItem(props) {
       background={Touchable.Ripple(rippleColor, false)}
     >
       <Wrapper>
+        {/* <Kitt.CheckBox
+          checked={checked}
+          onChange={(nextChecked) => {
+            setChecked(nextChecked);
+          }}
+        ></Kitt.CheckBox> */}
         <StyledIcon {...props.iconProps} />
         <TextWrapper>
           <Title style={props.titleStyle} numberOfLines={1}>

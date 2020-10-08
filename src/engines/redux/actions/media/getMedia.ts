@@ -1,3 +1,4 @@
+import { fn } from "engines/functions";
 import MusicFiles from "react-native-get-music-files";
 import { Dispatch } from "redux";
 import RNFetchBlob from "rn-fetch-blob";
@@ -5,10 +6,12 @@ import { store } from "store";
 import {
   checkStoragePermissions,
   cleanupMedia,
+  dTracks,
   errorReporter,
   IS_ANDROID,
+  trackID,
 } from "utils";
-import { dRedux, GetMediaAction, NowPlayingTracksAction } from "../types";
+import { dRedux, GetMediaAction, NowPlayingTracksAction } from "../../types";
 
 // import MusicFiles from 'react-native-get-music-files-v3dev-test';
 
@@ -84,22 +87,30 @@ export const getMedia = () => async (
     console.log("granted: ", media.mediaLoaded && granted);
     if (media.mediaLoaded && granted) {
       let tracks = await getMediaWithCovers();
+      const trackIDs = fn.js.vLookup(tracks, "id") as trackID[];
       dispatch({ type: "get_media_success", payload: tracks });
-      if (media.nowPlayingTracks == []) {
-        dispatch({ type: "now_playing_tracks", payload: tracks });
+      /** If nowPlayingTracks = []:
+       *  - no queue
+       *  - 1st time app startup
+       */
+      if (media.nowPlayingIDs == []) {
+        dispatch({ type: "now_playing_tracks", payload: trackIDs });
       }
     } else {
       console.log("New coming...");
       // let results = await MusicFiles.getAll(options);
       /** Temporary set __MEDIA for ios since it doesn't have local db */
-      let tracks = IS_ANDROID
+      let tracks: dTracks = IS_ANDROID
         ? cleanupMedia(await MusicFiles.getAll(options))
         : __MEDIA;
+      const trackIDs = fn.js.vLookup(tracks, "id") as trackID[];
+
       dispatch({ type: "get_media_success", payload: tracks });
-      dispatch({ type: "now_playing_tracks", payload: tracks });
+      dispatch({ type: "now_playing_tracks", payload: trackIDs });
       let trackWithCovers = await getMediaWithCovers();
+      const trackwCoversIDs = fn.js.vLookup(tracks, "id") as trackID[];
       dispatch({ type: "get_media_success", payload: trackWithCovers });
-      dispatch({ type: "now_playing_tracks", payload: trackWithCovers });
+      dispatch({ type: "now_playing_tracks", payload: trackwCoversIDs });
     }
   } catch (e) {
     errorReporter(e);

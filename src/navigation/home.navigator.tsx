@@ -14,6 +14,7 @@ import {
   TracksScreen,
 } from "screens";
 import { withTheme } from "styled-components/native";
+import { backgroundColor } from "themes";
 import { getBottomSpace, KeyOf, scale } from "utils";
 import TopMaterialTabNav from "./libraries.navigator";
 // import AnimatedTabBar, {
@@ -85,12 +86,11 @@ function HomeBottomTab(props) {
     },
     activeTintColor: foreground,
     inactiveTintColor: `${contrastTrans}0.7)`,
-    activeBackgroundColor: elevatedBG,
-    inactiveBackgroundColor: elevatedBG,
+
     style: {
       // height: 48,
       borderTopWidth: 0,
-      backgroundColor: elevatedBG,
+      backgroundColor: backgroundColor(props),
     } as ViewStyle,
     allowFontScaling: false,
   };

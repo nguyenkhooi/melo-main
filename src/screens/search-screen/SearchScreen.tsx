@@ -57,7 +57,7 @@ function SearchScreen(props: dSCR_Search) {
 
   function renderSearch() {
     const renderMargin =
-      currentTrack.id !== "000" ? { marginBottom: 60 } : { flex: 1 };
+      { flex: 1 };
     return (
       <FlatList
         data={listFilter()}

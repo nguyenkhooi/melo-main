@@ -17,6 +17,7 @@ import styled, { withTheme } from "styled-components/native";
 import { contrastColor, contrastTransColor, elevatedBGColor } from "themes";
 import ProgressBar from "../ProgressBar";
 import { sstyled, Txt } from "../Generals";
+import { TouchableNativeFeedback } from "react-native-gesture-handler";
 
 interface P {}
 
@@ -89,10 +90,11 @@ class SS_PlayerFooter extends React.Component<P> {
         }}
         withOverlay={false}
         overlayStyle={{ backgroundColor: "transparent" }}
-        //   alwaysOpen={-DEVICE_HEIGHT + 200}
+        alwaysOpen={getBottomSpace("safe") + scale(40) + scale(40)}
         // snapPoint={HEADER_HEIGHT}
         withHandle={false}
         onPositionChange={(position) => {
+          console.log("position");
           if (position == "top") {
             this.jumpToPlayerScr();
           }
@@ -130,17 +132,27 @@ const $_PlayerFooter = connector(
       /** NOTE replace with animation. See _toggleFooter() */
       // footerVisible &&
       currentTrack.id !== "000" && (
-        <View {...props}>
+        <>
           <CtnrFooterContent {...props}>
-            <Thumbnail source={coverSrc} onPress={jumpToPlayerScr} />
-            <CtnrTrackInfo>
-              <Title {...props} numberOfLines={1}>
-                {currentTrack.title || "unknown"}
-              </Title>
-              <Artist {...props} numberOfLines={1}>
-                {currentTrack.artist || "unknown"}
-              </Artist>
-            </CtnrTrackInfo>
+            <TouchableNativeFeedback
+              {...props}
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                paddingVertical: spacing[2],
+              }}
+              onPress={jumpToPlayerScr}
+            >
+              <Thumbnail source={coverSrc} onPress={jumpToPlayerScr} />
+              <CtnrTrackInfo>
+                <Title {...props} numberOfLines={1}>
+                  {currentTrack.title || "unknown"}
+                </Title>
+                <Artist {...props} numberOfLines={1}>
+                  {currentTrack.artist || "unknown"}
+                </Artist>
+              </CtnrTrackInfo>
+            </TouchableNativeFeedback>
             <$_FooterActions {...props} />
           </CtnrFooterContent>
           <ProgressWrapper>
@@ -150,7 +162,7 @@ const $_PlayerFooter = connector(
               color={theme.foreground}
             />
           </ProgressWrapper>
-        </View>
+        </>
       )
     );
   })
@@ -164,8 +176,8 @@ const $_FooterActions = (props: dRedux) => {
   return (
     <View
       style={{
-        position: "absolute",
-        right: 0,
+        // position: "absolute",
+        // right: 0,
         flexDirection: "row",
         justifyContent: "center",
       }}
@@ -201,7 +213,7 @@ const $_FooterActions = (props: dRedux) => {
       name="shuffle"
       color={shuffle ? "dodgerblue" : "grey"}
       
-      onPress={() => setShuffle(!shuffle, nowPlayingTracks)}
+      onPress={() => setShuffle(!shuffle, nowPlayingIDs)}
     /> */}
     </View>
   );
@@ -238,14 +250,13 @@ const Thumbnail = (props) => {
 const CtnrFooterContent = sstyled(View)((p) => ({
   flexDirection: "row",
   alignItems: "center",
-  paddingVertical: spacing[2],
   borderRadius: scale(5),
   backgroundColor: elevatedBGColor(p),
 }));
 
 const CtnrTrackInfo = sstyled(View)({
   height: "75%",
-  flex: 1,
+  // flex: 1,
   flexDirection: "column",
   justifyContent: "space-evenly",
   marginLeft: 15,

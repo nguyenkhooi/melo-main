@@ -24,94 +24,91 @@ interface dTrackComp extends dRedux {
  *
  * @version 0.10.5
  */
-export const RenderTrack: React.FC<dTrackComp> = connector(
-  React.memo(
-    (props: dTrackComp) => {
-      const {
-        item,
-        playback: { currentTrack },
-        setCurrentTrackID,
-        setOptions,
-        parent = "track-scr",
-      } = props;
+export const RenderTrack: React.FC<dTrackComp> = React.memo(
+  (props: dTrackComp) => {
+    const {
+      item,
+      playback: { currentTrack },
+      setCurrentTrackID,
+      setOptions,
+      parent = "track-scr",
+    } = props;
 
-      async function onTrackPress() {
-        if (item.id !== currentTrack.id) {
-          switch (parent) {
-            case "track-scr":
-              /** If track is pressed,
-               * set `nowPlayingTracks` using `setShuffle()`
-               * NOTE should think more about this
-               */
-              await setCurrentTrackID(item.id);
-              // await setShuffle(shuffle, mediaFiles);
-              return;
-              break;
-            case "search-scr":
-              await setCurrentTrackID(item.id);
-              return;
-              break;
-            case "playlist-scr":
-              await setCurrentTrackID(item.id);
-              return;
-              break;
-            case "now-playing-scr":
-              await setCurrentTrackID(item.id);
-              return;
-              break;
-            case "contents-scr":
-              await setCurrentTrackID(item.id);
-              return;
-              break;
-            default:
-              return;
-              break;
-          }
+    async function onTrackPress() {
+      if (item.id !== currentTrack.id) {
+        switch (parent) {
+          case "track-scr":
+            /** If track is pressed,
+             * set `nowPlayingTracks` using `setShuffle()`
+             * NOTE should think more about this
+             */
+            await setCurrentTrackID(item.id);
+            return;
+            break;
+          case "search-scr":
+            await setCurrentTrackID(item.id);
+            return;
+            break;
+          case "playlist-scr":
+            await setCurrentTrackID(item.id);
+            return;
+            break;
+          case "now-playing-scr":
+            await setCurrentTrackID(item.id);
+            return;
+            break;
+          case "contents-scr":
+            await setCurrentTrackID(item.id);
+            return;
+            break;
+          default:
+            return;
+            break;
         }
       }
+    }
 
-      const coverSrc = item.artwork ? { uri: item.artwork } : img.placeholder;
-      return (
-        <Touchable
-          onPress={onTrackPress}
-          onLongPress={() => setOptions({ visible: true, item })}
-          activeOpacity={0.4}
-        >
-          <Thumbnail {...props} source={coverSrc} />
-          <CtnrTrackInfo>
-            <Title
-              {...props}
-              numberOfLines={1}
-              current={item.id === currentTrack.id}
-            >
-              {item.title}
-              {/* {item.id} */}
-            </Title>
-            <Artist {...props} numberOfLines={1}>
-              {item.artist}
-            </Artist>
-            {/* <Text>{JSON.stringify(Object.keys(item))}</Text> */}
-          </CtnrTrackInfo>
-          <IconPrimr
-            preset={`safe`}
-            name={"dots_vertical"}
-            size={20}
-            color={contrastTransColor(0.75)(props)}
-            onPress={() => setOptions({ visible: true, item })}
-          />
-        </Touchable>
-      );
-    },
-    (prevProps: dTrackComp, nextProps: dTrackComp) =>
-      !(
-        nextProps.playback.currentTrack.id === nextProps.item.id ||
-        prevProps.playback.currentTrack.id === prevProps.item.id ||
-        prevProps.item !== nextProps.item
-      )
-  )
+    const coverSrc = item.artwork ? { uri: item.artwork } : img.placeholder;
+    return (
+      <Touchable
+        onPress={onTrackPress}
+        onLongPress={() => setOptions({ visible: true, item })}
+        activeOpacity={0.4}
+      >
+        <Thumbnail {...props} source={coverSrc} />
+        <CtnrTrackInfo>
+          <Title
+            {...props}
+            numberOfLines={1}
+            current={item.id === currentTrack.id}
+          >
+            {item.title}
+            {/* {item.id} */}
+          </Title>
+          <Artist {...props} numberOfLines={1}>
+            {item.artist}
+          </Artist>
+          {/* <Text>{JSON.stringify(Object.keys(item))}</Text> */}
+        </CtnrTrackInfo>
+        <IconPrimr
+          preset={`safe`}
+          name={"dots_vertical"}
+          size={20}
+          color={contrastTransColor(0.75)(props)}
+          onPress={() => setOptions({ visible: true, item })}
+        />
+      </Touchable>
+    );
+  },
+  (prevProps: dTrackComp, nextProps: dTrackComp) =>
+    !(
+      nextProps.playback.currentTrack.id === nextProps.item.id ||
+      prevProps.playback.currentTrack.id === prevProps.item.id ||
+      prevProps.item !== nextProps.item
+    )
 );
 
-export default withTheme(RenderTrack);
+export default connector(withTheme(RenderTrack));
 
 const Touchable = sstyled(TouchableOpacity)({
   flexDirection: "row",

@@ -1,10 +1,9 @@
-import { TrackProps } from "utils";
+import { TrackProps, trackID } from "utils";
 
 export const get_media_success = "get_media_success";
 export const now_playing_tracks = "now_playing_tracks";
 export const rename_track = "rename_track";
 export const delete_track = "delete_track";
-
 export interface GetMediaAction {
   type: typeof get_media_success;
   payload: TrackProps[];
@@ -12,7 +11,8 @@ export interface GetMediaAction {
 
 export interface NowPlayingTracksAction {
   type: typeof now_playing_tracks;
-  payload: TrackProps[];
+  // payload: TrackProps[];
+  payload: trackID[];
 }
 
 export interface RenameTrackAction {
@@ -44,7 +44,7 @@ export interface dMediaState {
    * - playback fn depends on this list
    * to skip to appropiate track
    */
-  nowPlayingTracks: TrackProps[];
+  nowPlayingIDs: trackID[];
 }
 
 export type dMediaActions =

@@ -3,7 +3,7 @@ import { View, FlatList } from "react-native";
 import _ from "lodash";
 
 import RenderCategory from "components/RenderCategory";
-import { dSCR, flatListCardLayout } from "utils";
+import { dSCR, flatListCardLayout, getBottomSpace, scale } from "utils";
 import { connector, dRedux } from "engines";
 import { PlayerFooter } from "components";
 
@@ -15,7 +15,6 @@ function AlbumsScreen(props: dSCR_Albums) {
     //* redux states
     media: { mediaFiles },
     playback: { currentTrack },
-    
   } = props;
   useEffect(() => {
     let unsubscribe = navigation.addListener("focus", () =>
@@ -62,8 +61,7 @@ function AlbumsScreen(props: dSCR_Albums) {
     return sortedData;
   }
 
-  let bottomMargin =
-    currentTrack.id !== "000" ? { marginBottom: 60 } : { flex: 1 };
+  let bottomMargin = { flex: 1 };
   return (
     <View style={bottomMargin}>
       <FlatList
@@ -72,6 +70,7 @@ function AlbumsScreen(props: dSCR_Albums) {
         numColumns={2}
         getItemLayout={flatListCardLayout}
         keyExtractor={(asset) => asset.title.toString()}
+        contentContainerStyle={{ paddingBottom: getBottomSpace() + scale(120) }}
       />
     </View>
   );

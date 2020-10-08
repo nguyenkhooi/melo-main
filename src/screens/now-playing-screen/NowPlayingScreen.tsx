@@ -1,20 +1,30 @@
 import { IconPrimr, CIRCULAR } from "assets";
 import { OptionsModal, RenderTrack, sstyled } from "components";
-import { connector, dRedux } from "engines";
+import { connector, dRedux, fn } from "engines";
 import React, { useState } from "react";
 import { Animated, FlatList, Text, View } from "react-native";
 import { withTheme } from "styled-components";
 import { contrastTransColor } from "themes";
-import { dSCR, spacing } from "utils";
+import { dSCR, spacing, TrackProps } from "utils";
 
 interface dSCR_Tracks extends dSCR, dRedux {}
 function NowPlayingScreen(props: dSCR_Tracks) {
   const {
     navigation,
-    media: { nowPlayingTracks },
+    media: { mediaFiles, nowPlayingIDs },
     playback: { currentTrack },
     // setCurrentList,
   } = props;
+
+  const [_queue, setQueue] = React.useState<TrackProps[]>([]);
+  React.useEffect(function fetchListfromIDs() {
+    const queue = fn.js.filterByValues(
+      "id",
+      nowPlayingIDs,
+      mediaFiles
+    ) as TrackProps[];
+    setQueue(queue);
+  }, []);
   // React.useEffect(() => {
   //   let unsubscribe = navigation.addListener("focus", () =>
   //     {
@@ -34,14 +44,18 @@ function NowPlayingScreen(props: dSCR_Tracks) {
       <CtnrNowPlaying {...props}>
         <TxtSub
           {...props}
-          onPress={() =>
-            refList.current.scrollToIndex({
-              animated: true,
-              index: currentTrack.index,
-            })
-          }
+          onPress={() => {
+            try {
+              refList.current.scrollToIndex({
+                animated: true,
+                index: currentTrack.index,
+              });
+            } catch (error) {
+              console.warn(error);
+            }
+          }}
         >
-          Coming up next • {nowPlayingTracks.length}
+          Coming up next • {nowPlayingIDs.length}
         </TxtSub>
         <IconPrimr
           preset={"safe"}
@@ -55,7 +69,7 @@ function NowPlayingScreen(props: dSCR_Tracks) {
       <FlatList
         ref={refList}
         keyExtractor={(asset) => asset.id.toString()}
-        data={nowPlayingTracks}
+        data={_queue}
         renderItem={({ item }) => (
           <RenderTrack
             {...props}

@@ -9,7 +9,7 @@ import { DEVICE_WIDTH, scale } from "utils";
 interface dPlaybackControl extends dRedux {}
 function S_PlaybackControl(props: dPlaybackControl) {
   const {
-    media: { mediaFiles, nowPlayingTracks },
+    media: { mediaFiles, nowPlayingIDs },
     playback: { currentTrack, loop, shuffle },
     player: { isPlaying },
     sethPlayback,
@@ -25,7 +25,7 @@ function S_PlaybackControl(props: dPlaybackControl) {
         {...props}
         type="sub"
         name="shuffle"
-        onPress={() => setShuffle(!shuffle, nowPlayingTracks)}
+        onPress={() => setShuffle(!shuffle, nowPlayingIDs)}
         color={
           shuffle ? foregroundColor(props) : contrastTransColor(0.35)(props)
         }
