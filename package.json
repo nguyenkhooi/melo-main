@@ -1,6 +1,6 @@
 {
   "name": "Melo",
-  "version": "3.0.11",
+  "version": "3.0.12",
   "private": true,
   "scripts": {
     "android": "cd android && gradlew clean && cd .. && react-native run-android --port 8013",
