@@ -1,6 +1,6 @@
 {
   "name": "Melo",
-  "version": "3.0.12",
+  "version": "3.0.13",
   "private": true,
   "scripts": {
     "android": "cd android && gradlew clean && cd .. && react-native run-android --port 8013",
@@ -62,6 +62,7 @@
     "react-native-track-player": "^1.2.3",
     "react-native-vector-icons": "7.1.0",
     "react-redux": "^7.2.0",
+    "recyclerlistview": "^3.0.0",
     "redux": "^4.0.5",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",

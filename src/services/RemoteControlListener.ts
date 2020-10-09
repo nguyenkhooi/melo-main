@@ -23,6 +23,23 @@ let flag = false;
 // }
 
 async function bgService() {
+  TrackPlayer.addEventListener("playback-state", async () => {
+    const tpState = await TrackPlayer.getState();
+    switch (tpState) {
+      case TrackPlayer.STATE_NONE:
+        return store.dispatch({ type: "set_playback", payload: false });
+      case TrackPlayer.STATE_PLAYING:
+        // console.log("listening play");
+        return store.dispatch({ type: "set_playback", payload: true });
+      case TrackPlayer.STATE_PAUSED:
+        // console.log("listening pause");
+        return store.dispatch({ type: "set_playback", payload: false });
+      case TrackPlayer.STATE_STOPPED:
+        return store.dispatch({ type: "set_playback", payload: false });
+      case TrackPlayer.STATE_BUFFERING:
+        return store.dispatch({ type: "set_playback", payload: false });
+    }
+  });
   TrackPlayer.addEventListener("remote-play", () => {
     console.log("remote-playing...");
     TrackPlayer.play();

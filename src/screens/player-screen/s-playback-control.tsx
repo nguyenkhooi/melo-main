@@ -5,12 +5,14 @@ import React from "react";
 import { View } from "react-native";
 import { contrastColor, contrastTransColor, foregroundColor } from "themes";
 import { DEVICE_WIDTH, scale } from "utils";
+import { usePlaybackState } from "react-native-track-player/lib/hooks";
+import TrackPlayer from "react-native-track-player";
 
 interface dPlaybackControl extends dRedux {}
 function S_PlaybackControl(props: dPlaybackControl) {
   const {
-    media: { mediaFiles, nowPlayingIDs },
-    playback: { currentTrack, loop, shuffle },
+    media: { nowPlayingIDs },
+    playback: { loop, shuffle },
     player: { isPlaying },
     sethPlayback,
     setShuffle,
@@ -18,6 +20,8 @@ function S_PlaybackControl(props: dPlaybackControl) {
     onNext,
     onBack,
   } = props;
+
+  const playbackState = usePlaybackState();
 
   return (
     <CtnrMain {...props}>
@@ -42,7 +46,7 @@ function S_PlaybackControl(props: dPlaybackControl) {
       <ActionIcon
         {...props}
         type="main"
-        name={isPlaying ? "pause" : "play"}
+        name={playbackState === TrackPlayer.STATE_PLAYING ? "pause" : "play"}
         onPress={() =>
           sethPlayback({
             type: isPlaying ? "pause" : "play",

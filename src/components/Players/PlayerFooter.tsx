@@ -1,4 +1,5 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Image, TouchableOpacity, View } from "react-native";
 import { Modalize } from "react-native-modalize";
 import { DEVICE_WIDTH, dSCR, getBottomSpace, scale, spacing } from "utils";
@@ -9,7 +10,14 @@ import {
   IconPrimr,
   img,
 } from "assets";
-import { connector, dRedux } from "engines";
+import {
+  connector,
+  dRedux,
+  ReduxStates,
+  rootReducer,
+  sethPlayback,
+  setShuffle,
+} from "engines";
 import { navigate } from "navigation";
 
 import { useTrackPlayerProgress } from "react-native-track-player/lib/hooks";
@@ -18,6 +26,8 @@ import { contrastColor, contrastTransColor, elevatedBGColor } from "themes";
 import ProgressBar from "../ProgressBar";
 import { sstyled, Txt } from "../Generals";
 import { TouchableNativeFeedback } from "react-native-gesture-handler";
+import TrackPlayer from "react-native-track-player";
+import { usePlaybackState } from "react-native-track-player/lib/hooks";
 
 interface P {}
 
@@ -94,7 +104,7 @@ class SS_PlayerFooter extends React.Component<P> {
         // snapPoint={HEADER_HEIGHT}
         withHandle={false}
         onPositionChange={(position) => {
-          console.log("position");
+          // console.log("position");
           if (position == "top") {
             this.jumpToPlayerScr();
           }
@@ -114,110 +124,114 @@ interface dCOMP_PlayerFooter extends dSCR, dRedux {
   jumpToPlayerScr(): void;
 }
 
-const $_PlayerFooter = connector(
-  withTheme((props: dCOMP_PlayerFooter) => {
-    const {
-      playback: { currentTrack },
-      theme,
-      jumpToPlayerScr,
-    } = props;
-    const { position, duration } = useTrackPlayerProgress(100);
-
-    const progress = position / duration;
-    const coverSrc = currentTrack.artwork
-      ? { uri: currentTrack.artwork }
-      : img.placeholder;
-
-    return (
-      /** NOTE replace with animation. See _toggleFooter() */
-      // footerVisible &&
-      currentTrack.id !== "000" && (
-        <>
-          <CtnrFooterContent {...props}>
-            <TouchableNativeFeedback
-              {...props}
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                paddingVertical: spacing[2],
-              }}
-              onPress={jumpToPlayerScr}
-            >
-              <Thumbnail source={coverSrc} onPress={jumpToPlayerScr} />
-              <CtnrTrackInfo>
-                <Title {...props} numberOfLines={1}>
-                  {currentTrack.title || "unknown"}
-                </Title>
-                <Artist {...props} numberOfLines={1}>
-                  {currentTrack.artist || "unknown"}
-                </Artist>
-              </CtnrTrackInfo>
-            </TouchableNativeFeedback>
-            <$_FooterActions {...props} />
-          </CtnrFooterContent>
-          <ProgressWrapper>
-            <Progress
-              // {...props}
-              progress={isNaN(progress) ? 0 : +progress.toFixed(3)}
-              color={theme.foreground}
-            />
-          </ProgressWrapper>
-        </>
-      )
-    );
-  })
-);
-
-const $_FooterActions = (props: dRedux) => {
+function $_PlayerFooter(props: dCOMP_PlayerFooter) {
   const {
-    player: { isPlaying },
-    sethPlayback,
+    // playback: { currentTrack },
+    theme,
+    jumpToPlayerScr,
   } = props;
+  const currentTrack = useSelector((state) => state.playback.currentTrack);
+  const { position, duration } = useTrackPlayerProgress(100);
+
+  const progress = position / duration;
+  const coverSrc = currentTrack.artwork
+    ? { uri: currentTrack.artwork }
+    : img.placeholder;
+
+  return (
+    /** NOTE replace with animation. See _toggleFooter() */
+    // footerVisible &&
+    currentTrack.id !== "000" && (
+      <>
+        <CtnrFooterContent {...props}>
+          <TouchableNativeFeedback
+            {...props}
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              paddingVertical: spacing[2],
+            }}
+            // onPress={jumpToPlayerScr}
+          >
+            <Thumbnail source={coverSrc} onPress={jumpToPlayerScr} />
+            <CtnrTrackInfo>
+              <Title {...props} numberOfLines={1}>
+                {currentTrack.title || "unknown"}
+              </Title>
+              <Artist {...props} numberOfLines={1}>
+                {currentTrack.artist || "unknown"}
+              </Artist>
+            </CtnrTrackInfo>
+          </TouchableNativeFeedback>
+          <$_FooterActions {...props} />
+        </CtnrFooterContent>
+        <ProgressWrapper>
+          <Progress
+            // {...props}
+            progress={isNaN(progress) ? 0 : +progress.toFixed(3)}
+            color={theme.foreground}
+          />
+        </ProgressWrapper>
+      </>
+    )
+  );
+}
+
+function $_FooterActions(props: dRedux) {
+  const {
+    // player: { isPlaying },
+    // sethPlayback,
+  } = props;
+  const shuffle = useSelector((state) => state.playback.shuffle);
+  const nowPlayingIDs = useSelector((state) => state.media.nowPlayingIDs);
+  const dispatch = useDispatch();
+  const playbackState = usePlaybackState();
   return (
     <View
       style={{
-        // position: "absolute",
-        // right: 0,
         flexDirection: "row",
         justifyContent: "center",
+        //* for debugging
+        // position: "absolute",
+        // right: 0,
       }}
     >
-      {isPlaying ? (
+      {/* <Txt.S2>state:{JSON.stringify(isPlaying)}</Txt.S2> */}
+      {/* {isPlaying ? ( */}
+      {playbackState === TrackPlayer.STATE_PLAYING ? (
         <ActionIcon
           {...props}
           name="pause"
-          onPress={() => sethPlayback({ type: "pause" })}
+          onPress={() => dispatch(sethPlayback({ type: "pause" }))}
         />
       ) : (
         <ActionIcon
           {...props}
           name="play"
           onPress={() => {
-            sethPlayback({ type: "play" });
+            dispatch(sethPlayback({ type: "play" }));
           }}
         />
       )}
       <ActionIcon
         {...props}
         name="forward"
-        onPress={() => sethPlayback({ type: "fwd" })}
+        onPress={() => dispatch(sethPlayback({ type: "fwd" }))}
       />
-      {/* <ActionIcon
-      {...props}
-      name="backward"
-      
-      onPress={() => sethPlayback({ type: "bwd" })}
-    />
-    <ActionIcon
-      {...props}
-      name="shuffle"
-      color={shuffle ? "dodgerblue" : "grey"}
-      
-      onPress={() => setShuffle(!shuffle, nowPlayingIDs)}
-    /> */}
+      <ActionIcon
+        {...props}
+        name="backward"
+        onPress={() => dispatch(sethPlayback({ type: "bwd" }))}
+      />
+      <ActionIcon
+        {...props}
+        name="shuffle"
+        color={shuffle ? "dodgerblue" : "grey"}
+        onPress={() => dispatch(setShuffle(!shuffle, nowPlayingIDs))}
+      />
     </View>
   );
-};
+}
 interface dActionIcon extends dIconPrimr {}
 const ActionIcon = (props: dActionIcon) => (
   <IconPrimr
@@ -282,4 +296,4 @@ const Progress = styled(ProgressBar)`
   background-color: ${contrastTransColor(0.1)};
 `;
 
-export default SS_PlayerFooter;
+export default withTheme(SS_PlayerFooter);

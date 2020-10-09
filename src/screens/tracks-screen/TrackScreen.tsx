@@ -10,12 +10,13 @@ import {
 } from "components";
 import RenderActivityIndicator from "components/RenderActivityIndicator";
 import { scanMessage } from "constants";
-import { connector, dRedux, sethPlayback } from "engines";
+import { connector, dRedux, fn, sethPlayback } from "engines";
 import R from "ramda";
 import React, { useEffect, useState } from "react";
 import { Animated, Dimensions, StatusBar, View, ViewStyle } from "react-native";
 // import QuickScrollList from "react-native-quick-scroll";
-import styled, { withTheme } from "styled-components/native";
+import { withTheme } from "styled-components/native";
+import { RecyclerListView, DataProvider } from "recyclerlistview";
 import { contrastColor } from "themes";
 import TrackPlayer from "react-native-track-player";
 import {
@@ -47,7 +48,7 @@ function TracksScreen(props: dSCR_Tracks) {
     //* redux state
 
     playback: { currentTrack, shuffle },
-    media: { mediaLoaded, mediaFiles, nowPlayingIDs: nowPlayingTracks },
+    media: { mediaLoaded, mediaFiles, nowPlayingIDs, mediaIDs },
     //* redux actions
     getMedia,
     setShuffle,
@@ -59,6 +60,11 @@ function TracksScreen(props: dSCR_Tracks) {
   const [scrollY] = useState(new Animated.Value(0));
   const [modal, setModal] = useState({ visible: false, item: {} });
   const [_isFetched, shouldFetch] = React.useState(false);
+  const [_tracks, getTracks] = React.useState(
+    new DataProvider((r1, r2) => {
+      return r1 !== r2;
+    })
+  );
 
   useEffect(() => {
     let unsubscribe = navigation.addListener("focus", () => {
@@ -83,8 +89,7 @@ function TracksScreen(props: dSCR_Tracks) {
       return (
         <View style={{ flex: 1 }}>
           {/* <ScreenTitle title={"Your Melo"} /> */}
-
-          {/* <Txt.P1>{R.pluck("title")(nowPlayingTracks)}</Txt.P1> */}
+          {/* <Txt.P1>{JSON.stringify(nowPlayingIDs)}</Txt.P1> */}
           <QuickScrollList
             keyExtractor={(asset) => asset.id.toString()}
             data={indexedTracks}
@@ -133,17 +138,14 @@ function TracksScreen(props: dSCR_Tracks) {
               size="giant"
               progress={true}
               icon={{ name: "shuffle" }}
+              // onPress={fetchMedia}
               onPress={async (xong) => {
                 await TrackPlayer.pause();
                 await setShuffle(true);
                 await sethPlayback({ type: "fwd" });
                 xong();
               }}
-            >
-              {/* {`Shuffle 'Em Alls: ${mediaFiles.length} - ${
-                nowPlayingTracks.length
-              }${shuffle ? "*" : ""}`} */}
-            </Buttoon>
+            />
           </View>
         </View>
       );

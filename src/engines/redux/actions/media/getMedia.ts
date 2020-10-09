@@ -11,7 +11,15 @@ import {
   IS_ANDROID,
   trackID,
 } from "utils";
-import { dRedux, GetMediaAction, NowPlayingTracksAction } from "../../types";
+import {
+  dRedux,
+  GetMediaAction,
+  get_media_order,
+  GetMediaOrderAction,
+  NowPlayingTracksAction,
+  get_media_success,
+  now_playing_tracks,
+} from "../../types";
 
 // import MusicFiles from 'react-native-get-music-files-v3dev-test';
 
@@ -76,7 +84,9 @@ const options = {
  * distribute them to `now_playing_tracks` and `mediaFiles`
  */
 export const getMedia = () => async (
-  dispatch: Dispatch<GetMediaAction | NowPlayingTracksAction>
+  dispatch: Dispatch<
+    GetMediaAction | NowPlayingTracksAction | GetMediaOrderAction
+  >
 ) => {
   try {
     // let granted = await checkStoragePermissionsOG();
@@ -105,12 +115,14 @@ export const getMedia = () => async (
         : __MEDIA;
       const trackIDs = fn.js.vLookup(tracks, "id") as trackID[];
 
-      dispatch({ type: "get_media_success", payload: tracks });
-      dispatch({ type: "now_playing_tracks", payload: trackIDs });
+      dispatch({ type: get_media_success, payload: tracks });
+      dispatch({ type: now_playing_tracks, payload: trackIDs });
+      dispatch({ type: get_media_order, payload: trackIDs });
       let trackWithCovers = await getMediaWithCovers();
       const trackwCoversIDs = fn.js.vLookup(tracks, "id") as trackID[];
-      dispatch({ type: "get_media_success", payload: trackWithCovers });
-      dispatch({ type: "now_playing_tracks", payload: trackwCoversIDs });
+      dispatch({ type: get_media_success, payload: trackWithCovers });
+      dispatch({ type: now_playing_tracks, payload: trackwCoversIDs });
+      dispatch({ type: get_media_order, payload: trackwCoversIDs });
     }
   } catch (e) {
     errorReporter(e);

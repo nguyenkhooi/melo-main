@@ -36,28 +36,32 @@ function FoldersScreen(props: dSCR_Folders) {
     navigation.navigate("content-scr", { title, content });
   }
 
-  function renderFolders() {
-    let data = _.groupBy(mediaFiles, "folder");
-    console.log("data:  ", Object.keys(data));
-    let keys = Object.keys(data);
-    return keys.map((key, index) => (
-      <ListItem
-        title={key}
-        subtitle={`${data[key].length} tracks`}
-        key={(key + index).toString()}
-        onPress={() => onListItemPress(key, data[key])}
-        onSelect={(name) => {
-          const _folderToKeep = [..._folder, name];
-          const _folderToSkip = R.filter(
-            (name) => !_folderToKeep.includes(name),
-            Object.keys(data)
-          );
-          setFolders(_folderToSkip);
-        }}
-        iconProps={folderIcon}
-      />
-    ));
-  }
+  const renderFolders = React.memo(
+    (props) => {
+      let data = _.groupBy(mediaFiles, "folder");
+      console.log("data:  ", Object.keys(data));
+      let keys = Object.keys(data);
+      return keys.map((key, index) => (
+        <ListItem
+          title={key}
+          subtitle={`${data[key].length} tracks`}
+          key={(key + index).toString()}
+          onPress={() => onListItemPress(key, data[key])}
+          onSelect={(name) => {
+            const _folderToKeep = [..._folder, name];
+            const _folderToSkip = R.filter(
+              (name) => !_folderToKeep.includes(name),
+              Object.keys(data)
+            );
+            setFolders(_folderToSkip);
+          }}
+          iconProps={folderIcon}
+        />
+      ));
+    },
+
+    (prevProps, nextProps) => prevProps === nextProps
+  );
 
   return (
     <View style={{ flex: 1 }}>
@@ -77,7 +81,7 @@ function FoldersScreen(props: dSCR_Folders) {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: getBottomSpace() + scale(120) }}
       >
-        {renderFolders()}
+        {/* {renderFolders} */}
       </ScrollView>
     </View>
   );
