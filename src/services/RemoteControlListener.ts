@@ -1,6 +1,6 @@
 import { dRedux, setCurrentTrackID, sethPlayback } from "engines";
+import { Alert } from "react-native";
 import TrackPlayer from "react-native-track-player";
-import { getRandomNumber, TrackProps } from "utils";
 import { store } from "../store";
 
 let flag = false;
@@ -23,23 +23,54 @@ let flag = false;
 // }
 
 async function bgService() {
-  TrackPlayer.addEventListener("playback-state", async () => {
-    const tpState = await TrackPlayer.getState();
-    switch (tpState) {
+  let {
+    playback: { currentTrack, loop },
+    media: { mediaFiles },
+  }: dRedux = store.getState();
+
+  TrackPlayer.addEventListener("playback-state", async (e) => {
+    /**
+     * 0  - none
+     * 1  - stop
+     * 2  - pause
+     * 3  - play
+     * ?4  -
+     * ?5  -
+     * 6  - buffering
+     * 7  - connecting
+     * ?8  - "ready"
+     */
+    switch (e.state) {
       case TrackPlayer.STATE_NONE:
-        return store.dispatch({ type: "set_playback", payload: false });
+        console.log("none", e);
+        // return store.dispatch({ type: "set_playback", payload: false });
+        break;
       case TrackPlayer.STATE_PLAYING:
+        console.log("playing", e);
         // console.log("listening play");
-        return store.dispatch({ type: "set_playback", payload: true });
+        // return store.dispatch({ type: "set_playback", payload: true });
+        break;
       case TrackPlayer.STATE_PAUSED:
+        console.log("paused", e);
         // console.log("listening pause");
-        return store.dispatch({ type: "set_playback", payload: false });
+        // return store.dispatch({ type: "set_playback", payload: false });
+        break;
       case TrackPlayer.STATE_STOPPED:
-        return store.dispatch({ type: "set_playback", payload: false });
+        console.log("stop", e);
+        // return store.dispatch({ type: "set_playback", payload: false });
+        break;
       case TrackPlayer.STATE_BUFFERING:
-        return store.dispatch({ type: "set_playback", payload: false });
+        console.log("buffering", e);
+        // return store.dispatch({ type: "set_playback", payload: false });
+        break;
+      case TrackPlayer.STATE_READY:
+        console.log("ready", e);
+        break;
+      default:
+        console.log("unknown", e);
     }
   });
+
   TrackPlayer.addEventListener("remote-play", () => {
     console.log("remote-playing...");
     TrackPlayer.play();
@@ -70,6 +101,22 @@ async function bgService() {
     store.dispatch(sethPlayback({ type: "fwd" }));
   });
 
+  TrackPlayer.addEventListener("playback-track-changed", async (e) => {
+    console.log("track changed listener: ", e);
+    try {
+      if (currentTrack.id !== "000" && !!e && !!e.nextTrack) {
+        const targetedTrack = await TrackPlayer.getTrack(e.nextTrack);
+        store.dispatch({
+          type: "current_track",
+          payload: targetedTrack,
+        });
+        // store.dispatch(sethPlayback({ type: "fwd" }));
+      }
+    } catch (error) {
+      console.warn("err track-changed: ", error);
+    }
+  });
+
   TrackPlayer.addEventListener("remote-previous", () => {
     console.log("remote-previous...");
     // let { playback, media }: dRedux = store.getState();
@@ -85,12 +132,13 @@ async function bgService() {
     store.dispatch(sethPlayback({ type: "bwd" }));
   });
 
+  /**
+   * @note "playback-queue-ended" is not top important anymore in the latest logic,
+   * since TP now contains the whole track[]
+   *
+   */
   TrackPlayer.addEventListener("playback-queue-ended", ({ position }) => {
-    console.log("remote-queue-end...");
-    let {
-      playback: { currentTrack, loop },
-      media: { mediaFiles },
-    }: dRedux = store.getState();
+    console.log("remote-queue-end...:", position);
     // console.log("current state: ", playback);
     // console.warn("current media: ", mediaFiles.length);
     if (position > 0) {
@@ -99,6 +147,7 @@ async function bgService() {
         // backgroundPlayback(currentTrack);
         store.dispatch(setCurrentTrackID(currentTrack.id));
       } else {
+        Alert.alert("Done!!");
         store.dispatch(sethPlayback({ type: "fwd" }));
         // backgroundPlayback(
         //   shuffle

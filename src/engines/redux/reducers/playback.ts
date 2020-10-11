@@ -1,4 +1,10 @@
-import { dPlaybackActions, dPlaybackState } from "../types";
+import {
+  current_track,
+  dPlaybackActions,
+  dPlaybackState,
+  set_loop,
+  set_shuffle
+} from "../types";
 
 const INITIAL_STATE: dPlaybackState = {
   currentTrack: {
@@ -21,11 +27,11 @@ export function playback(
   action: dPlaybackActions
 ) {
   switch (action.type) {
-    case "current_track":
+    case current_track:
       return { ...state, currentTrack: action.payload };
-    case "set_loop":
+    case set_loop:
       return { ...state, loop: action.payload };
-    case "set_shuffle":
+    case set_shuffle:
       return { ...state, shuffle: action.payload };
     default:
       return state;

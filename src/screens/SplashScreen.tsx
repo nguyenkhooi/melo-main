@@ -1,13 +1,18 @@
 //@ts-check
 import { img } from "assets";
 import { sstyled } from "components";
-import { connector, dRedux } from "engines";
+import { connector, dRedux, getMedia } from "engines";
 import React from "react";
-import { Image, StatusBar, Text, View } from "react-native";
+import { Image, StatusBar, View } from "react-native";
+import { useDispatch } from "react-redux";
 import { colors, dSCR } from "utils";
 
 interface dSCR_Splash extends dSCR, dRedux {}
 function SplashScreen() {
+  const dispatch = useDispatch();
+  React.useEffect(function fetchMedia() {
+    dispatch(getMedia());
+  }, []);
   return (
     <Ctnr>
       <StatusBar backgroundColor={colors.elevatedBG} animated />

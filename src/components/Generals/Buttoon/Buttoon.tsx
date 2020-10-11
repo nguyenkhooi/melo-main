@@ -37,69 +37,95 @@ interface P extends ButtonProps {
     Play
   </Buttoon>
  * 
- * @version 0.10.5 
+ * @version 0.10.10
  */
-export default function Buttoon(props: P) {
-  const {
-    icon,
-    compact = false,
-    appearance,
-    onPress,
-    progress,
-    textStyle,
-  } = props;
-  const [_loading, setLoading] = React.useState(false);
-  function _onPress() {
-    setLoading(progress);
+export default class Buttoon extends React.PureComponent<P> {
+  constructor(props: P) {
+    super(props);
+    this.state = {
+      _loading: false,
+    };
+    this._onPress = this._onPress.bind(this);
+  }
+  _onPress() {
+    this.setState({ _loading: this.props.progress });
     Keyboard.dismiss();
     //@ts-ignore
-    onPress && onPress(() => setLoading(false));
+    this.props.onPress &&
+      this.props.onPress(() => this.setState({ _loading: false }));
   }
 
+  static Fab(p: P) {
+    return Fab(p);
+  }
+  render() {
+    const {
+      icon,
+      compact = false,
+      appearance,
+      onPress,
+      progress,
+      style,
+    } = this.props;
+
+    return (
+      <Button
+        {...this.props}
+        onPress={this._onPress}
+        style={[
+          style,
+          !!compact && { alignSelf: "center" },
+          appearance == "icon" && {
+            borderRadius: scale(100),
+            borderWidth: 0,
+            width: scale(20),
+            height: scale(20),
+            margin: scale(3),
+          },
+        ]}
+        accessoryLeft={(props: dAccessory) => {
+          return this.state._loading ? (
+            <ActivityIndicator color={props.style.tintColor} />
+          ) : (
+            !R.isNil(icon) && R.isNil(icon.right) && (
+              <IconPrimr
+                preset={"default"}
+                name={`arrow_left`}
+                size={props.style.width * 0.8}
+                color={props.style.tintColor}
+                {...icon}
+              />
+            )
+          );
+        }}
+        accessoryRight={(props: dAccessory) => {
+          return (
+            !R.isNil(icon) &&
+            !R.isNil(icon.right) && (
+              <IconPrimr
+                preset={`safe`}
+                name={`arrow_left`}
+                size={props.style.width * 0.8}
+                color={props.style.tintColor}
+                {...icon}
+              />
+            )
+          );
+        }}
+      />
+    );
+  }
+}
+
+function Fab(props: P) {
   return (
-    <Button
+    <Buttoon
+      style={{ padding: 30, borderRadius: 100 }}
+      compact
+      size="giant"
+      progress={true}
+      icon={{ name: "placeholder" }}
       {...props}
-      onPress={_onPress}
-      style={[
-        props.style,
-        !!compact && { alignSelf: "center" },
-        appearance == "icon" && {
-          borderRadius: scale(100),
-          borderWidth: 0,
-          width: scale(20),
-          height: scale(20),
-          margin: scale(3),
-        },
-      ]}
-      accessoryLeft={(props: dAccessory) => {
-        return _loading ? (
-          <ActivityIndicator color={props.style.tintColor} />
-        ) : (
-          !R.isNil(icon) && R.isNil(icon.right) && (
-            <IconPrimr
-              preset={"default"}
-              name={`arrow_left`}
-              size={props.style.width * 0.8}
-              color={props.style.tintColor}
-              {...icon}
-            />
-          )
-        );
-      }}
-      accessoryRight={(props: dAccessory) => {
-        return (
-          !R.isNil(icon) &&
-          !R.isNil(icon.right) && (
-            <IconPrimr
-              preset={`safe`}
-              name={`arrow_left`}
-              size={props.style.width * 0.8}
-              color={props.style.tintColor}
-              {...icon}
-            />
-          )
-        );
-      }}
     />
   );
 }

@@ -1,11 +1,11 @@
 import { CIRCULAR, IconPrimr, img } from "assets";
 import { connector, dRedux } from "engines";
 import React from "react";
-import { Dimensions, Image, TouchableOpacity, View } from "react-native";
+import { Image, TouchableOpacity, View } from "react-native";
 import { withTheme } from "styled-components/native";
 import { contrastColor, contrastTransColor, foregroundColor } from "themes";
 import { DEVICE_WIDTH, scale, spacing, TrackProps } from "utils";
-import { Txt, sstyled } from "./Generals";
+import { sstyled, Txt } from "./Generals";
 
 interface dTrackComp extends dRedux {
   item: TrackProps;
@@ -22,48 +22,52 @@ interface dTrackComp extends dRedux {
  * Track Info Render used in multiple TrackLists throughout the project
  * Component's behavior depends on its parent
  *
- * @version 0.10.5
+ * @version 0.10.10 *( disable to touch until `onTrackPress()` is done )*
  */
 export const RenderTrack: React.FC<dTrackComp> = React.memo(
   (props: dTrackComp) => {
     const {
       item,
       playback: { currentTrack },
+      media: { mediaFiles, mediaIDs },
       setCurrentTrackID,
+      setNowPlayingTracks,
       setOptions,
       parent = "track-scr",
     } = props;
 
+    const [_isDisabled, shouldDisabled] = React.useState(false);
+
     async function onTrackPress() {
+      //* to prevent pressing the same track multiple times
       if (item.id !== currentTrack.id) {
+        shouldDisabled(true);
         switch (parent) {
           case "track-scr":
-            /** If track is pressed,
-             * set `nowPlayingTracks` using `setShuffle()`
-             * NOTE should think more about this
-             */
-            await setCurrentTrackID(item.id);
-            return;
+            // await setCurrentTrackID(item.id);
+            await setNowPlayingTracks(mediaIDs, mediaFiles, true, item.id);
+            return shouldDisabled(false);
             break;
           case "search-scr":
             await setCurrentTrackID(item.id);
-            return;
+            return shouldDisabled(false);
             break;
           case "playlist-scr":
             await setCurrentTrackID(item.id);
-            return;
+            return shouldDisabled(false);
             break;
           case "now-playing-scr":
             await setCurrentTrackID(item.id);
-            return;
+            return shouldDisabled(false);
             break;
           case "contents-scr":
             await setCurrentTrackID(item.id);
-            return;
+            return shouldDisabled(false);
             break;
           default:
-            return;
+            return shouldDisabled(false);
             break;
+          // }
         }
       }
     }
@@ -71,7 +75,8 @@ export const RenderTrack: React.FC<dTrackComp> = React.memo(
     const coverSrc = item.artwork ? { uri: item.artwork } : img.placeholder;
     return (
       <Touchable
-        onPress={onTrackPress}
+        disabled={_isDisabled}
+        onPress={() => onTrackPress()}
         onLongPress={() => setOptions({ visible: true, item })}
         activeOpacity={0.4}
       >
@@ -82,8 +87,8 @@ export const RenderTrack: React.FC<dTrackComp> = React.memo(
             numberOfLines={1}
             current={item.id === currentTrack.id}
           >
-            {item.title}
-            {/* {item.id} */}
+            {/* {item.title} */}
+            {item.duration}
           </Title>
           <Artist {...props} numberOfLines={1}>
             {item.artist}

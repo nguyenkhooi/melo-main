@@ -3,7 +3,14 @@ import Buttoon from "components/Generals/Buttoon/Buttoon";
 import { connector, dRedux, fn } from "engines";
 import React, { useState } from "react";
 import { FlatList, View } from "react-native";
-import { dSCR, flatListItemLayout, scale, spacing, TrackProps } from "utils";
+import {
+  dSCR,
+  dTracks,
+  flatListItemLayout,
+  scale,
+  spacing,
+  TrackProps
+} from "utils";
 
 interface dSCR_ShowFolder extends dSCR, dRedux {
   route: { params: { content: TrackProps[] } };
@@ -17,9 +24,11 @@ function ShowFolderScreen(props: dSCR_ShowFolder) {
   } = props;
   const [modal, setModal] = useState({ visible: false, item: {} });
   const [_queueIDs, setQueueIDs] = React.useState([]);
+  const [_queue, setQueue] = React.useState<dTracks>([]);
   React.useEffect(function getQueueIDs() {
     const queueIDs = fn.js.vLookup(route.params.content, "id");
     setQueueIDs(queueIDs);
+    setQueue(route.params.content);
   }, []);
   return (
     <View style={{ flex: 1 }}>
@@ -48,20 +57,16 @@ function ShowFolderScreen(props: dSCR_ShowFolder) {
           right: spacing[5],
         }}
       >
-        <Buttoon
-          style={{ padding: 30, borderRadius: 100 }}
-          compact
-          size="giant"
-          progress={true}
+        <Buttoon.Fab
           icon={{ name: "play" }}
           onPress={(xong) => {
-            setNowPlayingTracks(_queueIDs, true);
+            setNowPlayingTracks(_queueIDs, _queue, true);
             navigation.navigate("player-scr");
             setTimeout(() => {
               xong();
             }, 1000);
           }}
-        ></Buttoon>
+        ></Buttoon.Fab>
       </View>
     </View>
   );

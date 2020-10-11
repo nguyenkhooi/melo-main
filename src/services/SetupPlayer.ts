@@ -1,7 +1,5 @@
 import { img } from "assets";
-import { dRedux, getMedia } from "engines";
 import TrackPlayer from "react-native-track-player";
-import { store } from "store";
 import { errorReporter } from "utils";
 const resolveAssetSource = require("react-native/Libraries/Image/resolveAssetSource");
 // const resolvedImage = resolveAssetSource(myImage);
@@ -40,15 +38,17 @@ export async function setupPlayer() {
 
     /**
      * Aligning TrackPlayer with Redux states
-     *
+     * @deprecated
      * @summary TrackPlayer ONLY inherits track lists from `mediaFiles`,
      * so we should not see TrackPlayer.add("other_track_list")
      * anywhere else
      */
-    const {
-      playback: { currentTrack },
-    }: dRedux = store.getState();
-    currentTrack.id !== "000" && (await TrackPlayer.add(currentTrack));
+    // const {
+    //   playback: { currentTrack },
+    // }: dRedux = store.getState();
+    // !!currentTrack &&
+    //   currentTrack.id !== "000" &&
+    //   (await TrackPlayer.add(currentTrack));
 
     // const _currentTrack = await TrackPlayer.getCurrentTrack();
     // if (!!currentTrack && !_currentTrack) {

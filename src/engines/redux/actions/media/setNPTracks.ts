@@ -1,5 +1,6 @@
+import TrackPlayer from "react-native-track-player";
 import { Dispatch } from "redux";
-import { errorReporter, trackID } from "utils";
+import { dTracks, errorReporter, trackID } from "utils";
 import { NowPlayingTracksAction, SetCurrentTrackAction } from "../../types";
 import { setCurrentTrackID } from "../playback";
 
@@ -16,6 +17,7 @@ import { setCurrentTrackID } from "../playback";
  */
 export const setNowPlayingTracks = (
   nowPlayingTrackIDs: trackID[],
+  nowPlayingTracks?: dTracks,
 
   /**  Should we play this list? */
   shouldPlay?: boolean,
@@ -36,6 +38,9 @@ export const setNowPlayingTracks = (
     });
 
     if (shouldPlay) {
+      await TrackPlayer.reset();
+      await TrackPlayer.add([...nowPlayingTracks]);
+
       const _startingTrackID = startingTrackID || nowPlayingTrackIDs[0];
       //@ts-ignore
       dispatch(setCurrentTrackID(_startingTrackID));

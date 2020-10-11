@@ -1,33 +1,27 @@
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Image, TouchableOpacity, View } from "react-native";
-import { Modalize } from "react-native-modalize";
-import { DEVICE_WIDTH, dSCR, getBottomSpace, scale, spacing } from "utils";
 import {
   CIRCULAR_BOLD,
   CIRCULAR_LIGHT,
   dIconPrimr,
   IconPrimr,
-  img,
+  img
 } from "assets";
-import {
-  connector,
-  dRedux,
-  ReduxStates,
-  rootReducer,
-  sethPlayback,
-  setShuffle,
-} from "engines";
+import { dRedux, sethPlayback, setShuffle } from "engines";
 import { navigate } from "navigation";
-
-import { useTrackPlayerProgress } from "react-native-track-player/lib/hooks";
+import React from "react";
+import { Image, TouchableOpacity, View } from "react-native";
+import { TouchableNativeFeedback } from "react-native-gesture-handler";
+import { Modalize } from "react-native-modalize";
+import TrackPlayer from "react-native-track-player";
+import {
+  usePlaybackState,
+  useTrackPlayerProgress
+} from "react-native-track-player/lib/hooks";
+import { useDispatch, useSelector } from "react-redux";
 import styled, { withTheme } from "styled-components/native";
 import { contrastColor, contrastTransColor, elevatedBGColor } from "themes";
-import ProgressBar from "../ProgressBar";
+import { DEVICE_WIDTH, dSCR, getBottomSpace, scale, spacing } from "utils";
 import { sstyled, Txt } from "../Generals";
-import { TouchableNativeFeedback } from "react-native-gesture-handler";
-import TrackPlayer from "react-native-track-player";
-import { usePlaybackState } from "react-native-track-player/lib/hooks";
+import ProgressBar from "../ProgressBar";
 
 interface P {}
 
@@ -134,13 +128,15 @@ function $_PlayerFooter(props: dCOMP_PlayerFooter) {
   const { position, duration } = useTrackPlayerProgress(100);
 
   const progress = position / duration;
-  const coverSrc = currentTrack.artwork
-    ? { uri: currentTrack.artwork }
-    : img.placeholder;
+  const coverSrc =
+    !!currentTrack && !!currentTrack.artwork
+      ? { uri: currentTrack.artwork }
+      : img.placeholder;
 
   return (
     /** NOTE replace with animation. See _toggleFooter() */
     // footerVisible &&
+    !!currentTrack &&
     currentTrack.id !== "000" && (
       <>
         <CtnrFooterContent {...props}>
@@ -151,6 +147,7 @@ function $_PlayerFooter(props: dCOMP_PlayerFooter) {
               alignItems: "center",
               paddingVertical: spacing[2],
             }}
+            //* for debugging
             // onPress={jumpToPlayerScr}
           >
             <Thumbnail source={coverSrc} onPress={jumpToPlayerScr} />
@@ -178,10 +175,7 @@ function $_PlayerFooter(props: dCOMP_PlayerFooter) {
 }
 
 function $_FooterActions(props: dRedux) {
-  const {
-    // player: { isPlaying },
-    // sethPlayback,
-  } = props;
+  //* for debugging
   const shuffle = useSelector((state) => state.playback.shuffle);
   const nowPlayingIDs = useSelector((state) => state.media.nowPlayingIDs);
   const dispatch = useDispatch();
@@ -192,8 +186,8 @@ function $_FooterActions(props: dRedux) {
         flexDirection: "row",
         justifyContent: "center",
         //* for debugging
-        // position: "absolute",
-        // right: 0,
+        position: "absolute",
+        right: 0,
       }}
     >
       {/* <Txt.S2>state:{JSON.stringify(isPlaying)}</Txt.S2> */}
@@ -217,31 +211,42 @@ function $_FooterActions(props: dRedux) {
         {...props}
         name="forward"
         onPress={() => dispatch(sethPlayback({ type: "fwd" }))}
+        // onPress={() => TrackPlayer.skipToNext()}
       />
       <ActionIcon
         {...props}
         name="backward"
         onPress={() => dispatch(sethPlayback({ type: "bwd" }))}
+        // onPress={() => TrackPlayer.skipToPrevious()}
       />
       <ActionIcon
         {...props}
         name="shuffle"
         color={shuffle ? "dodgerblue" : "grey"}
-        onPress={() => dispatch(setShuffle(!shuffle, nowPlayingIDs))}
+        onPress={() => dispatch(setShuffle(!shuffle))}
       />
     </View>
   );
 }
 interface dActionIcon extends dIconPrimr {}
-const ActionIcon = (props: dActionIcon) => (
-  <IconPrimr
-    preset={"default"}
-    size={scale(18)}
-    color={contrastColor(props)}
-    containerStyle={{ padding: spacing[3] }}
-    {...props}
-  />
-);
+const ActionIcon = (props: dActionIcon) => {
+  const [_isDisabled, shouldDisabled] = React.useState(false);
+  return (
+    <IconPrimr
+      preset={"default"}
+      size={scale(18)}
+      color={contrastColor(props)}
+      containerStyle={{ padding: spacing[3] }}
+      disabled={_isDisabled}
+      {...props}
+      onPress={async () => {
+        shouldDisabled(true);
+        await props.onPress();
+        shouldDisabled(false);
+      }}
+    />
+  );
+};
 
 const Thumbnail = (props) => {
   const { onPress, source } = props;

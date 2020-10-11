@@ -1,18 +1,14 @@
 // import { enum_LibrariesTopTab } from "navigation/libraries.navigator";
 
-import { dSettingsActions, dSettingsState } from "../types";
 
-const INITIAL_STATE: dSettingsState = {
+const INITIAL_STATE = {
   foldersToSkip: ["whatsapp audio"],
   theme: "light",
   topTabs: ["playlists-scr", "artists-scr", "albums-scr", "folders-scr"],
   // ] as enum_LibrariesTopTab[],
 };
 
-export function settings(
-  state: dSettingsState = INITIAL_STATE,
-  action: dSettingsActions
-) {
+export function settings(state = INITIAL_STATE, action) {
   switch (action.type) {
     case "add_folders_to_skip":
       return { ...state, foldersToSkip: action.payload };

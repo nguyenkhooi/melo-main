@@ -6,6 +6,7 @@ import {
   get_media_success,
   now_playing_tracks,
   rename_track,
+  set_loading
 } from "../types";
 
 const INITIAL_STATE: dMediaState = {
@@ -20,6 +21,11 @@ export function media(
   action: dMediaActions
 ) {
   switch (action.type) {
+    case set_loading:
+      return {
+        ...state,
+        mediaLoaded: !action.payload,
+      };
     case get_media_success:
       return {
         ...state,

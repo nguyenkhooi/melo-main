@@ -1,5 +1,7 @@
 import { fn } from "engines/functions";
+import R from "ramda";
 import MusicFiles from "react-native-get-music-files";
+import TrackPlayer from "react-native-track-player";
 import { Dispatch } from "redux";
 import RNFetchBlob from "rn-fetch-blob";
 import { store } from "store";
@@ -9,18 +11,19 @@ import {
   dTracks,
   errorReporter,
   IS_ANDROID,
-  trackID,
+  trackID
 } from "utils";
 import {
   dRedux,
   GetMediaAction,
-  get_media_order,
   GetMediaOrderAction,
-  NowPlayingTracksAction,
+  get_media_order,
   get_media_success,
+  NowPlayingTracksAction,
   now_playing_tracks,
+  SetLoadingAction,
+  set_loading
 } from "../../types";
-
 // import MusicFiles from 'react-native-get-music-files-v3dev-test';
 
 const __MEDIA = [
@@ -79,13 +82,35 @@ const options = {
   blured: false,
 };
 
+export const setLoading = (isLoading: boolean): SetLoadingAction => {
+  return { type: "set_loading", payload: isLoading };
+};
+
 /**
  * Get media from device then
  * distribute them to `now_playing_tracks` and `mediaFiles`
+ * ---
+ *
+ * @version 0.10.10 *(Update behaviors when "U_FIRST_USE_THE_APP" and "U_RETURN_TO_THE_APP" )*
+ * @author nguyenkhooi
+ *
+ * @description
+ * - Scenarios to use getMedia()
+ *  - **U_FIRST_USE_THE_APP** (User first opens the app):
+ *    - states: `{mediaFiles: [], nowPlayingIDs: [], currentTrack: null}`
+ *    - getMedia() -> `{mediaFiles: track[](og), nowPlayingIDs: trackID[](og), currentTrack: null}`
+ *    - reset and fill TrackPlayer -> `TP.queue: track[](og)`
+ *  - **U_RETURN_TO_THE_APP** (User returns to the app):
+ *    - states: `{mediaFiles: track[](og), nowPlayingIDs: trackID[](og), currentTrack: null}`;
+ *    - getMedia() ->
+ *    ?- getMedia() now should **add** to `mediaFiles`, instead of replacing it
  */
-export const getMedia = () => async (
+export const getMedia = (isManual?: "manual") => async (
   dispatch: Dispatch<
-    GetMediaAction | NowPlayingTracksAction | GetMediaOrderAction
+    | GetMediaAction
+    | NowPlayingTracksAction
+    | GetMediaOrderAction
+    | SetLoadingAction
   >
 ) => {
   try {
@@ -93,20 +118,21 @@ export const getMedia = () => async (
     // if (!granted) await getStoragePermission();
 
     let granted = await checkStoragePermissions();
-    let { media }: dRedux = store.getState();
-    console.log("granted: ", media.mediaLoaded && granted);
-    if (media.mediaLoaded && granted) {
-      let tracks = await getMediaWithCovers();
-      const trackIDs = fn.js.vLookup(tracks, "id") as trackID[];
-      dispatch({ type: "get_media_success", payload: tracks });
-      /** If nowPlayingTracks = []:
-       *  - no queue
-       *  - 1st time app startup
-       */
-      if (media.nowPlayingIDs == []) {
-        dispatch({ type: "now_playing_tracks", payload: trackIDs });
-      }
-    } else {
+    let {
+      media: { mediaFiles, mediaLoaded, nowPlayingIDs },
+      playback: { currentTrack },
+    }: dRedux = store.getState();
+
+    /** set loading to true */
+    // dispatch({ type: set_loading, payload: true });
+
+    console.log("U_RETURN_TO_THE_APP: ", mediaFiles !== [] && granted);
+    const U_FIRST_USE_THE_APP = !(mediaFiles !== [] && granted);
+    const U_RETURN_TO_THE_APP = mediaFiles !== [] && granted && !!!isManual;
+    const U_REFRESH_THE_APP = !!isManual;
+
+    //* CASE: FIRST TIME USER OPENS THE APP
+    if (U_FIRST_USE_THE_APP) {
       console.log("New coming...");
       // let results = await MusicFiles.getAll(options);
       /** Temporary set __MEDIA for ios since it doesn't have local db */
@@ -114,15 +140,66 @@ export const getMedia = () => async (
         ? cleanupMedia(await MusicFiles.getAll(options))
         : __MEDIA;
       const trackIDs = fn.js.vLookup(tracks, "id") as trackID[];
-
+      console.log("adding to TP...");
+      await TrackPlayer.add([...tracks]);
       dispatch({ type: get_media_success, payload: tracks });
       dispatch({ type: now_playing_tracks, payload: trackIDs });
       dispatch({ type: get_media_order, payload: trackIDs });
+
+      /**
+       * Now get tracks' covers and replace `mediaFiles` with it.
+       */
       let trackWithCovers = await getMediaWithCovers();
-      const trackwCoversIDs = fn.js.vLookup(tracks, "id") as trackID[];
       dispatch({ type: get_media_success, payload: trackWithCovers });
-      dispatch({ type: now_playing_tracks, payload: trackwCoversIDs });
-      dispatch({ type: get_media_order, payload: trackwCoversIDs });
+      dispatch({ type: set_loading, payload: false });
+    }
+
+    //* CASE: WHEN USER RETURNS TO THE APP
+    if (U_RETURN_TO_THE_APP) {
+      /**
+       * If `currentTrack` exists, add that track to TP first
+       * - so that if user wantS to play it,
+       * they don't have to wait for the whole `tracks` to load
+       */
+      if (!!currentTrack && currentTrack.id !== "000") {
+        await TrackPlayer.add(currentTrack);
+        console.log("add currentTrack to TP...: ");
+      }
+
+      /**
+       * Now, we start getting tracks from device
+       * - then remove `currentTrack` above out the list to avoid duplication
+       */
+      let deviceTracks = await getMediaWithCovers();
+      let tracks = R.reject((track) => track.id === currentTrack.id, [
+        ...deviceTracks,
+      ]);
+      // let tracks = fn.js.arrayMergeNoDup("id", [
+      //   deviceTracks,
+      //   [currentTrack],
+      // ]) as dTracks;
+      const trackIDs = fn.js.vLookup(tracks, "id") as trackID[];
+      console.log(
+        "add TP wo currentTrack...: ",
+        deviceTracks.length + " - " + tracks.length
+      );
+      await TrackPlayer.removeUpcomingTracks();
+      await TrackPlayer.add([...tracks]);
+
+      /**
+       * If `nowPlayingTracks` = []:
+       *  - no queue
+       *  - 1st time app startup
+       */
+      if (nowPlayingIDs == []) {
+        dispatch({ type: now_playing_tracks, payload: trackIDs });
+      }
+      dispatch({ type: get_media_success, payload: tracks });
+      dispatch({ type: get_media_order, payload: trackIDs });
+      dispatch({ type: set_loading, payload: false });
+    }
+
+    if (U_REFRESH_THE_APP) {
     }
   } catch (e) {
     errorReporter(e);

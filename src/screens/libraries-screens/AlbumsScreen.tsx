@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
-import { View, FlatList } from "react-native";
-import _ from "lodash";
-
-import RenderCategory from "components/RenderCategory";
-import { dSCR, flatListCardLayout, getBottomSpace, scale } from "utils";
-import { connector, dRedux } from "engines";
 import { PlayerFooter } from "components";
+import RenderCategory from "components/RenderCategory";
+import { connector, dRedux } from "engines";
+import _ from "lodash";
+import React, { useEffect } from "react";
+import { FlatList, View } from "react-native";
+import { dSCR, flatListCardLayout, getBottomSpace, scale } from "utils";
+
 
 interface dSCR_Albums extends dSCR, dRedux {}
 
@@ -24,6 +24,7 @@ function AlbumsScreen(props: dSCR_Albums) {
   }, [navigation]);
 
   function onAlbumPress(title, content) {
+    PlayerFooter.close();
     navigation.navigate("content-scr", { title, content });
   }
 

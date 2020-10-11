@@ -3,17 +3,16 @@ import { sstyled } from "components";
 import { connector, dRedux } from "engines";
 import React from "react";
 import { View } from "react-native";
+import TrackPlayer from "react-native-track-player";
+import { usePlaybackState } from "react-native-track-player/lib/hooks";
 import { contrastColor, contrastTransColor, foregroundColor } from "themes";
 import { DEVICE_WIDTH, scale } from "utils";
-import { usePlaybackState } from "react-native-track-player/lib/hooks";
-import TrackPlayer from "react-native-track-player";
 
 interface dPlaybackControl extends dRedux {}
 function S_PlaybackControl(props: dPlaybackControl) {
   const {
     media: { nowPlayingIDs },
     playback: { loop, shuffle },
-    player: { isPlaying },
     sethPlayback,
     setShuffle,
     setLoop,
@@ -49,7 +48,8 @@ function S_PlaybackControl(props: dPlaybackControl) {
         name={playbackState === TrackPlayer.STATE_PLAYING ? "pause" : "play"}
         onPress={() =>
           sethPlayback({
-            type: isPlaying ? "pause" : "play",
+            type:
+              playbackState === TrackPlayer.STATE_PLAYING ? "pause" : "play",
           })
         }
       />
@@ -85,18 +85,27 @@ const CtnrMain = sstyled(View)({
 interface dActionIcon extends dIconPrimr {
   type: "main" | "sub";
 }
-const ActionIcon = (props: dActionIcon) => (
-  <IconPrimr
-    preset={"default"}
-    size={props.type == "main" ? 20 : 18}
-    color={contrastColor(props)}
-    containerStyle={{
-      height: scale(28),
-      width: scale(28),
-      borderRadius: scale(14),
-      justifyContent: "center",
-      alignItems: "center",
-    }}
-    {...props}
-  />
-);
+const ActionIcon = (props: dActionIcon) => {
+  const [_isDisabled, shouldDisabled] = React.useState(false);
+  return (
+    <IconPrimr
+      preset={"default"}
+      size={props.type == "main" ? 20 : 18}
+      color={contrastColor(props)}
+      containerStyle={{
+        height: scale(28),
+        width: scale(28),
+        borderRadius: scale(14),
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+      disabled={_isDisabled}
+      {...props}
+      onPress={async () => {
+        shouldDisabled(true);
+        await props.onPress();
+        shouldDisabled(false);
+      }}
+    />
+  );
+};

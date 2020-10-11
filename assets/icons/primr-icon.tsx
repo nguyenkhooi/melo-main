@@ -125,7 +125,7 @@ export const iconOptions = {
 /**
  * Main and the only Icon component of the whole codebase
  *
- * @version 1.10.4
+ * @version 1.10.10 (add disabled icon's color)
  * @example
  *  <IconPrimr preset={"safe"} name={"arrow_left"} size={30} color={"dodgerblue"} />
  */
@@ -151,7 +151,7 @@ export default function IconPrimr(props: dIconPrimr) {
       presets(size)[preset].icon || presets().default.icon,
       {
         size,
-        color,
+        color: disabled ? "#69696940" : color,
         name,
       },
     ])

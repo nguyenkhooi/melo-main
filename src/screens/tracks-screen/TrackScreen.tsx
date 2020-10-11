@@ -1,24 +1,20 @@
+import { useScrollToTop } from "@react-navigation/native";
 import { CIRCULAR } from "assets";
-import {
-  Kitt,
-  OptionsModal,
-  PlayerFooter,
-  RenderTrack,
-  ScreenTitle,
-  sstyled,
-  Txt,
-} from "components";
+import { OptionsModal, PlayerFooter, sstyled, Txt } from "components";
+import Buttoon from "components/Generals/Buttoon/Buttoon";
 import RenderActivityIndicator from "components/RenderActivityIndicator";
 import { scanMessage } from "constants";
-import { connector, dRedux, fn, sethPlayback } from "engines";
+import { connector, dRedux, fn } from "engines";
 import R from "ramda";
 import React, { useEffect, useState } from "react";
 import { Animated, Dimensions, StatusBar, View, ViewStyle } from "react-native";
+import { FlatList } from "react-native-gesture-handler";
+// import { FlatList } from "react-native-gesture-handler";
+import TrackPlayer from "react-native-track-player";
+import { DataProvider } from "recyclerlistview";
 // import QuickScrollList from "react-native-quick-scroll";
 import { withTheme } from "styled-components/native";
-import { RecyclerListView, DataProvider } from "recyclerlistview";
 import { contrastColor } from "themes";
-import TrackPlayer from "react-native-track-player";
 import {
   dSCR,
   flatListItemLayout,
@@ -26,12 +22,10 @@ import {
   getStatusBarHeight,
   scale,
   spacing,
-  TrackProps,
+  TrackProps
 } from "utils";
-import { FlatList } from "react-native-gesture-handler";
-import Buttoon from "components/Generals/Buttoon/Buttoon";
 
-const QuickScrollList = FlatList;
+// const QuickScrollList = FlatList;
 
 const ScreenHeight = Dimensions.get("window").height;
 const StatusBarHeight = StatusBar.currentHeight;
@@ -52,7 +46,8 @@ function TracksScreen(props: dSCR_Tracks) {
     //* redux actions
     getMedia,
     setShuffle,
-
+    setCurrentTrackID,
+    sethPlayback,
     // setCurrentList,
   } = props;
   const indexedTracks = R.sortBy(R.prop("index"))(mediaFiles);
@@ -60,6 +55,8 @@ function TracksScreen(props: dSCR_Tracks) {
   const [scrollY] = useState(new Animated.Value(0));
   const [modal, setModal] = useState({ visible: false, item: {} });
   const [_isFetched, shouldFetch] = React.useState(false);
+
+  const [_queue, setQueue] = React.useState([]);
   const [_tracks, getTracks] = React.useState(
     new DataProvider((r1, r2) => {
       return r1 !== r2;
@@ -67,8 +64,8 @@ function TracksScreen(props: dSCR_Tracks) {
   );
 
   useEffect(() => {
-    let unsubscribe = navigation.addListener("focus", () => {
-      getMedia(); //* fetch media without showing indicator
+    let unsubscribe = navigation.addListener("focus", async () => {
+      // await getMedia(); //* fetch media without showing indicator
       PlayerFooter.open();
     });
     return unsubscribe;
@@ -81,33 +78,63 @@ function TracksScreen(props: dSCR_Tracks) {
       shouldFetch(false);
     }, 1000);
   }
+  React.useEffect(async function updateQueue() {
+    const queue = await TrackPlayer.getQueue();
+    const queueIDs = fn.js.vLookup(queue, "id");
+    setQueue(queueIDs);
+  }, []);
+
+  async function getQueue() {
+    const queue = await TrackPlayer.getQueue();
+    const queueIDs = fn.js.vLookup(queue, "id");
+    // setQueue(queueIDs);
+    setQueue(queue);
+  }
+
+  const refMediaList = React.useRef<FlatList<{}>>();
+  useScrollToTop(refMediaList);
 
   if (mediaLoaded) {
     if (mediaFiles.length > 0) {
       // if (1 == 1) {
-      // if (1 == 1) {
       return (
         <View style={{ flex: 1 }}>
           {/* <ScreenTitle title={"Your Melo"} /> */}
-          {/* <Txt.P1>{JSON.stringify(nowPlayingIDs)}</Txt.P1> */}
-          <QuickScrollList
-            keyExtractor={(asset) => asset.id.toString()}
-            data={indexedTracks}
+          {/* <Txt.S1>{JSON.stringify(nowPlayingIDs)}</Txt.S1> */}
+          <Txt.P1 onPress={getQueue}>
+            {JSON.stringify(mediaFiles.length) +
+              " - " +
+              JSON.stringify(_queue.length)}
+          </Txt.P1>
+          {/* <Txt.P1 onPress={fetchMedia}>{"Refresh"}</Txt.P1> */}
+          <FlatList
+            ref={refMediaList}
+            // keyExtractor={(asset) => asset.id.toString()}
+            // data={indexedTracks}
+            data={_queue}
             refreshing={_isFetched}
             onRefresh={fetchMedia}
             renderItem={({ item }: { item: TrackProps }) => (
-              <RenderTrack
-                {...props}
-                parent="track-scr"
-                item={item}
-                setOptions={setModal}
-              />
+              <Txt.H6
+                onPress={() => setCurrentTrackID(item.id)}
+                style={{
+                  fontWeight: item.id == currentTrack.id ? "bold" : "600",
+                }}
+              >
+                {JSON.stringify(item.id)}
+              </Txt.H6>
+              // <RenderTrack
+              //   {...props}
+              //   parent="track-scr"
+              //   item={item}
+              //   setOptions={setModal}
+              // />
             )}
             getItemLayout={flatListItemLayout}
             scrollEventThrottle={16}
             maxToRenderPerBatch={30}
             contentContainerStyle={styles.flatlistContent}
-            initialScrollIndex={currentTrack.index || undefined}
+            // initialScrollIndex={currentTrack.index || undefined}
             ListFooterComponentStyle={{
               width: "100%",
               height: getBottomSpace() + scale(500),
@@ -132,17 +159,12 @@ function TracksScreen(props: dSCR_Tracks) {
               right: spacing[5],
             }}
           >
-            <Buttoon
-              style={{ padding: 30, borderRadius: 100 }}
-              compact
-              size="giant"
-              progress={true}
+            <Buttoon.Fab
               icon={{ name: "shuffle" }}
               // onPress={fetchMedia}
               onPress={async (xong) => {
                 await TrackPlayer.pause();
                 await setShuffle(true);
-                await sethPlayback({ type: "fwd" });
                 xong();
               }}
             />
