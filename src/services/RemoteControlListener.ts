@@ -1,3 +1,4 @@
+import { TrackPlaya } from "components";
 import { dRedux, setCurrentTrackID, sethPlayback } from "engines";
 import { Alert } from "react-native";
 import TrackPlayer from "react-native-track-player";
@@ -104,6 +105,12 @@ async function bgService() {
   TrackPlayer.addEventListener("playback-track-changed", async (e) => {
     console.log("track changed listener: ", e);
     try {
+      const playingItemId = await TrackPlaya.getInstance().getCurrentTrackId();
+      // no playing item and therefore listener is being trigged on a abnormal situation (e.g. logging out)
+      if (playingItemId === null) {
+        return null;
+      }
+
       if (currentTrack.id !== "000" && !!e && !!e.nextTrack) {
         const targetedTrack = await TrackPlayer.getTrack(e.nextTrack);
         store.dispatch({

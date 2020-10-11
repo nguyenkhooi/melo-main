@@ -1,17 +1,17 @@
 import PropTypes from "prop-types";
 import React, { useState } from "react";
 import {
-    Image,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-    ViewPropTypes
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewPropTypes,
 } from "react-native";
 import TrackPlayer, {
-    usePlaybackState,
-    useTrackPlayerEvents,
-    useTrackPlayerProgress
+  usePlaybackState,
+  useTrackPlayerEvents,
+  useTrackPlayerProgress,
 } from "react-native-track-player";
 
 function ProgressBar() {
@@ -58,7 +58,18 @@ export default function Player(props) {
     }
   });
 
-  const { style, onNext, onPrevious, onTogglePlayback } = props;
+  const { style, onNext, onPrevious, onTogglePlayback, currentTrack } = props;
+
+  React.useEffect(
+    function getCurrentTrack() {
+      if (!!currentTrack) {
+        setTrackTitle(currentTrack.title + " - " + currentTrack.id);
+        setTrackArtist(currentTrack.artist);
+        setTrackArtwork(currentTrack.url);
+      }
+    },
+    [currentTrack]
+  );
 
   var middleButtonText = "Play";
 

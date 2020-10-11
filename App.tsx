@@ -1,3 +1,4 @@
+import { TrackPlaya } from "components";
 //@ts-check
 import {
   canExit,
@@ -5,7 +6,7 @@ import {
   RootNavigator,
   setRootNavigation,
   useBackButtonHandler,
-  useNavigationPersistence
+  useNavigationPersistence,
 } from "navigation";
 import React, { useEffect, useState } from "react";
 import { YellowBox } from "react-native";
@@ -25,7 +26,8 @@ export default function App() {
     store.dispatch({ type: "set_playback", payload: false }); // To make sure currentTrack is paused at startup
     store.dispatch({ type: "set_loading", payload: true });
     // store.dispatch(setShuffle(false)); // Tempor disable shuffle at startup since getMedia() will return `indexedTracks`
-    setupPlayer();
+    // setupPlayer();
+    TrackPlaya.getInstance();
     // if (Text.defaultProps == null) Text.defaultProps = {};
     // Text.defaultProps.allowFontScaling = false;
     console.disableYellowBox = true;

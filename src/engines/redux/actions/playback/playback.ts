@@ -10,8 +10,8 @@ import {
   SetPlayerAction,
   set_shuffle,
   ToggleLoopAction,
-  ToggleShuffleAction
-} from "../types";
+  ToggleShuffleAction,
+} from "../../types";
 
 /**
  * Set current track to play.
@@ -306,7 +306,10 @@ export const setShuffle = (
   }
 };
 
-function playlistShuffle(array: any[], type: "knuth" | "normal" = "knuth") {
+export function playlistShuffle(
+  array: any[],
+  type: "knuth" | "normal" = "knuth"
+) {
   try {
     switch (type) {
       case "knuth":

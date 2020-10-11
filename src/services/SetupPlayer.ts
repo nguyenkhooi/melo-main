@@ -6,8 +6,8 @@ const resolveAssetSource = require("react-native/Libraries/Image/resolveAssetSou
 
 /**
  * Setup TrackPlayer with suitable capability,
- * get device's media,
- * and aligning TrackPlayer with Redux states
+ * //get device's media,
+ * //and aligning TrackPlayer with Redux states
  *
  * @version 0.10.5
  */

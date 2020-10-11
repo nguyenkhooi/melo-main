@@ -2,7 +2,7 @@ import TrackPlayer from "react-native-track-player";
 import { Dispatch } from "redux";
 import { dTracks, errorReporter, trackID } from "utils";
 import { NowPlayingTracksAction, SetCurrentTrackAction } from "../../types";
-import { setCurrentTrackID } from "../playback";
+import { setCurrentTrackID } from "../playback/playback";
 
 /**
  * Set a `nowPlayingTracks` list, for index reference.
@@ -71,5 +71,12 @@ export const setNowPlayingTracks = (
     // });
   } catch (e) {
     errorReporter(e);
+  }
+};
+
+const addToPlaylist = async (tracks: dTracks) => (dispatch: Dispatch<>) => {
+  try {
+  } catch (error) {
+    errorReporter(error, "3121330114");
   }
 };

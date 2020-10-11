@@ -1,23 +1,151 @@
+import { TrackPlaya } from "components";
 import { connector, dRedux, fn } from "engines";
+import R from "ramda";
 import React from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import TrackPlayer from "react-native-track-player";
 import { usePlaybackState } from "react-native-track-player/lib/hooks";
-import { dSCR } from "utils";
+import { dSCR, dTracks, TrackProps } from "utils";
 import Player from "./Player";
 import playlistData from "./playlist.json";
 
 interface dSCR_Tracks extends dSCR, dRedux {}
 function TestScreen(props: dSCR_Tracks) {
   const {
+    playback: { currentTrack },
     media: { nowPlayingIDs: nowPlayingTracks, mediaFiles },
   } = props;
   const playbackState = usePlaybackState();
   const [_tracks, setTracks] = React.useState(mediaFiles);
+  const [_currentTrack, setCurrentTrack] = React.useState<TrackProps>(null);
   const [_isShuffled, setShuffle] = React.useState(false);
   const [_queue, setQueue] = React.useState([]);
 
-  async function togglePlayback() {
+  // React.useEffect(function TrackPlayaListener() {
+  //   const trackChangedListener = TrackPlaya.addTrackChangeListener(
+  //     async () => await updateCurrentPlayingItem()
+  //   );
+  //   return trackChangedListener.remove();
+  // });
+
+  React.useEffect(function updateCurrentTrack() {
+    setCurrentTrack(currentTrack);
+  }, []);
+  React.useEffect(
+    function updateCurrentTrack() {
+      setCurrentTrack(currentTrack);
+    },
+    [currentTrack]
+  );
+  //* here we do some error checking to ensure that we're updating as we expect
+  // const updateCurrentPlayingItem = async () => {
+  //   const playingItemId = await TrackPlaya.getInstance().getCurrentTrackId();
+  //   // no playing item and therefore listener is being trigged on a abnormal situation (e.g. logging out)
+  //   if (playingItemId === null) {
+  //     return null;
+  //   }
+
+  //   const playingItem = _tracks.find((item) => item.id === playingItemId);
+
+  //   if (!playingItem) {
+  //     throw new Error(
+  //       "Changed track to an item that has not been added to the playlist"
+  //     );
+  //   }
+
+  //   setCurrentTrack(playingItem);
+
+  //   return playingItem;
+  // };
+
+  async function shuffle(array: dTracks) {
+    const _queue = await TrackPlayer.getQueue();
+    let queue = [..._queue];
+    const playedTracks = R.reject((track) => queue.includes(track), mediaFiles);
+    const targetedQueue = _isShuffled
+      ? R.reject((track) => playedTracks.includes(track), mediaFiles)
+      : queue.sort(() => Math.random() - 0.5);
+
+    await TrackPlayer.removeUpcomingTracks();
+    await TrackPlayer.add(targetedQueue);
+    setTracks(targetedQueue);
+
+    // const targetedTracks = _isShuffled
+    //   ? mediaFiles
+    //   : array.sort(() => Math.random() - 0.5);
+
+    // const shuffledTracks = R.reject(
+    //   (track) => track.id == _currentTrack.id,
+    //   targetedTracks
+    // );
+    // addToPlaylist(array);
+
+    setShuffle(!_isShuffled);
+
+    // return targetedTracks;
+  }
+
+  async function addToPlaylist(givenTracks: dTracks) {
+    setTracks([..._tracks, ...givenTracks]);
+    return Promise.all(
+      givenTracks.map((item) => TrackPlaya.getInstance().appendToQueue(item))
+    );
+  }
+
+  const addBeforePlaylist = (...givenTracks: TrackProps[]) => {
+    setTracks([...givenTracks, ..._tracks]);
+
+    return Promise.all(
+      givenTracks.map((item) =>
+        TrackPlaya.getInstance().prependToQueue(item.data)
+      )
+    );
+  };
+
+  const clearPlaylist = () => {
+    // this.setState(initialState);
+    return TrackPlaya.getInstance().clear();
+  };
+
+  // this creates a playlist with the items
+  // we access this directly to add items to the playlist
+  const createPlaylistFrom = async ({
+    items,
+    startingAtId,
+  }: {
+    items: TrackProps[];
+    startingAtId?: string;
+    startingAtPosition?: number;
+  }) => {
+    const before: TrackProps[] = [];
+    const after: TrackProps[] = [];
+
+    // Split the items at the starting at item
+    // so we can queue the tracks
+    items.forEach((item) => {
+      if (item.id === startingAtId || after.length > 0) {
+        after.push(item);
+      } else {
+        before.push(item);
+      }
+    });
+
+    await addToPlaylist(...after);
+    await addBeforePlaylist(...before);
+  };
+
+  const togglePlayback = () => {
+    return TrackPlaya.getInstance().togglePlay();
+  };
+
+  const skipToNext = () => {
+    return TrackPlaya.getInstance().next();
+  };
+
+  const skipToPrevious = () => {
+    return TrackPlaya.getInstance().previous();
+  };
+  async function togglePlaybackOG() {
     const currentTrack = await TrackPlayer.getCurrentTrack();
     if (currentTrack == null) {
       await TrackPlayer.reset();
@@ -33,7 +161,7 @@ function TestScreen(props: dSCR_Tracks) {
     }
   }
 
-  async function skipToNext() {
+  async function skipToNextOG() {
     try {
       const positions = fn.js.vLookup(_tracks, "id"); //* [1111,2222,3333,4444]
       console.log("id pos: ", positions);
@@ -43,7 +171,7 @@ function TestScreen(props: dSCR_Tracks) {
     } catch (_) {}
   }
 
-  async function skipToPrevious() {
+  async function skipToPreviousOG() {
     try {
       const positions = fn.js.vLookup(_tracks, "id"); //* [1111,2222,3333,4444]
       console.log("id pos: ", positions);
@@ -57,11 +185,13 @@ function TestScreen(props: dSCR_Tracks) {
     <ScrollView>
       <View style={styles.container}>
         <Player
+          currentTrack={_currentTrack}
           onNext={skipToNext}
           style={styles.player}
           onPrevious={skipToPrevious}
           onTogglePlayback={togglePlayback}
         />
+        {/* <Text style={styles.state}>{JSON.stringify(_currentTrack)}</Text> */}
         <Text style={styles.state}>{getStateName(playbackState)}</Text>
         <Text
           style={styles.state}
@@ -70,28 +200,31 @@ function TestScreen(props: dSCR_Tracks) {
             setQueue(queue);
           }}
         >
-          Queue: {JSON.stringify(_queue)} (should == [])
+          Queue: {JSON.stringify(_queue.length)} (should == [])
         </Text>
         <Text
           style={styles.state}
           onPress={() => {
-            const newTracks = shuffle(_tracks);
-            setTracks(newTracks);
-            setShuffle(!_isShuffled);
+            shuffle(_tracks);
           }}
         >
           {"Shuffle: " + _isShuffled}
         </Text>
       </View>
       {_tracks.map((track) => (
-        <Text style={styles.description}>{track.title}</Text>
+        <Text
+          style={[
+            styles.description,
+            !!_currentTrack &&
+              !!_currentTrack.id &&
+              track.id === _currentTrack.id && { fontWeight: "bold" },
+          ]}
+        >
+          {track.title}
+        </Text>
       ))}
     </ScrollView>
   );
-}
-
-function shuffle(array: any[]) {
-  return array.sort(() => Math.random() - 0.5);
 }
 
 TestScreen.navigationOptions = {
