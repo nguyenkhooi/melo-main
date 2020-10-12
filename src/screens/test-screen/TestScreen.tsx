@@ -1,11 +1,11 @@
 import { TrackPlaya } from "components";
-import { connector, dRedux, fn } from "engines";
+import { connector, dRedux, fn, playlistShuffle } from "engines";
 import R from "ramda";
 import React from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import TrackPlayer from "react-native-track-player";
 import { usePlaybackState } from "react-native-track-player/lib/hooks";
-import { dSCR, dTracks, TrackProps } from "utils";
+import { dSCR, dTracks, trackID, TrackProps } from "utils";
 import Player from "./Player";
 import playlistData from "./playlist.json";
 
@@ -16,10 +16,11 @@ function TestScreen(props: dSCR_Tracks) {
     media: { nowPlayingIDs: nowPlayingTracks, mediaFiles },
   } = props;
   const playbackState = usePlaybackState();
-  const [_tracks, setTracks] = React.useState(mediaFiles);
   const [_currentTrack, setCurrentTrack] = React.useState<TrackProps>(null);
   const [_isShuffled, setShuffle] = React.useState(false);
-  const [_queue, setQueue] = React.useState([]);
+  const [_indexedTracks, setIndexedTracks] = React.useState(mediaFiles);
+  const [_npTracks, setNPTracks] = React.useState([]);
+  const [_playaTracks, setPlayaTracks] = React.useState([]);
 
   // React.useEffect(function TrackPlayaListener() {
   //   const trackChangedListener = TrackPlaya.addTrackChangeListener(
@@ -58,19 +59,63 @@ function TestScreen(props: dSCR_Tracks) {
   //   return playingItem;
   // };
 
-  async function shuffle(array: dTracks) {
+  async function shuffle(indexedTracks: dTracks = mediaFiles) {
     const _queue = await TrackPlaya.getInstance().getQueue();
-    let queue = [..._queue];
-    const playedTracks = R.reject((track) => queue.includes(track), mediaFiles);
-    const targetedQueue = _isShuffled
-      ? R.reject((track) => playedTracks.includes(track), mediaFiles)
-      : queue.sort(() => Math.random() - 0.5);
+    // let queueTracks = [..._queue];
+    const currentPos = R.indexOf(currentTrack.id, R.pluck("id")(indexedTracks));
+    const tracksWoCurrent = R.pluck("id")(
+      R.reject((track) => track.id === currentTrack.id, indexedTracks)
+    ) as trackID[];
 
-      // await TrackPlaya
+    // const playedTracks = R.reject((track) => queueTracks.includes(track), mediaFiles);
+    let targetedTracks: TrackProps[];
+    const U_TURN_OFF_SHUFFLE = _isShuffled;
+    const U_TURN_ON_SHUFFLE = !_isShuffled;
 
-    await TrackPlayer.removeUpcomingTracks();
-    await TrackPlayer.add(targetedQueue);
-    setTracks(targetedQueue);
+    if (U_TURN_OFF_SHUFFLE) {
+      let beforeCurrentTracks = R.slice(
+        0,
+        currentPos,
+        indexedTracks
+      ) as TrackProps[];
+      console.log("BC: ", beforeCurrentTracks.length);
+      let afterCurrentTracks = R.slice(
+        currentPos + 1,
+        indexedTracks.length,
+        indexedTracks
+      ) as TrackProps[];
+      console.log("AC: ", afterCurrentTracks.length);
+
+      targetedTracks = [...afterCurrentTracks, ...beforeCurrentTracks];
+    }
+
+    if (U_TURN_ON_SHUFFLE) {
+      const shuffledTracks = playlistShuffle([..._queue], "normal");
+      const shuffledTrackswoCurrent = R.reject(
+        (track) => track.id === currentTrack.id,
+        shuffledTracks
+      );
+
+      targetedTracks = shuffledTrackswoCurrent;
+    }
+
+    /**
+     *  Since `currentTrack` maybe NOT on top of the queue (since there're probably tracks before it).
+     *  Hence, we remove all tracks except `currentTrack`, then add the `targetedTracks` after it.
+     *  -> `currentTrack` back on top
+     */
+    await TrackPlayer.remove(tracksWoCurrent);
+    await TrackPlayer.add(targetedTracks);
+    setPlayaTracks(targetedTracks);
+    setNPTracks(targetedTracks);
+    setShuffle(!_isShuffled);
+
+    // const targetedQueue  = _isShuffled ?
+    // const targetedQueue = _isShuffled
+    //   ? R.reject((track) => playedTracks.includes(track), mediaFiles)
+    //   : [..._queue].sort(() => Math.random() - 0.5);
+
+    // await TrackPlaya
 
     // const targetedTracks = _isShuffled
     //   ? mediaFiles
@@ -82,20 +127,18 @@ function TestScreen(props: dSCR_Tracks) {
     // );
     // addToPlaylist(array);
 
-    setShuffle(!_isShuffled);
-
     // return targetedTracks;
   }
 
   async function addToPlaylist(givenTracks: dTracks) {
-    setTracks([..._tracks, ...givenTracks]);
+    setNPTracks([..._npTracks, ...givenTracks]);
     return Promise.all(
       givenTracks.map((item) => TrackPlaya.getInstance().appendToQueue(item))
     );
   }
 
   const addBeforePlaylist = (...givenTracks: TrackProps[]) => {
-    setTracks([...givenTracks, ..._tracks]);
+    setNPTracks([...givenTracks, ..._npTracks]);
 
     return Promise.all(
       givenTracks.map((item) =>
@@ -151,7 +194,7 @@ function TestScreen(props: dSCR_Tracks) {
     const currentTrack = await TrackPlayer.getCurrentTrack();
     if (currentTrack == null) {
       await TrackPlayer.reset();
-      await TrackPlayer.add([..._tracks]);
+      await TrackPlayer.add([..._npTracks]);
 
       await TrackPlayer.play();
     } else {
@@ -165,7 +208,7 @@ function TestScreen(props: dSCR_Tracks) {
 
   async function skipToNextOG() {
     try {
-      const positions = fn.js.vLookup(_tracks, "id"); //* [1111,2222,3333,4444]
+      const positions = fn.js.vLookup(_npTracks, "id"); //* [1111,2222,3333,4444]
       console.log("id pos: ", positions);
       const thisTrackID = await TrackPlayer.getCurrentTrack();
       const thisPos = positions.indexOf(thisTrackID);
@@ -175,7 +218,7 @@ function TestScreen(props: dSCR_Tracks) {
 
   async function skipToPreviousOG() {
     try {
-      const positions = fn.js.vLookup(_tracks, "id"); //* [1111,2222,3333,4444]
+      const positions = fn.js.vLookup(_npTracks, "id"); //* [1111,2222,3333,4444]
       console.log("id pos: ", positions);
       const thisTrackID = await TrackPlayer.getCurrentTrack();
       const thisPos = positions.indexOf(thisTrackID);
@@ -199,15 +242,16 @@ function TestScreen(props: dSCR_Tracks) {
           style={styles.state}
           onPress={async () => {
             const queue = await TrackPlaya.getInstance().getQueue();
-            setQueue(queue);
+            setPlayaTracks(queue);
+            setNPTracks(queue);
           }}
         >
-          Queue: {JSON.stringify(_queue.length)} (should == [])
+          Queue: {JSON.stringify(_playaTracks.length)} (should == [])
         </Text>
         <Text
           style={styles.state}
           onPress={() => {
-            shuffle(_tracks);
+            shuffle(_indexedTracks);
           }}
         >
           {"Shuffle: " + _isShuffled}
@@ -218,7 +262,24 @@ function TestScreen(props: dSCR_Tracks) {
           <Text style={{ fontWeight: "bold" }}>
             Media Files {mediaFiles.length}
           </Text>
-          {mediaFiles.map((track) => (
+          {mediaFiles.map((track, index) => (
+            <Text
+              style={[
+                styles.description,
+                !!_currentTrack &&
+                  !!_currentTrack.id &&
+                  track.id === _currentTrack.id && { fontWeight: "bold" },
+              ]}
+            >
+              {index} ➖ {track.id}
+            </Text>
+          ))}
+        </View>
+        <View>
+          <Text style={{ fontWeight: "bold" }}>
+            Now Playing {_npTracks.length}
+          </Text>
+          {_npTracks.map((track) => (
             <Text
               style={[
                 styles.description,
@@ -232,23 +293,10 @@ function TestScreen(props: dSCR_Tracks) {
           ))}
         </View>
         <View>
-          <Text style={{ fontWeight: "bold" }}>Playlist {_tracks.length}</Text>
-          {_tracks.map((track) => (
-            <Text
-              style={[
-                styles.description,
-                !!_currentTrack &&
-                  !!_currentTrack.id &&
-                  track.id === _currentTrack.id && { fontWeight: "bold" },
-              ]}
-            >
-              {track.id}
-            </Text>
-          ))}
-        </View>
-        <View>
-          <Text style={{ fontWeight: "bold" }}>Queue {_queue.length}</Text>
-          {_queue.map((track) => (
+          <Text style={{ fontWeight: "bold" }}>
+            Queue {_playaTracks.length}
+          </Text>
+          {_playaTracks.map((track) => (
             <Text
               style={[
                 styles.description,

@@ -159,7 +159,7 @@ export const getMedia = (isManual?: "manual") => async (
     if (U_RETURN_TO_THE_APP) {
       /**
        * If `currentTrack` exists, add that track to TP first
-       * 
+       *
        * ---
        * - Why? if user wants to play it,
        * they don't have to wait for the whole `tracks` to load
@@ -193,7 +193,7 @@ export const getMedia = (isManual?: "manual") => async (
         deviceTracks.length,
         deviceTracks
       ) as TrackProps[];
-      console.log("AC: ", beforeCurrentTracks.length);
+      console.log("AC: ", afterCurrentTracks.length);
       const queueTracks = [...afterCurrentTracks, ...beforeCurrentTracks];
       // let tracks = R.reject((track) => track.id === currentTrack.id, [
       //   ...deviceTracks,

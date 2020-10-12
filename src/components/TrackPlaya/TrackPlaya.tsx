@@ -188,6 +188,9 @@ class TrackPlayaa extends React.Component {
       : this.createTrack(playables);
 
     const currentTrackId = await this.getCurrentTrackId();
+    const queue = await this.getQueue();
+    // const beforeCurrentTracks = R.slice
+    TrackPlayer.remove();
     TrackPlayer.add(audioFiles, currentTrackId);
   };
 
