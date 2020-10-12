@@ -1,6 +1,6 @@
 import TrackPlayer, { Track } from "react-native-track-player";
 import { img } from "assets";
-import { dTracks, errorReporter, TrackProps } from "utils";
+import { dTracks, errorReporter, trackID, TrackProps } from "utils";
 import _ from "lodash";
 import { connector, dRedux, playlistShuffle } from "engines";
 import R from "ramda";
@@ -15,33 +15,33 @@ interface P extends dRedux {}
  * This API simplifies TrackPlayer
  * by exposing methods to do common things.
  *
- * @version 0.10.11 *(created)*
+ * @version 0.10.12 *(Build `toggleShuffle()`, `setPlaylist()`)*
  * @author nguyenkhooi
  * @see https://medium.com/finimize-engineering/building-a-global-audio-player-in-react-native-dd065fc64b02
  */
-class TrackPlayaa extends React.Component {
+export class TrackPlaya extends React.Component {
   /**
    * TrackPlaya instance
    */
-  private static instance: TrackPlayaa;
+  private static instance: TrackPlaya;
 
   /**
    * Allows us to get a current instance, or make an instance of the player
    * and stops us reinitialising the player
    * ---
    *
-   * @version 0.10.11
+   * @version 0.10.12 *(Build `toggleShuffle()`, `setPlaylist()`)*
    * @author nguyenkhooi
    */
   static getInstance() {
-    if (!TrackPlayaa.instance) {
+    if (!TrackPlaya.instance) {
       console.log("getting TP instance...");
-      TrackPlayaa.instance = new TrackPlayaa({});
-      TrackPlayaa.instance.init();
-      return TrackPlayaa.instance;
+      TrackPlaya.instance = new TrackPlaya({});
+      TrackPlaya.instance.init();
+      return TrackPlaya.instance;
     }
 
-    return TrackPlayaa.instance;
+    return TrackPlaya.instance;
   }
 
   /**
@@ -98,17 +98,14 @@ class TrackPlayaa extends React.Component {
   /**
    * This function takes an item, defined with the type below,
    * and adds it to the track player
+   *
+   * todo: update this
    */
-  private createTrack = (item: TrackProps): Track => {
-    const { url, title, id, artwork } = item;
-    const track = {
-      id,
-      url,
-      title,
-      artist: "Melo",
-      artwork,
+  private createTrack = (vanillaTrack: Track) => {
+    const track: TrackProps = {
+      ...vanillaTrack,
       // here we use the voice algorithm, as it improves the quality of speech audio
-      pitchAlgorithm: TrackPlayer.PITCH_ALGORITHM_VOICE,
+      // pitchAlgorithm: TrackPlayer.PITCH_ALGORITHM_VOICE,
     };
 
     return track;
@@ -135,6 +132,94 @@ class TrackPlayaa extends React.Component {
 
   next = () => TrackPlayer.skipToNext();
   previous = () => TrackPlayer.skipToPrevious();
+
+  setPlaylist = async (givenTracks: TrackProps[]) => {
+    await TrackPlayer.reset();
+    await TrackPlayer.add([...givenTracks]);
+  };
+
+  /**
+   * Toggle shuffle the given indexed tracks.
+   * Note that when shuffle = false, `npTracks` return to `indexedTracks`
+   * ---
+   *
+   * @version 0.10.12 *( build separated behaviors for U_TURN_OFF_SHUFFLE and U_TURN_ON_SHUFFLE )*
+   * @author nguyenkhooi
+   *
+   */
+  async toggleShuffle(
+    shouldShuffle: boolean,
+    indexedTracks: TrackProps[],
+    currentTrack: TrackProps
+  ) {
+    const _queue = await TrackPlayer.getQueue();
+    // let queueTracks = [..._queue];
+    const currentPos = R.indexOf(currentTrack.id, R.pluck("id")(indexedTracks));
+    const tracksWoCurrent = R.pluck("id")(
+      R.reject((track) => track.id === currentTrack.id, indexedTracks)
+    ) as trackID[];
+
+    let targetedTracks: TrackProps[];
+
+    /**
+     * Behavior when u turn off shuffle
+     *
+     * ---
+     * - Similar behaviors with getMedia(),
+     * where `beforeCurrentTracks` and `afterCurrentTracks` are identified,
+     * then `targetedTracks = [...afterCurrentTracks, ...beforeCurrentTracks]`
+     *
+     * todo: maybe write an independent fn for this behavior, then use it here and getMedia
+     */
+    const U_TURN_OFF_SHUFFLE = !shouldShuffle;
+
+    /**
+     * Behavior when u turn on shuffle
+     *
+     * ---
+     * - Simply `targetedTracks = shuffledTrackswoCurrent`;
+     *
+     */
+    const U_TURN_ON_SHUFFLE = shouldShuffle;
+
+    if (U_TURN_OFF_SHUFFLE) {
+      let beforeCurrentTracks = R.slice(
+        0,
+        currentPos,
+        indexedTracks
+      ) as TrackProps[];
+      console.log("BC: ", beforeCurrentTracks.length);
+      let afterCurrentTracks = R.slice(
+        currentPos + 1,
+        indexedTracks.length,
+        indexedTracks
+      ) as TrackProps[];
+      console.log("AC: ", afterCurrentTracks.length);
+
+      targetedTracks = [...afterCurrentTracks, ...beforeCurrentTracks];
+    }
+
+    if (U_TURN_ON_SHUFFLE) {
+      const shuffledTracks = playlistShuffle([..._queue], "normal");
+      const shuffledTrackswoCurrent = R.reject(
+        (track) => track.id === currentTrack.id,
+        shuffledTracks
+      );
+
+      targetedTracks = shuffledTrackswoCurrent;
+    }
+
+    /**
+     *  Since `currentTrack` maybe NOT on top of the queue
+     *  (there're probably tracks before it),
+     *  we remove all tracks except `currentTrack`,
+     *  then add the `targetedTracks` after it.
+     *  -> `currentTrack` back on top
+     */
+    await TrackPlayer.remove(tracksWoCurrent);
+    await TrackPlayer.add(targetedTracks);
+    return targetedTracks;
+  }
 
   createPlaylist = async (
     givenTracks: TrackProps[],
@@ -206,8 +291,6 @@ class TrackPlayaa extends React.Component {
     TrackPlayer.add(audioFiles);
   };
 }
-
-export const TrackPlaya = TrackPlayaa;
 
 // typescript things
 // here we declare a definition for a 'playable item' - this allows us to

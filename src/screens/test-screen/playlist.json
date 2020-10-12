@@ -1,34 +1,90 @@
 [
   {
-    "id": "1111",
-    "url": "https://drive.google.com/uc?export=download&id=1AjPwylDJgR8DOnmJWeRgZzjsohi-7ekj",
-    "title": "1-Longing",
-    "artist": "David Chavez",
-    "artwork": "https://i.picsum.photos/id/100/200/200.jpg",
-    "duration": 143
+    "album": "Epica",
+    "artist": "audiomachine",
+    "artwork": "file:///storage/emulated/0/data/user/0/com.melo/files/.melo/.covers/covers1140.jpg",
+    "duration": "284890",
+    "folder": "Music",
+    "id": "28489029",
+    "index": 29,
+    "title": "Prologue: Birth",
+    "url": "/storage/emulated/0/Download/Music/Epica CD 1 TRACK 1 (320).mp3"
   },
   {
-    "id": "2222",
-    "url": "https://drive.google.com/uc?export=download&id=1VM9_umeyzJn0v1pRzR1BSm9y3IhZ3c0E",
-    "title": "2-Soul Searching (Demo)",
-    "artist": "David Chavez",
-    "artwork": "https://i.picsum.photos/id/200/200/200.jpg",
-    "duration": 77
+    "album": "Chronicles",
+    "artist": "audiomachine",
+    "artwork": "file:///storage/emulated/0/data/user/0/com.melo/files/.melo/.covers/covers1134.jpg",
+    "duration": "192313",
+    "folder": "Music",
+    "id": "19231330",
+    "index": 30,
+    "title": "Reaching",
+    "url": "/storage/emulated/0/Download/Music/Chronicles CD 1 TRACK 2 (320).mp3"
   },
   {
-    "id": "3333",
-    "url": "https://drive.google.com/uc?export=download&id=1bmvPOy2IVbkUROgm0dqiZry_miiL4OqI",
-    "title": "3-Lullaby (Demo)",
-    "artist": "David Chavez",
-    "artwork": "https://i.picsum.photos/id/300/200/200.jpg",
-    "duration": 71
+    "album": "Magnus: B-Sides",
+    "artist": "audiomachine",
+    "artwork": "file:///storage/emulated/0/data/user/0/com.melo/files/.melo/.covers/covers1143.jpg",
+    "duration": "146259",
+    "folder": "Music",
+    "id": "14625932",
+    "index": 32,
+    "title": "Satori",
+    "url": "/storage/emulated/0/Download/Music/Magnus B-Sides CD 1 TRACK 9 (320).mp3"
   },
   {
-    "id": "4444",
-    "url": "https://drive.google.com/uc?export=download&id=1V-c_WmanMA9i5BwfkmTs-605BQDsfyzC",
-    "title": "4-Rhythm City (Demo)",
-    "artist": "David Chavez",
-    "artwork": "https://i.picsum.photos/id/400/200/200.jpg",
-    "duration": 106
+    "album": "Decimus",
+    "artist": "audiomachine",
+    "artwork": "file:///storage/emulated/0/data/user/0/com.melo/files/.melo/.covers/covers866.jpg",
+    "duration": "243669",
+    "folder": "Music",
+    "id": "24366933",
+    "index": 33,
+    "title": "The Lion's Heart",
+    "url": "/storage/emulated/0/Download/Music/audiomachine - The Lion's Heart.mp3"
+  },
+  {
+    "album": "Chronicles",
+    "artist": "audiomachine",
+    "artwork": "file:///storage/emulated/0/data/user/0/com.melo/files/.melo/.covers/covers1136.jpg",
+    "duration": "185077",
+    "folder": "Music",
+    "id": "18507736",
+    "index": 36,
+    "title": "The Messenger",
+    "url": "/storage/emulated/0/Download/Music/Chronicles CD 1 TRACK 28 (320).mp3"
+  },
+  {
+    "album": "Decimus",
+    "artist": "audiomachine",
+    "artwork": "file:///storage/emulated/0/data/user/0/com.melo/files/.melo/.covers/covers1139.jpg",
+    "duration": "176273",
+    "folder": "Music",
+    "id": "17627337",
+    "index": 37,
+    "title": "Voyage of Dreams",
+    "url": "/storage/emulated/0/Download/Music/Decimus CD 1 TRACK 8 (320).mp3"
+  },
+  {
+    "album": "Magnus: B-Sides",
+    "artist": "audiomachine",
+    "artwork": "file:///storage/emulated/0/data/user/0/com.melo/files/.melo/.covers/covers1144.jpg",
+    "duration": "177397",
+    "folder": "Music",
+    "id": "17739738",
+    "index": 38,
+    "title": "When the Time Comes",
+    "url": "/storage/emulated/0/Download/Music/Magnus B-Sides CD 1 TRACK 10 (320).mp3"
+  },
+  {
+    "album": "Magnus: B-Sides",
+    "artist": "audiomachine",
+    "artwork": "file:///storage/emulated/0/data/user/0/com.melo/files/.melo/.covers/covers1146.jpg",
+    "duration": "198242",
+    "folder": "Music",
+    "id": "19824239",
+    "index": 39,
+    "title": "Wide Open Sky",
+    "url": "/storage/emulated/0/Download/Music/Magnus B-Sides CD 1 TRACK 12 (320).mp3"
   }
 ]
