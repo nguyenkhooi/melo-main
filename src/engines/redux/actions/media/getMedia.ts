@@ -11,7 +11,8 @@ import {
   dTracks,
   errorReporter,
   IS_ANDROID,
-  trackID
+  trackID,
+  TrackProps,
 } from "utils";
 import {
   dRedux,
@@ -22,7 +23,7 @@ import {
   NowPlayingTracksAction,
   now_playing_tracks,
   SetLoadingAction,
-  set_loading
+  set_loading,
 } from "../../types";
 // import MusicFiles from 'react-native-get-music-files-v3dev-test';
 
@@ -91,7 +92,7 @@ export const setLoading = (isLoading: boolean): SetLoadingAction => {
  * distribute them to `now_playing_tracks` and `mediaFiles`
  * ---
  *
- * @version 0.10.10 *(Update behaviors when "U_FIRST_USE_THE_APP" and "U_RETURN_TO_THE_APP" )*
+ * @version 0.10.12 *(Update correct queueTracks in "U_RETURN_TO_THE_APP" )*
  * @author nguyenkhooi
  *
  * @description
@@ -100,7 +101,7 @@ export const setLoading = (isLoading: boolean): SetLoadingAction => {
  *    - states: `{mediaFiles: [], nowPlayingIDs: [], currentTrack: null}`
  *    - getMedia() -> `{mediaFiles: track[](og), nowPlayingIDs: trackID[](og), currentTrack: null}`
  *    - reset and fill TrackPlayer -> `TP.queue: track[](og)`
- *  - **U_RETURN_TO_THE_APP** (User returns to the app):
+ *  !- **U_RETURN_TO_THE_APP** (User returns to the app):
  *    - states: `{mediaFiles: track[](og), nowPlayingIDs: trackID[](og), currentTrack: null}`;
  *    - getMedia() ->
  *    ?- getMedia() now should **add** to `mediaFiles`, instead of replacing it
@@ -158,7 +159,9 @@ export const getMedia = (isManual?: "manual") => async (
     if (U_RETURN_TO_THE_APP) {
       /**
        * If `currentTrack` exists, add that track to TP first
-       * - so that if user wantS to play it,
+       * 
+       * ---
+       * - Why? if user wants to play it,
        * they don't have to wait for the whole `tracks` to load
        */
       if (!!currentTrack && currentTrack.id !== "000") {
@@ -168,23 +171,40 @@ export const getMedia = (isManual?: "manual") => async (
 
       /**
        * Now, we start getting tracks from device
-       * - then remove `currentTrack` above out the list to avoid duplication
+       *
+       * ---
+       * - Slice deviceTracks into `beforeCurrentTracks` and `afterCurrentTracks`
+       * - Create a queue of `[...afterCurrentTracks, ...beforeCurrentTracks]` to make `nowPlayingTracks` "feels" like `deviceTracks`, tho this list starts with the `currentTrack` instead of `deviceTracks[0]`
+       * //- then remove `currentTrack` above out the list to avoid duplication
        */
       let deviceTracks = await getMediaWithCovers();
-      let tracks = R.reject((track) => track.id === currentTrack.id, [
-        ...deviceTracks,
-      ]);
-      // let tracks = fn.js.arrayMergeNoDup("id", [
-      //   deviceTracks,
-      //   [currentTrack],
-      // ]) as dTracks;
-      const trackIDs = fn.js.vLookup(tracks, "id") as trackID[];
+      const currentPos = R.indexOf(
+        currentTrack.id,
+        R.pluck("id")(deviceTracks)
+      );
+      let beforeCurrentTracks = R.slice(
+        0,
+        currentPos,
+        deviceTracks
+      ) as TrackProps[];
+      console.log("BC: ", beforeCurrentTracks.length);
+      let afterCurrentTracks = R.slice(
+        currentPos + 1,
+        deviceTracks.length,
+        deviceTracks
+      ) as TrackProps[];
+      console.log("AC: ", beforeCurrentTracks.length);
+      const queueTracks = [...afterCurrentTracks, ...beforeCurrentTracks];
+      // let tracks = R.reject((track) => track.id === currentTrack.id, [
+      //   ...deviceTracks,
+      // ]);
+      await TrackPlayer.removeUpcomingTracks();
+      await TrackPlayer.add(queueTracks);
+      const trackIDs = fn.js.vLookup(deviceTracks, "id") as trackID[];
       console.log(
         "add TP wo currentTrack...: ",
-        deviceTracks.length + " - " + tracks.length
+        deviceTracks.length + " - " + queueTracks.length
       );
-      await TrackPlayer.removeUpcomingTracks();
-      await TrackPlayer.add([...tracks]);
 
       /**
        * If `nowPlayingTracks` = []:
@@ -194,7 +214,7 @@ export const getMedia = (isManual?: "manual") => async (
       if (nowPlayingIDs == []) {
         dispatch({ type: now_playing_tracks, payload: trackIDs });
       }
-      dispatch({ type: get_media_success, payload: tracks });
+      dispatch({ type: get_media_success, payload: deviceTracks });
       dispatch({ type: get_media_order, payload: trackIDs });
       dispatch({ type: set_loading, payload: false });
     }

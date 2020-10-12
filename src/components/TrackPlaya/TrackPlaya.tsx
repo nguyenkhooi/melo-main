@@ -4,6 +4,7 @@ import { dTracks, errorReporter, TrackProps } from "utils";
 import _ from "lodash";
 import { connector, dRedux, playlistShuffle } from "engines";
 import R from "ramda";
+import React from "react";
 const resolveAssetSource = require("react-native/Libraries/Image/resolveAssetSource");
 // const resolvedImage = resolveAssetSource(myImage);
 interface P extends dRedux {}
@@ -18,7 +19,7 @@ interface P extends dRedux {}
  * @author nguyenkhooi
  * @see https://medium.com/finimize-engineering/building-a-global-audio-player-in-react-native-dd065fc64b02
  */
-class TrackPlayaa {
+class TrackPlayaa extends React.Component {
   /**
    * TrackPlaya instance
    */
@@ -35,7 +36,7 @@ class TrackPlayaa {
   static getInstance() {
     if (!TrackPlayaa.instance) {
       console.log("getting TP instance...");
-      TrackPlayaa.instance = new TrackPlayaa();
+      TrackPlayaa.instance = new TrackPlayaa({});
       TrackPlayaa.instance.init();
       return TrackPlayaa.instance;
     }
@@ -113,6 +114,8 @@ class TrackPlayaa {
     return track;
   };
 
+  getQueue = async () => await TrackPlayer.getQueue();
+
   pause = () => TrackPlayer.pause();
 
   isPlaying = async () => {
@@ -133,7 +136,7 @@ class TrackPlayaa {
   next = () => TrackPlayer.skipToNext();
   previous = () => TrackPlayer.skipToPrevious();
 
-  createQueue = async (
+  createPlaylist = async (
     givenTracks: TrackProps[],
     isShuffle = false,
     currentTrack: TrackProps
@@ -150,7 +153,7 @@ class TrackPlayaa {
         await TrackPlayer.reset();
         await TrackPlayer.add(targetedTracks);
       } catch (error) {
-        errorReporter(error, "3127100-0_1");
+        errorReporter(error, "3127100-101");
       }
     }
 
@@ -165,7 +168,7 @@ class TrackPlayaa {
           return queueTracks.includes(track) || track === currentTrack;
         }, mediaFiles);
       } catch (error) {
-        errorReporter(error, "3127100-0_2");
+        errorReporter(error, "3127100-102");
       }
     }
   };

@@ -59,12 +59,14 @@ function TestScreen(props: dSCR_Tracks) {
   // };
 
   async function shuffle(array: dTracks) {
-    const _queue = await TrackPlayer.getQueue();
+    const _queue = await TrackPlaya.getInstance().getQueue();
     let queue = [..._queue];
     const playedTracks = R.reject((track) => queue.includes(track), mediaFiles);
     const targetedQueue = _isShuffled
       ? R.reject((track) => playedTracks.includes(track), mediaFiles)
       : queue.sort(() => Math.random() - 0.5);
+
+      // await TrackPlaya
 
     await TrackPlayer.removeUpcomingTracks();
     await TrackPlayer.add(targetedQueue);
@@ -196,7 +198,7 @@ function TestScreen(props: dSCR_Tracks) {
         <Text
           style={styles.state}
           onPress={async () => {
-            const queue = await TrackPlayer.getQueue();
+            const queue = await TrackPlaya.getInstance().getQueue();
             setQueue(queue);
           }}
         >
@@ -211,18 +213,55 @@ function TestScreen(props: dSCR_Tracks) {
           {"Shuffle: " + _isShuffled}
         </Text>
       </View>
-      {_tracks.map((track) => (
-        <Text
-          style={[
-            styles.description,
-            !!_currentTrack &&
-              !!_currentTrack.id &&
-              track.id === _currentTrack.id && { fontWeight: "bold" },
-          ]}
-        >
-          {track.title}
-        </Text>
-      ))}
+      <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
+        <View>
+          <Text style={{ fontWeight: "bold" }}>
+            Media Files {mediaFiles.length}
+          </Text>
+          {mediaFiles.map((track) => (
+            <Text
+              style={[
+                styles.description,
+                !!_currentTrack &&
+                  !!_currentTrack.id &&
+                  track.id === _currentTrack.id && { fontWeight: "bold" },
+              ]}
+            >
+              {track.id}
+            </Text>
+          ))}
+        </View>
+        <View>
+          <Text style={{ fontWeight: "bold" }}>Playlist {_tracks.length}</Text>
+          {_tracks.map((track) => (
+            <Text
+              style={[
+                styles.description,
+                !!_currentTrack &&
+                  !!_currentTrack.id &&
+                  track.id === _currentTrack.id && { fontWeight: "bold" },
+              ]}
+            >
+              {track.id}
+            </Text>
+          ))}
+        </View>
+        <View>
+          <Text style={{ fontWeight: "bold" }}>Queue {_queue.length}</Text>
+          {_queue.map((track) => (
+            <Text
+              style={[
+                styles.description,
+                !!_currentTrack &&
+                  !!_currentTrack.id &&
+                  track.id === _currentTrack.id && { fontWeight: "bold" },
+              ]}
+            >
+              {track.id}
+            </Text>
+          ))}
+        </View>
+      </View>
     </ScrollView>
   );
 }
@@ -253,7 +292,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F5FCFF",
   },
   description: {
-    width: "80%",
+    // width: "80%",
     marginTop: 20,
     textAlign: "center",
   },
