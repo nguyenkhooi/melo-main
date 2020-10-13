@@ -5,7 +5,7 @@ import { Image, TouchableOpacity, View } from "react-native";
 import { connect, useDispatch } from "react-redux";
 import { withTheme } from "styled-components/native";
 import { contrastColor, contrastTransColor, foregroundColor } from "themes";
-import { DEVICE_WIDTH, scale, spacing, TrackProps } from "utils";
+import { DEVICE_WIDTH, dSCR, scale, spacing, TrackProps } from "utils";
 import { sstyled, Txt } from "./Generals";
 import { TrackPlaya } from "./TrackPlaya/TrackPlaya";
 
@@ -34,7 +34,7 @@ export const RenderTrack: React.FC<dTrackComp> = React.memo(
       setCurrentTrackk,
       item,
       setOptions,
-      parent = "track-scr",
+      parent = "default",
     } = props;
     const dispatch = useDispatch();
     const [_isDisabled, shouldDisabled] = React.useState(false);
@@ -69,7 +69,9 @@ export const RenderTrack: React.FC<dTrackComp> = React.memo(
             thisTrackPlaya.play();
             return shouldDisabled(false);
             break;
-          default:
+          case "default":
+            await setCurrentTrackk(item);
+            thisTrackPlaya.play();
             return shouldDisabled(false);
             break;
           // }
@@ -113,7 +115,8 @@ export const RenderTrack: React.FC<dTrackComp> = React.memo(
     !(
       nextProps.currentTrack.id === nextProps.item.id ||
       prevProps.currentTrack.id === prevProps.item.id ||
-      prevProps.item !== nextProps.item
+      prevProps.item !== nextProps.item ||
+      prevProps.theme.current !== nextProps.theme.current
     )
 );
 
@@ -156,9 +159,10 @@ const Artist = sstyled(Txt.P2)((p) => ({
 
 interface dState extends ReturnType<typeof mapStates> {}
 interface dActions extends Partial<typeof mapDispatch> {}
-interface dTrackComp extends dState, dActions {
+interface dTrackComp extends dState, dActions, dSCR {
   item: TrackProps;
   parent:
+    | "default"
     | "track-scr"
     | "now-playing-scr"
     | "search-scr"

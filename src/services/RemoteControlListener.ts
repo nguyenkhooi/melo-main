@@ -1,33 +1,19 @@
 import { TrackPlaya } from "components";
-import { dRedux, setCurrentTrackID, sethPlayback } from "engines";
+import {
+  dRedux,
+  setCurrentTrackk,
+  sethPlayback,
+} from "engines";
 import { Alert } from "react-native";
 import TrackPlayer from "react-native-track-player";
 import { store } from "../store";
 
-let flag = false;
-
-/**
- * Background fn to dispatch current_track (not )
- * @param track
- */
-// async function backgroundPlayback(track: TrackProps) {
-//   console.log("bg playtrack...");
-//   //   if (flag) return;
-//   //   flag = true;
-//   //   setTimeout(() => (flag = false), 250);
-//   await TrackPlayer.reset();
-//   await TrackPlayer.add(track);
-//   store.dispatch(setCurrentTrackID(track.id));
-//   store.dispatch({ type: "current_track", payload: track });
-//   TrackPlayer.play();
-//   store.dispatch({ type: "set_playback", payload: true });
-// }
 
 async function bgService() {
-  let {
-    playback: { currentTrack, loop },
-    media: { mediaFiles },
-  }: dRedux = store.getState();
+  //! Put store.getState() in addEventListener to get latest states
+  //// let {
+  ////   playback: { currentTrack, loop },
+  //// }: dRedux = store.getState();
 
   TrackPlayer.addEventListener("playback-state", async (e) => {
     /**
@@ -104,12 +90,16 @@ async function bgService() {
 
   TrackPlayer.addEventListener("playback-track-changed", async (e) => {
     console.log("track changed listener: ", e);
+    let {
+      playback: { currentTrack },
+    }: dRedux = store.getState();
     try {
       const playingItemId = await TrackPlaya.getInstance().getCurrentTrackId();
       // no playing item and therefore listener is being trigged on a abnormal situation (e.g. logging out)
       if (playingItemId === null) {
         return null;
       }
+      console.log("currentTrack: ", currentTrack.title);
       console.log(">", currentTrack.id !== "000" && !!e && !!e.nextTrack);
       if (currentTrack.id !== "000" && !!e && !!e.nextTrack) {
         const targetedTrack = await TrackPlayer.getTrack(e.nextTrack);
@@ -146,13 +136,16 @@ async function bgService() {
    */
   TrackPlayer.addEventListener("playback-queue-ended", ({ position }) => {
     console.log("remote-queue-end...:", position);
+    let {
+      playback: { currentTrack, loop },
+    }: dRedux = store.getState();
     // console.log("current state: ", playback);
     // console.warn("current media: ", mediaFiles.length);
     if (position > 0) {
       // if (1 == 1) {
       if (loop) {
         // backgroundPlayback(currentTrack);
-        store.dispatch(setCurrentTrackID(currentTrack.id));
+        store.dispatch(setCurrentTrackk(currentTrack));
       } else {
         Alert.alert("Done!!");
         store.dispatch(sethPlayback({ type: "fwd" }));

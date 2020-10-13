@@ -49,6 +49,8 @@ export class TrackPlaya extends React.Component {
   static addTrackChangeListener = (callback: () => void) =>
     TrackPlayer.addEventListener("playback-track-changed", callback);
 
+  core = TrackPlayer;
+
   getCurrentTrackId() {
     return TrackPlayer.getCurrentTrack();
   }

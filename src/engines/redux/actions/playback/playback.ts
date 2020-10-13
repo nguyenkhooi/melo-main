@@ -28,7 +28,10 @@ export const setCurrentTrackk = (targetedTrack: TrackProps) => async (
 ) => {
   const thisTrackPlaya = TrackPlaya.getInstance();
   try {
-    await thisTrackPlaya.skipToTrack(targetedTrack.id);
+    await thisTrackPlaya.skipToTrack(targetedTrack.id).catch(async (e) => {
+      await thisTrackPlaya.core.add(targetedTrack);
+      // await thisTrackPlaya.core.remove()
+    });
     dispatch({
       type: "current_track",
       payload: targetedTrack,
