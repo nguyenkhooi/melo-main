@@ -16,7 +16,6 @@ import {
   ReduxStates,
   getMedia,
   setShuffle,
-  playlistShuffle,
   buildNowPlayingTracks,
 } from "engines";
 import R from "ramda";
@@ -69,17 +68,15 @@ function TracksScreen(props: dSCR_Tracks) {
     navigation,
     mediaLoaded,
     mediaFiles,
-    shuffle,
     //* redux actions
     getMedia,
     setShuffle,
-    buildNowPlayingTracks,
   } = props;
 
   const [modal, setModal] = useState({ visible: false, item: {} });
   const [_isFetched, shouldFetch] = React.useState(false);
 
-  const [_queue, setQueue] = React.useState([]);
+  const [, setQueue] = React.useState([]);
 
   const [] = React.useState(
     new DataProvider((r1, r2) => {
@@ -109,12 +106,6 @@ function TracksScreen(props: dSCR_Tracks) {
     const queueIDs = R.pluck("id")(queue);
     setQueue(queueIDs);
   }, []);
-
-  async function getQueue() {
-    const queue = await TrackPlayer.getQueue();
-    // setQueue(queueIDs);
-    setQueue(queue);
-  }
 
   const refMediaList = React.useRef<FlatList<{}>>();
   useScrollToTop(refMediaList);
@@ -186,15 +177,8 @@ function TracksScreen(props: dSCR_Tracks) {
           >
             <Buttoon.Fab
               icon={{ name: "shuffle" }}
-              // onPress={fetchMedia}
               onPress={async (xong) => {
-                // await setShuffle(true, mediaFiles);
-                const targetedPlaylist = shuffle
-                  ? playlistShuffle(mediaFiles, "normal")
-                  : mediaFiles;
-
-                buildNowPlayingTracks(targetedPlaylist, mediaFiles);
-
+                await setShuffle(true, mediaFiles);
                 setTimeout(() => {
                   xong();
                   thisTrackPlaya.play();

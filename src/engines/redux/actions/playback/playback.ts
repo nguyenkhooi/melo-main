@@ -20,7 +20,7 @@ import {
  * Think of users pressing specific track to play it
  * ---
  *
- * @version 0.10.12
+ * @version 0.10.13 *(Add await)*
  * @author nguyenkhooi
  */
 export const setCurrentTrackk = (targetedTrack: TrackProps) => async (
@@ -28,7 +28,7 @@ export const setCurrentTrackk = (targetedTrack: TrackProps) => async (
 ) => {
   const thisTrackPlaya = TrackPlaya.getInstance();
   try {
-    thisTrackPlaya.skipToTrack(targetedTrack.id);
+    await thisTrackPlaya.skipToTrack(targetedTrack.id);
     dispatch({
       type: "current_track",
       payload: targetedTrack,

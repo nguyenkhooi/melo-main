@@ -1,8 +1,8 @@
 import { CIRCULAR, IconPrimr, img } from "assets";
-import { ReduxActions, ReduxStates } from "engines";
+import { ReduxActions, ReduxStates, setCurrentTrackk } from "engines";
 import React from "react";
 import { Image, TouchableOpacity, View } from "react-native";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { withTheme } from "styled-components/native";
 import { contrastColor, contrastTransColor, foregroundColor } from "themes";
 import { DEVICE_WIDTH, scale, spacing, TrackProps } from "utils";
@@ -18,7 +18,7 @@ const mapStates = (states: ReduxStates) => {
   return { currentTrack };
 };
 
-const mapDispatch = {} as ReduxActions;
+const mapDispatch = { setCurrentTrackk } as ReduxActions;
 
 /**
  * Track Info Render used in multiple TrackLists throughout the project
@@ -29,8 +29,14 @@ const mapDispatch = {} as ReduxActions;
  */
 export const RenderTrack: React.FC<dTrackComp> = React.memo(
   (props: dTrackComp) => {
-    const { currentTrack, item, setOptions, parent = "track-scr" } = props;
-
+    const {
+      currentTrack,
+      setCurrentTrackk,
+      item,
+      setOptions,
+      parent = "track-scr",
+    } = props;
+    const dispatch = useDispatch();
     const [_isDisabled, shouldDisabled] = React.useState(false);
     const thisTrackPlaya = TrackPlaya.getInstance();
     async function onTrackPress() {
@@ -39,27 +45,27 @@ export const RenderTrack: React.FC<dTrackComp> = React.memo(
         shouldDisabled(true);
         switch (parent) {
           case "track-scr":
-            await thisTrackPlaya.skipToTrack(item.id);
+            await setCurrentTrackk(item);
             thisTrackPlaya.play();
             return shouldDisabled(false);
             break;
           case "search-scr":
-            await thisTrackPlaya.skipToTrack(item.id);
+            await setCurrentTrackk(item);
             thisTrackPlaya.play();
             return shouldDisabled(false);
             break;
           case "playlist-scr":
-            await thisTrackPlaya.skipToTrack(item.id);
+            await setCurrentTrackk(item);
             thisTrackPlaya.play();
             return shouldDisabled(false);
             break;
           case "now-playing-scr":
-            await thisTrackPlaya.skipToTrack(item.id);
+            await setCurrentTrackk(item);
             thisTrackPlaya.play();
             return shouldDisabled(false);
             break;
           case "contents-scr":
-            await thisTrackPlaya.skipToTrack(item.id);
+            await setCurrentTrackk(item);
             thisTrackPlaya.play();
             return shouldDisabled(false);
             break;
