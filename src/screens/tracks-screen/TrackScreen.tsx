@@ -7,10 +7,18 @@ import {
   sstyled,
   Txt,
   Buttoon,
+  TrackPlaya,
 } from "components";
 import RenderActivityIndicator from "components/RenderActivityIndicator";
 import { scanMessage } from "constants";
-import { ReduxActions, ReduxStates, getMedia, setShuffle } from "engines";
+import {
+  ReduxActions,
+  ReduxStates,
+  getMedia,
+  setShuffle,
+  playlistShuffle,
+  buildNowPlayingTracks,
+} from "engines";
 import R from "ramda";
 import React, { useEffect, useState } from "react";
 import { Dimensions, StatusBar, View, ViewStyle } from "react-native";
@@ -45,13 +53,15 @@ const itemHeight = 75;
 const mapStates = (state: ReduxStates) => {
   const {
     media: { mediaLoaded, mediaFiles },
+    playback: { shuffle },
   } = state;
-  return { mediaLoaded, mediaFiles };
+  return { mediaLoaded, mediaFiles, shuffle };
 };
 
 const mapDispatch = {
   getMedia,
   setShuffle,
+  buildNowPlayingTracks,
 } as ReduxActions;
 
 function TracksScreen(props: dSCR_Tracks) {
@@ -59,9 +69,11 @@ function TracksScreen(props: dSCR_Tracks) {
     navigation,
     mediaLoaded,
     mediaFiles,
+    shuffle,
     //* redux actions
     getMedia,
     setShuffle,
+    buildNowPlayingTracks,
   } = props;
 
   const [modal, setModal] = useState({ visible: false, item: {} });
@@ -74,6 +86,8 @@ function TracksScreen(props: dSCR_Tracks) {
       return r1 !== r2;
     })
   );
+
+  const thisTrackPlaya = TrackPlaya.getInstance();
 
   useEffect(() => {
     let unsubscribe = navigation.addListener("focus", async () => {
@@ -112,11 +126,11 @@ function TracksScreen(props: dSCR_Tracks) {
         <View style={{ flex: 1 }}>
           {/* <ScreenTitle title={"Your Melo"} /> */}
           {/* <Txt.S1>{JSON.stringify(nowPlayingIDs)}</Txt.S1> */}
-          <Txt.P1 onPress={getQueue}>
+          {/* <Txt.P1 onPress={getQueue}>
             {JSON.stringify(mediaFiles.length) +
               " - " +
               JSON.stringify(_queue.length)}
-          </Txt.P1>
+          </Txt.P1> */}
           {/* <Txt.P1 onPress={fetchMedia}>{"Refresh"}</Txt.P1> */}
           <FlatList
             ref={refMediaList}
@@ -174,8 +188,17 @@ function TracksScreen(props: dSCR_Tracks) {
               icon={{ name: "shuffle" }}
               // onPress={fetchMedia}
               onPress={async (xong) => {
-                await setShuffle(true, mediaFiles);
-                xong();
+                // await setShuffle(true, mediaFiles);
+                const targetedPlaylist = shuffle
+                  ? playlistShuffle(mediaFiles, "normal")
+                  : mediaFiles;
+
+                buildNowPlayingTracks(targetedPlaylist, mediaFiles);
+
+                setTimeout(() => {
+                  xong();
+                  thisTrackPlaya.play();
+                }, 500);
               }}
             />
           </View>

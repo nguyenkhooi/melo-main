@@ -150,7 +150,7 @@ function $_PlayerFooter(props: dCOMP_PlayerFooter) {
               paddingVertical: spacing[2],
             }}
             //* for debugging
-            // onPress={jumpToPlayerScr}
+            onPress={jumpToPlayerScr}
           >
             <Thumbnail source={coverSrc} onPress={jumpToPlayerScr} />
             <CtnrTrackInfo>
@@ -193,8 +193,8 @@ function $_FooterActions(props: dCOMP_PlayerFooter) {
         flexDirection: "row",
         justifyContent: "center",
         //* for debugging
-        position: "absolute",
-        right: 0,
+        // position: "absolute",
+        // right: 0,
       }}
     >
       {/* <Txt.S2>state:{JSON.stringify(isPlaying)}</Txt.S2> */}
@@ -220,7 +220,7 @@ function $_FooterActions(props: dCOMP_PlayerFooter) {
         onPress={() => dispatch(sethPlayback({ type: "fwd" }))}
         // onPress={() => TrackPlayer.skipToNext()}
       />
-      <ActionIcon
+      {/* <ActionIcon
         {...props}
         name="backward"
         onPress={() => dispatch(sethPlayback({ type: "bwd" }))}
@@ -231,7 +231,7 @@ function $_FooterActions(props: dCOMP_PlayerFooter) {
         name="shuffle"
         color={isShuffled ? "dodgerblue" : "grey"}
         onPress={() => dispatch(setShuffle(!isShuffled, nowPlayingTracks))}
-      />
+      /> */}
     </View>
   );
 }
