@@ -1,7 +1,15 @@
+import { TrackPlaya } from "components";
 import TrackPlayer from "react-native-track-player";
 import { Dispatch } from "redux";
-import { dTracks, errorReporter, trackID } from "utils";
-import { NowPlayingTracksAction, SetCurrentTrackAction } from "../../types";
+import { dTracks, errorReporter, trackID, TrackProps } from "utils";
+import {
+  NowPlayingTracksAction,
+  SetCurrentTrackAction,
+  SetIndexedTracksAction,
+  SetNowPlayingTracksAction,
+  set_indexed_tracks,
+  set_np_tracks,
+} from "../../types";
 import { setCurrentTrackID } from "../playback/playback";
 
 /**
@@ -10,7 +18,7 @@ import { setCurrentTrackID } from "../playback/playback";
  * But remember, TrackPlayer ALWAYS inherits `MediaFiles[]`,
  * so don't use `TrackPlayer.add(nowPlayingTracks)`
  *
- * @param nowPlayingTrackIDs
+ * @deprecated soon
  *
  * NOTE: The only one that can "reset" and "add" TrackPlayer is setNowPlayingTracks
  * so that TrackPlayer's playing list == nowPlayingLists
@@ -74,9 +82,14 @@ export const setNowPlayingTracks = (
   }
 };
 
-const addToPlaylist = async (tracks: dTracks) => (dispatch: Dispatch<>) => {
-  try {
-  } catch (error) {
-    errorReporter(error, "3121330114");
-  }
+export const buildNowPlayingTracks = (
+  targetedTracks: TrackProps[],
+  indexedTracks: TrackProps[]
+) => async (
+  dispatch: Dispatch<SetNowPlayingTracksAction | SetIndexedTracksAction>
+) => {
+  let thisTrackPlaya = TrackPlaya.getInstance();
+  thisTrackPlaya.setPlaylist(targetedTracks);
+  dispatch({ type: set_indexed_tracks, payload: indexedTracks });
+  return dispatch({ type: set_np_tracks, payload: targetedTracks });
 };

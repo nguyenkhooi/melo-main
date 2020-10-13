@@ -3,9 +3,9 @@ import {
   CIRCULAR_LIGHT,
   dIconPrimr,
   IconPrimr,
-  img
+  img,
 } from "assets";
-import { dRedux, sethPlayback, setShuffle } from "engines";
+import { dRedux, ReduxStates, sethPlayback, setShuffle } from "engines";
 import { navigate } from "navigation";
 import React from "react";
 import { Image, TouchableOpacity, View } from "react-native";
@@ -14,7 +14,7 @@ import { Modalize } from "react-native-modalize";
 import TrackPlayer from "react-native-track-player";
 import {
   usePlaybackState,
-  useTrackPlayerProgress
+  useTrackPlayerProgress,
 } from "react-native-track-player/lib/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import styled, { withTheme } from "styled-components/native";
@@ -176,8 +176,13 @@ function $_PlayerFooter(props: dCOMP_PlayerFooter) {
 
 function $_FooterActions(props: dRedux) {
   //* for debugging
-  const shuffle = useSelector((state) => state.playback.shuffle);
-  const nowPlayingIDs = useSelector((state) => state.media.nowPlayingIDs);
+  const isShuffled = useSelector(
+    (state: ReduxStates) => state.playback.shuffle
+  );
+  const nowPlayingTracks = useSelector(
+    (state: ReduxStates) => state.media.nowPlayingTracks
+  );
+
   const dispatch = useDispatch();
   const playbackState = usePlaybackState();
   return (
@@ -222,8 +227,8 @@ function $_FooterActions(props: dRedux) {
       <ActionIcon
         {...props}
         name="shuffle"
-        color={shuffle ? "dodgerblue" : "grey"}
-        onPress={() => dispatch(setShuffle(!shuffle))}
+        color={isShuffled ? "dodgerblue" : "grey"}
+        onPress={() => dispatch(setShuffle(!isShuffled, nowPlayingTracks))}
       />
     </View>
   );

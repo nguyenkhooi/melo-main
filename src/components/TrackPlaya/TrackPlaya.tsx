@@ -113,7 +113,10 @@ export class TrackPlaya extends React.Component {
 
   getQueue = async () => await TrackPlayer.getQueue();
 
+  play = () => TrackPlayer.play();
   pause = () => TrackPlayer.pause();
+  next = () => TrackPlayer.skipToNext();
+  previous = () => TrackPlayer.skipToPrevious();
 
   isPlaying = async () => {
     const currentState = await TrackPlayer.getState();
@@ -130,8 +133,7 @@ export class TrackPlaya extends React.Component {
     }
   };
 
-  next = () => TrackPlayer.skipToNext();
-  previous = () => TrackPlayer.skipToPrevious();
+  skipToTrack = (targetedTrackID: trackID) => TrackPlayer.skip(targetedTrackID);
 
   setPlaylist = async (givenTracks: TrackProps[]) => {
     await TrackPlayer.reset();
@@ -218,7 +220,8 @@ export class TrackPlaya extends React.Component {
      */
     await TrackPlayer.remove(tracksWoCurrent);
     await TrackPlayer.add(targetedTracks);
-    return targetedTracks;
+    const nowPlayingTracks = [currentTrack, ...targetedTracks];
+    return nowPlayingTracks;
   }
 
   createPlaylist = async (

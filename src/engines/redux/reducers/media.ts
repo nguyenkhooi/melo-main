@@ -6,7 +6,9 @@ import {
   get_media_success,
   now_playing_tracks,
   rename_track,
-  set_loading
+  set_indexed_tracks,
+  set_loading,
+  set_np_tracks,
 } from "../types";
 
 const INITIAL_STATE: dMediaState = {
@@ -14,6 +16,8 @@ const INITIAL_STATE: dMediaState = {
   mediaLoaded: false,
   mediaIDs: [],
   nowPlayingIDs: [],
+  indexedTracks: [],
+  nowPlayingTracks: [],
 };
 
 export function media(
@@ -26,21 +30,26 @@ export function media(
         ...state,
         mediaLoaded: !action.payload,
       };
+      break;
     case get_media_success:
       return {
         ...state,
         mediaLoaded: true,
         mediaFiles: action.payload,
       } as dMediaState;
+      break;
     case now_playing_tracks:
       return { ...state, nowPlayingIDs: action.payload };
+      break;
     case get_media_order:
       return { ...state, mediaIDs: action.payload };
+      break;
     case rename_track: {
       let mediaArr = [...state.mediaFiles];
       let index = mediaArr.findIndex((i) => i.id === action.payload.id);
       if (index !== -1) mediaArr[index] = action.payload;
       return { ...state, mediaFiles: mediaArr };
+      break;
     }
     case delete_track: {
       let mediaArray = [...state.mediaFiles];
@@ -52,7 +61,14 @@ export function media(
         });
       }
       return { ...state, mediaFiles: mediaArray };
+      break;
     }
+    case set_indexed_tracks:
+      return { ...state, indexedTracks: action.payload } as dMediaState;
+
+    case set_np_tracks:
+      return { ...state, nowPlayingTracks: action.payload } as dMediaState;
+      break;
     default:
       return state;
   }

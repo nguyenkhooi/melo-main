@@ -1,3 +1,4 @@
+import { TrackPlaya } from "components";
 import R from "ramda";
 import TrackPlayer from "react-native-track-player";
 import { Dispatch } from "redux";
@@ -5,9 +6,10 @@ import { store } from "store";
 import { errorReporter, TrackProps } from "utils";
 import {
   dRedux,
-  NowPlayingTracksAction,
   SetCurrentTrackAction,
+  SetNowPlayingTracksAction,
   SetPlayerAction,
+  set_np_tracks,
   set_shuffle,
   ToggleLoopAction,
   ToggleShuffleAction,
@@ -16,36 +18,20 @@ import {
 /**
  * Set current track to play.
  * Think of users pressing specific track to play it
- * @param currentTrack
- * @deprecated
+ * ---
+ *
+ * @version 0.10.12
+ * @author nguyenkhooi
  */
-export const setCurrentTrackk = () => async (
+export const setCurrentTrackk = (targetedTrack: TrackProps) => async (
   dispatch: Dispatch<SetCurrentTrackAction | SetPlayerAction>
 ) => {
+  const thisTrackPlaya = TrackPlaya.getInstance();
   try {
-    // await TrackPlayer.reset();
-    // await TrackPlayer.add(currentTrack);
-    // dispatch({
-    //   type: "current_track",
-    //   payload: currentTrack,
-    // });
-    // TrackPlayer.play();
-    // dispatch({
-    //   type: "set_playback",
-    //   payload: true,
-    // });
-
-    const currentTrack = await TrackPlayer.getTrack(
-      await TrackPlayer.getCurrentTrack()
-    );
+    thisTrackPlaya.skipToTrack(targetedTrack.id);
     dispatch({
       type: "current_track",
-      payload: currentTrack,
-    });
-    TrackPlayer.play();
-    dispatch({
-      type: "set_playback",
-      payload: true,
+      payload: targetedTrack,
     });
   } catch (e) {
     errorReporter(e, "3121");
@@ -116,12 +102,14 @@ type dSethPlayback = {
 };
 /**
  * Fn to set playback (play, pause, forward, backward)
+ *
  * ---
  *
  * @version 0.10.10 *( rewrite the logic and depend on TrackPlayer<> more for faster performance)*
  * @author nguyenkhooi
  */
 export const sethPlayback = ({ type }: dSethPlayback) => async (dispatch) => {
+  const thisTrackPlaya = TrackPlaya.getInstance();
   try {
     const {
       media: { nowPlayingIDs },
@@ -141,78 +129,20 @@ export const sethPlayback = ({ type }: dSethPlayback) => async (dispatch) => {
          * *dispatch() is now run in TrackPlayer's bgService()
          * for enhancing performance
          */
-        await TrackPlayer.play();
+        await thisTrackPlaya.play();
         break;
       case "pause":
         /**
          * *dispatch() is now run in TrackPlayer's bgService()
          * for enhancing performance
          */
-        await TrackPlayer.pause();
+        await thisTrackPlaya.pause();
         break;
-      /**
-       * case "fwd":
-       * Recalling TrackPlayer ALWAYS inherits `mediaFiles` list (Hence [{id: 1},{id: 2},{id: 3},...]),
-       *  when we manipulate the `nowPlayingTracks` list (e.g. shuffle, play specific artists...),
-       *
-       */
       case "fwd":
-        /** Check if current track is at the end of `nowPlayingTracks`:
-         *    ✅ : targetedTrack = 1st track of `nowPlayingTracks`
-         *    ❌ : targetedTrack = next track of the `currentTrack` in `nowPlayingTracks`
-         */
-        // currentTrack.id === nowPlayingTracks[nowPlayingTracks.length - 1].id &&
-        //   console.log("End of list");
-        const targetedTrackID: string =
-          currentTrack.id === nowPlayingIDs[nowPlayingIDs.length - 1]
-            ? nowPlayingIDs[0]
-            : nowPlayingIDs[currentTrackPosition + 1];
-
-        // console.log(
-        //   "targetedID: ",
-        //   currentTrack.id +
-        //     " - " +
-        //     currentTrackPosition +
-        //     " - " +
-        //     targetedTrackID
-        // );
-
-        TrackPlayer.skipToNext();
-
-        // return dispatch(setCurrentTrackID(targetedTrackID));
-
-        // await TrackPlayer.skip(targetedTrackID);
-        // TrackPlayer.play();
-        // return dispatch({ type: "set_playback", payload: true });
+        thisTrackPlaya.next();
         break;
       case "bwd":
-        /** Check if current track is at the start of `nowPlayingTracks`:
-         *    ✅ : targetedTrack = last track of `nowPlayingTracks`
-         *    ❌ : targetedTrack = prev track of the `currentTrack` in `nowPlayingTracks`
-         */
-        // currentTrack.id === nowPlayingTracks[0].id &&
-        //   console.log("Start of list");
-        const targetedTrackID1: string =
-          currentTrack.id === nowPlayingIDs[0]
-            ? nowPlayingIDs[nowPlayingIDs.length - 1]
-            : nowPlayingIDs[currentTrackPosition - 1];
-
-        // console.log(
-        //   "targetedID: ",
-        //   currentTrack.id +
-        //     " - " +
-        //     currentTrackPosition +
-        //     " - " +
-        //     targetedTrackID1
-        // );
-
-        TrackPlayer.skipToPrevious();
-        // dispatch(setCurrentTrackID(targetedTrackID1));
-
-        // await TrackPlayer.skip(targetedTrackID1);
-        // await TrackPlayer.skip(targetedTrackID1);
-        // TrackPlayer.play();
-        // return dispatch({ type: "set_playback", payload: true });
+        thisTrackPlaya.previous();
         break;
     }
   } catch (error) {
@@ -240,66 +170,30 @@ export const setLoop = (isLoop: boolean): ToggleLoopAction => {
  * @author nguyenkhooi
  */
 export const setShuffle = (
-  isShuffle: boolean,
+  shouldShuffle: boolean,
   /**trackIDs?: trackID[] */
-  givenTracks?: TrackProps[]
+  givenTracks: TrackProps[]
 ) => async (
   dispatch: Dispatch<
-    ToggleShuffleAction | NowPlayingTracksAction | SetCurrentTrackAction
+    ToggleShuffleAction | SetCurrentTrackAction | SetNowPlayingTracksAction
   >
 ) => {
+  console.log("hitt");
+  let thisTrackPlaya = TrackPlaya.getInstance();
   try {
     const {
-      media: { mediaIDs, mediaFiles },
+      playback: { currentTrack },
+      media: { indexedTracks },
     }: dRedux = store.getState();
+    const targetedTracks = await thisTrackPlaya.toggleShuffle(
+      shouldShuffle,
+      givenTracks,
+      currentTrack
+    );
     //* modify indicator
-    dispatch({ type: set_shuffle, payload: isShuffle });
+    dispatch({ type: set_shuffle, payload: shouldShuffle });
+    dispatch({ type: set_np_tracks, payload: targetedTracks });
     //* track ids' order to be used
-    const _tracks = givenTracks || mediaFiles;
-    //* If shuffle == true, shuffle _trackIDs, else use the OG one
-    const targetedTracks = isShuffle
-      ? (playlistShuffle([..._tracks], "normal") as TrackProps[])
-      : (mediaFiles as TrackProps[]);
-    const playbackState = await TrackPlayer.getState();
-
-    // dispatch({ type: now_playing_tracks, payload: targetedIDs });
-
-    console.log("is shuffled?", isShuffle);
-
-    const TRACK_PLAYER_IS_PLAYING = playbackState == TrackPlayer.STATE_PLAYING;
-    const TRACK_PLAYER_IS_NOT_PLAYING = !TRACK_PLAYER_IS_PLAYING;
-
-    /**
-     * If track player is playing,
-     * reject the `currentTrack` out of `targetedTracks` -> `shuffledTracks`,
-     * and add `shuffledTracks` after the `currentTrack`
-     */
-    if (TRACK_PLAYER_IS_PLAYING) {
-      const _currentTrackID = await TrackPlayer.getCurrentTrack();
-      const shuffledTracks = R.reject(
-        (track) => track.id === _currentTrackID,
-        targetedTracks
-      );
-      await TrackPlayer.removeUpcomingTracks();
-      await TrackPlayer.add([...shuffledTracks]);
-    }
-
-    /**
-     * If track player is not playing,
-     *  reset the TrackPlayer, and add targetedTracks,
-     *  set its 1st track as currentTrack
-     */
-    if (TRACK_PLAYER_IS_NOT_PLAYING) {
-      await TrackPlayer.reset();
-      await TrackPlayer.add([...targetedTracks]);
-      //@ts-ignore
-      dispatch(setCurrentTrackID(targetedTracks[0].id));
-    }
-    // return (
-    //   playbackState != TrackPlayer.STATE_PLAYING &&
-    //   //@ts-ignore
-    //   dispatch(setCurrentTrackID(targetedTracks[0]))
-    // );
   } catch (error) {
     errorReporter(error, "3124");
     return null;

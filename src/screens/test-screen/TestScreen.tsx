@@ -1,35 +1,34 @@
 import { TrackPlaya } from "components";
-import { connector, dRedux, fn, playlistShuffle } from "engines";
+import { connector, dRedux, playlistShuffle, setShuffle } from "engines";
 import _ from "lodash";
-import R from "ramda";
 import React from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import TrackPlayer from "react-native-track-player";
 import { usePlaybackState } from "react-native-track-player/lib/hooks";
-import { dSCR, dTracks, trackID, TrackProps } from "utils";
+import { dSCR, TrackProps } from "utils";
 import Player from "./Player";
 import playlistData from "./playlist.json";
+import { useDispatch } from "react-redux";
+
+const USE_REDUX = true;
 
 interface dSCR_Tracks extends dSCR, dRedux {}
 function TestScreen(props: dSCR_Tracks) {
   const {
-    playback: { currentTrack },
-    media: { nowPlayingIDs: nowPlayingTracks, mediaFiles },
+    playback: { currentTrack, shuffle },
+    media: { nowPlayingTracks, mediaFiles, indexedTracks },
+    sethPlayback,
+    // setShuffle,
+    buildNowPlayingTracks,
   } = props;
+  const dispatch = useDispatch();
   const playbackState = usePlaybackState();
   let thisTrackPlaya = TrackPlaya.getInstance();
   const [_currentTrack, setCurrentTrack] = React.useState<TrackProps>(null);
-  const [_isShuffled, setShuffle] = React.useState(false);
+  const [_isShuffled, shouldShuffle] = React.useState(false);
   const [_indexedTracks, setIndexedTracks] = React.useState(mediaFiles);
   const [_npTracks, setNPTracks] = React.useState([]);
   const [_playaTracks, setPlayaTracks] = React.useState([]);
-
-  // React.useEffect(function TrackPlayaListener() {
-  //   const trackChangedListener = TrackPlaya.addTrackChangeListener(
-  //     async () => await updateCurrentPlayingItem()
-  //   );
-  //   return trackChangedListener.remove();
-  // });
 
   React.useEffect(function updateCurrentTrack() {
     setCurrentTrack(currentTrack);
@@ -40,110 +39,123 @@ function TestScreen(props: dSCR_Tracks) {
     },
     [currentTrack]
   );
-  //* here we do some error checking to ensure that we're updating as we expect
-  // const updateCurrentPlayingItem = async () => {
-  //   const playingItemId = await thisTrackPlaya.getCurrentTrackId();
-  //   // no playing item and therefore listener is being trigged on a abnormal situation (e.g. logging out)
-  //   if (playingItemId === null) {
-  //     return null;
-  //   }
 
-  //   const playingItem = _tracks.find((item) => item.id === playingItemId);
-
-  //   if (!playingItem) {
-  //     throw new Error(
-  //       "Changed track to an item that has not been added to the playlist"
-  //     );
-  //   }
-
-  //   setCurrentTrack(playingItem);
-
-  //   return playingItem;
-  // };
-
-  async function toggleShuffle() {
-    const targetedTracks = await thisTrackPlaya.toggleShuffle(
-      !_isShuffled,
-      _indexedTracks,
-      _currentTrack
-    );
-
-    setPlayaTracks(targetedTracks);
-    setNPTracks(targetedTracks);
-    setShuffle(!_isShuffled);
-  }
-
-  const _getQueue = async () => {
+  const _getTPQueue = async () => {
     const queue = await thisTrackPlaya.getQueue();
     // console.log(">>>>>", queue);
     setPlayaTracks(queue);
-    setNPTracks(queue);
   };
 
-  async function addToPlaylist(givenTracks: dTracks) {
-    setNPTracks([..._npTracks, ...givenTracks]);
-    return Promise.all(
-      givenTracks.map((item) => thisTrackPlaya.appendToQueue(item))
-    );
+  async function toggleShuffle() {
+    if (USE_REDUX) {
+      await dispatch(setShuffle(!shuffle, indexedTracks));
+    } else {
+      const targetedTracks = await thisTrackPlaya.toggleShuffle(
+        !_isShuffled,
+        _indexedTracks,
+        _currentTrack
+      );
+
+      setNPTracks(targetedTracks);
+      shouldShuffle(!_isShuffled);
+    }
   }
 
-  const addBeforePlaylist = (...givenTracks: TrackProps[]) => {
-    setNPTracks([...givenTracks, ..._npTracks]);
-
-    return Promise.all(
-      givenTracks.map((item) => thisTrackPlaya.prependToQueue(item.data))
-    );
-  };
-
-  const clearPlaylist = () => {
-    // this.setState(initialState);
-    return thisTrackPlaya.clear();
-  };
-
   const togglePlayback = () => {
+    if (USE_REDUX) {
+      // sethPlayback({ type: "play" });
+      return thisTrackPlaya.togglePlay();
+    }
     return thisTrackPlaya.togglePlay();
   };
 
   const skipToNext = () => {
+    if (USE_REDUX) {
+      return sethPlayback({ type: "fwd" });
+    }
     return thisTrackPlaya.next();
   };
 
   const skipToPrevious = () => {
+    if (USE_REDUX) {
+      sethPlayback({ type: "bwd" });
+    }
     return thisTrackPlaya.previous();
   };
+
+  const playAllTracks = async () => {
+    if (USE_REDUX) {
+      const targetedPlaylist = _isShuffled
+        ? playlistShuffle(mediaFiles, "normal")
+        : mediaFiles;
+
+      buildNowPlayingTracks(targetedPlaylist, mediaFiles);
+
+      setTimeout(() => {
+        _getTPQueue();
+        thisTrackPlaya.togglePlay();
+      }, 500);
+    } else {
+      const targetedPlaylist = _isShuffled
+        ? playlistShuffle(mediaFiles, "normal")
+        : mediaFiles;
+      thisTrackPlaya.setPlaylist(targetedPlaylist);
+      setNPTracks(targetedPlaylist);
+      setIndexedTracks(mediaFiles);
+      setTimeout(() => {
+        _getTPQueue();
+        thisTrackPlaya.togglePlay();
+      }, 500);
+    }
+  };
+
+  const playCustomTracks = async (givenTracks: TrackProps[]) => {
+    if (USE_REDUX) {
+      const targetedPlaylist = _isShuffled
+        ? playlistShuffle(givenTracks, "normal")
+        : givenTracks;
+
+      buildNowPlayingTracks(targetedPlaylist, givenTracks);
+      setTimeout(() => {
+        _getTPQueue();
+        thisTrackPlaya.togglePlay();
+      }, 500);
+    } else {
+      const targetedPlaylist = _isShuffled
+        ? playlistShuffle(givenTracks, "normal")
+        : givenTracks;
+      thisTrackPlaya.setPlaylist(targetedPlaylist);
+      setNPTracks(targetedPlaylist);
+      setIndexedTracks(givenTracks);
+      setTimeout(() => {
+        _getTPQueue();
+        thisTrackPlaya.togglePlay();
+      }, 500);
+    }
+  };
+
+  const playSingleTrack = (targetedTrack: TrackProps) => {
+    setCurrentTrack(targetedTrack);
+    thisTrackPlaya.skipToTrack(targetedTrack.id);
+    setTimeout(() => {
+      _getTPQueue();
+      thisTrackPlaya.togglePlay();
+    }, 500);
+  };
+
+  const NP_TRACKS = USE_REDUX ? nowPlayingTracks : _npTracks;
 
   return (
     <ScrollView>
       <View style={styles.container}>
         <View>
-          <Text
-            style={styles.state}
-            onPress={async () => {
-              const targetedPlaylist = _isShuffled
-                ? playlistShuffle(mediaFiles, "normal")
-                : mediaFiles;
-              thisTrackPlaya.setPlaylist(targetedPlaylist);
-              setIndexedTracks(mediaFiles);
-              setTimeout(() => {
-                _getQueue();
-                thisTrackPlaya.togglePlay();
-              }, 500);
-            }}
-          >
+          <Text style={styles.state} onPress={playAllTracks}>
             ▶ Play all
           </Text>
           <Text
             style={styles.state}
             onPress={async () => {
-              const targetedPlaylist = _isShuffled
-                ? playlistShuffle(mediaFiles, "normal")
-                : playlistData;
-              thisTrackPlaya.setPlaylist(targetedPlaylist);
-              setIndexedTracks(playlistData);
-              setTimeout(() => {
-                _getQueue();
-                thisTrackPlaya.togglePlay();
-              }, 500);
+              playCustomTracks(playlistData);
             }}
           >
             ▶ Play custom
@@ -163,11 +175,11 @@ function TestScreen(props: dSCR_Tracks) {
           onPress={async () => {
             toggleShuffle();
             setTimeout(() => {
-              _getQueue();
+              _getTPQueue();
             }, 500);
           }}
         >
-          {"🔀 Shuffle: " + _isShuffled}
+          {`🔀 Shuffle: ${USE_REDUX ? shuffle : _isShuffled}`}
         </Text>
       </View>
 
@@ -191,10 +203,11 @@ function TestScreen(props: dSCR_Tracks) {
         </View>
         <View>
           <Text style={{ fontWeight: "bold" }}>
-            Now Playing {_npTracks.length}
+            Now Playing {NP_TRACKS.length}
           </Text>
-          {_npTracks.map((track) => (
+          {NP_TRACKS.map((track) => (
             <Text
+              onPress={() => playSingleTrack(track)}
               style={[
                 styles.description,
                 !!_currentTrack &&
@@ -207,7 +220,7 @@ function TestScreen(props: dSCR_Tracks) {
           ))}
         </View>
         <View>
-          <Text style={{ fontWeight: "bold" }} onPress={_getQueue}>
+          <Text style={{ fontWeight: "bold" }} onPress={_getTPQueue}>
             Queue {_playaTracks.length}
           </Text>
           {_playaTracks.map((track) => (
