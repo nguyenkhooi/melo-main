@@ -16,7 +16,7 @@ import {
   ReduxStates,
   getMedia,
   setShuffle,
-  buildNowPlayingTracks,
+  sethPlayback,
 } from "engines";
 import R from "ramda";
 import React, { useEffect, useState } from "react";
@@ -60,7 +60,7 @@ const mapStates = (state: ReduxStates) => {
 const mapDispatch = {
   getMedia,
   setShuffle,
-  buildNowPlayingTracks,
+  sethPlayback,
 } as ReduxActions;
 
 function TracksScreen(props: dSCR_Tracks) {
@@ -71,6 +71,7 @@ function TracksScreen(props: dSCR_Tracks) {
     //* redux actions
     getMedia,
     setShuffle,
+    sethPlayback,
   } = props;
 
   const [modal, setModal] = useState({ visible: false, item: {} });
@@ -181,7 +182,7 @@ function TracksScreen(props: dSCR_Tracks) {
                 await setShuffle(true, mediaFiles);
                 setTimeout(() => {
                   xong();
-                  thisTrackPlaya.play();
+                  sethPlayback({ type: "fwd" });
                 }, 500);
               }}
             />

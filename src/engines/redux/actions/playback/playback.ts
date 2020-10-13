@@ -139,10 +139,12 @@ export const sethPlayback = ({ type }: dSethPlayback) => async (dispatch) => {
         await thisTrackPlaya.pause();
         break;
       case "fwd":
-        thisTrackPlaya.next();
+        await thisTrackPlaya.next();
+        return thisTrackPlaya.play();
         break;
       case "bwd":
-        thisTrackPlaya.previous();
+        await thisTrackPlaya.previous();
+        return thisTrackPlaya.play();
         break;
     }
   } catch (error) {

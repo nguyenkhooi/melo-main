@@ -9,7 +9,7 @@ import { DEVICE_WIDTH, scale, spacing, TrackProps } from "utils";
 import { sstyled, Txt } from "./Generals";
 import { TrackPlaya } from "./TrackPlaya/TrackPlaya";
 
-const DEV_MODE = true;
+const DEV_MODE = false;
 
 const mapStates = (states: ReduxStates) => {
   const {
@@ -95,7 +95,7 @@ export const RenderTrack: React.FC<dTrackComp> = React.memo(
             {item.title}
           </Title>
           <Artist {...props} numberOfLines={1}>
-            {`${DEV_MODE && item.id + "•"}${item.artist} `}
+            {`${DEV_MODE ? item.id + "•" : ""}${item.artist} `}
           </Artist>
           {/* <Text>{JSON.stringify(Object.keys(item))}</Text> */}
         </CtnrTrackInfo>

@@ -110,10 +110,7 @@ async function bgService() {
       if (playingItemId === null) {
         return null;
       }
-      console.log(
-        ">",
-        currentTrack.id !== "000" + "/" + !!e + "/" + !!e.nextTrack
-      );
+      console.log(">", currentTrack.id !== "000" && !!e && !!e.nextTrack);
       if (currentTrack.id !== "000" && !!e && !!e.nextTrack) {
         const targetedTrack = await TrackPlayer.getTrack(e.nextTrack);
         store.dispatch({

@@ -1,8 +1,8 @@
 import { IconPrimr, CIRCULAR } from "assets";
 import { OptionsModal, RenderTrack, sstyled } from "components";
-import { connector, dRedux, fn } from "engines";
+import { connector, dRedux } from "engines";
 import React, { useState } from "react";
-import { Animated, FlatList, Text, View } from "react-native";
+import { FlatList, Text, View } from "react-native";
 import { withTheme } from "styled-components";
 import { contrastTransColor } from "themes";
 import { dSCR, spacing, TrackProps } from "utils";
@@ -11,19 +11,14 @@ interface dSCR_Tracks extends dSCR, dRedux {}
 function NowPlayingScreen(props: dSCR_Tracks) {
   const {
     navigation,
-    media: { mediaFiles, nowPlayingIDs },
+    media: { nowPlayingTracks },
     playback: { currentTrack },
     // setCurrentList,
   } = props;
 
   const [_queue, setQueue] = React.useState<TrackProps[]>([]);
   React.useEffect(function fetchListfromIDs() {
-    const queue = fn.js.filterByValues(
-      "id",
-      nowPlayingIDs,
-      mediaFiles
-    ) as TrackProps[];
-    setQueue(queue);
+    setQueue(nowPlayingTracks);
   }, []);
   // React.useEffect(() => {
   //   let unsubscribe = navigation.addListener("focus", () =>
@@ -55,7 +50,7 @@ function NowPlayingScreen(props: dSCR_Tracks) {
             }
           }}
         >
-          Coming up next • {nowPlayingIDs.length}
+          Coming up next • {_queue.length}
         </TxtSub>
         <IconPrimr
           preset={"safe"}
