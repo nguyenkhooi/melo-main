@@ -1,5 +1,5 @@
-import { OptionsModal, RenderTrack, Buttoon } from "components";
-import { connector, dRedux, fn } from "engines";
+import { OptionsModal, RenderTrack, Buttoon, TrackPlaya } from "components";
+import { connector, dRedux, fn, playlistShuffle } from "engines";
 import React, { useState } from "react";
 import { FlatList, View } from "react-native";
 import {
@@ -19,7 +19,9 @@ function ShowFolderScreen(props: dSCR_ShowFolder) {
     navigation,
     route,
     media: { mediaFiles },
+    playback: { shuffle },
     setNowPlayingTracks,
+    buildNowPlayingTracks,
   } = props;
   const [modal, setModal] = useState({ visible: false, item: {} });
   const [_queueIDs, setQueueIDs] = React.useState([]);
@@ -29,6 +31,7 @@ function ShowFolderScreen(props: dSCR_ShowFolder) {
     setQueueIDs(queueIDs);
     setQueue(route.params.content);
   }, []);
+  const thisTrackPlaya = TrackPlaya.getInstance();
   return (
     <View style={{ flex: 1 }}>
       <FlatList
@@ -59,11 +62,17 @@ function ShowFolderScreen(props: dSCR_ShowFolder) {
         <Buttoon.Fab
           icon={{ name: "play" }}
           onPress={(xong) => {
-            setNowPlayingTracks(_queueIDs, _queue, true);
-            navigation.navigate("player-scr");
+            const givenTracks = _queue;
+            const targetedPlaylist = shuffle
+              ? playlistShuffle(givenTracks, "normal")
+              : givenTracks;
+
+            buildNowPlayingTracks(targetedPlaylist, givenTracks);
             setTimeout(() => {
               xong();
-            }, 1000);
+              navigation.navigate("player-scr");
+              thisTrackPlaya.togglePlay();
+            }, 500);
           }}
         ></Buttoon.Fab>
       </View>
