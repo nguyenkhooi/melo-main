@@ -11,10 +11,7 @@ const ImageSize = Dimensions.get("window").width * 0.82;
 interface d$_CoversCarousel extends dSCR_Player {}
 
 export const S_CoversCarousel = React.forwardRef((props: d$_CoversCarousel) => {
-  const {
-    theme,
-    playback: { currentTrack },
-  } = props;
+  const { currentTrack } = props;
 
   return (
     <View style={{ flex: 1 }}>
@@ -86,10 +83,7 @@ interface dArt extends d$_CoversCarousel {
  * @param props
  */
 export const $_CoverArt = (props: dArt) => {
-  const {
-    theme,
-    playback: { currentTrack },
-  } = props;
+  const { theme, currentTrack } = props;
 
   const imgSrc = props.artwork ? { uri: props.artwork } : img.placeholder;
   // return <Cover {...props} source={imgSrc} />;

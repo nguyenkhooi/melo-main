@@ -1,79 +1,119 @@
 import { dIconPrimr, IconPrimr } from "assets";
 import { sstyled } from "components";
-import { connector, dRedux } from "engines";
+import {
+  connector,
+  dRedux,
+  ReduxActions,
+  ReduxStates,
+  sethPlayback,
+  setShuffle,
+  setLoop,
+} from "engines";
 import React from "react";
 import { View } from "react-native";
 import TrackPlayer from "react-native-track-player";
 import { usePlaybackState } from "react-native-track-player/lib/hooks";
+import { connect } from "react-redux";
 import { contrastColor, contrastTransColor, foregroundColor } from "themes";
 import { DEVICE_WIDTH, scale } from "utils";
+import { dSCR_Player } from "./PlayerScreen";
 
-interface dPlaybackControl extends dRedux {}
-function S_PlaybackControl(props: dPlaybackControl) {
+const mapStates = (state: ReduxStates) => {
   const {
-    media: { nowPlayingIDs },
+    media: { nowPlayingTracks },
     playback: { loop, shuffle },
-    sethPlayback,
-    setShuffle,
-    setLoop,
-    onNext,
-    onBack,
-  } = props;
+  } = state;
+  return { nowPlayingTracks, loop, shuffle };
+};
 
-  const playbackState = usePlaybackState();
+const mapDispatch = {
+  sethPlayback,
+  setShuffle,
+  setLoop,
+} as ReduxActions;
 
-  return (
-    <CtnrMain {...props}>
-      <ActionIcon
-        {...props}
-        type="sub"
-        name="shuffle"
-        onPress={() => setShuffle(!shuffle, nowPlayingIDs)}
-        color={
-          shuffle ? foregroundColor(props) : contrastTransColor(0.35)(props)
-        }
-      />
-      <ActionIcon
-        {...props}
-        type="main"
-        name="backward"
-        onPress={() => {
-          onBack();
-          sethPlayback({ type: "bwd" });
-        }}
-      />
-      <ActionIcon
-        {...props}
-        type="main"
-        name={playbackState === TrackPlayer.STATE_PLAYING ? "pause" : "play"}
-        onPress={() =>
-          sethPlayback({
-            type:
-              playbackState === TrackPlayer.STATE_PLAYING ? "pause" : "play",
-          })
-        }
-      />
-      <ActionIcon
-        {...props}
-        type="main"
-        name="forward"
-        onPress={() => {
-          onNext();
-          sethPlayback({ type: "fwd" });
-        }}
-      />
-      <ActionIcon
-        {...props}
-        type="sub"
-        name={loop ? "loop_one" : "loop"}
-        onPress={() => setLoop(!loop)}
-        color={foregroundColor(props)}
-      />
-    </CtnrMain>
-  );
+/**
+ * Section Playback Control of `player-scr`
+ *
+ * ---
+ *
+ * @version 0.10.13 *("default" -> "renderfied")*
+ * @author nguyenkhooi
+ */
+export function S_PlaybackControl(p: dPlaybackControl) {
+  const Render = connect(
+    mapStates,
+    mapDispatch
+  )((rx: dState & dActions) => {
+    const {
+      nowPlayingTracks,
+      loop,
+      shuffle,
+      sethPlayback,
+      setShuffle,
+      setLoop,
+    } = rx;
+
+    const { onNext, onBack } = p;
+    const props = { ...p, ...rx };
+
+    const playbackState = usePlaybackState();
+
+    return (
+      <CtnrMain {...props}>
+        <ActionIcon
+          {...props}
+          type="sub"
+          name="shuffle"
+          onPress={() => setShuffle(!shuffle, nowPlayingTracks)}
+          color={
+            shuffle ? foregroundColor(props) : contrastTransColor(0.35)(props)
+          }
+        />
+        <ActionIcon
+          {...props}
+          type="main"
+          name="backward"
+          onPress={() => {
+            onBack();
+            sethPlayback({ type: "bwd" });
+          }}
+        />
+        <ActionIcon
+          {...props}
+          type="main"
+          name={playbackState === TrackPlayer.STATE_PLAYING ? "pause" : "play"}
+          onPress={() =>
+            sethPlayback({
+              type:
+                playbackState === TrackPlayer.STATE_PLAYING ? "pause" : "play",
+            })
+          }
+        />
+        <ActionIcon
+          {...props}
+          type="main"
+          name="forward"
+          onPress={() => {
+            onNext();
+            sethPlayback({ type: "fwd" });
+          }}
+        />
+        <ActionIcon
+          {...props}
+          type="sub"
+          name={loop ? "loop_one" : "loop"}
+          onPress={() => setLoop(!loop)}
+          color={foregroundColor(props)}
+        />
+      </CtnrMain>
+    );
+  });
+
+  return <Render />;
 }
 
-export default connector(S_PlaybackControl);
+// export default connect(mapStates, mapDispatch)(S_PlaybackControl);
 
 const CtnrMain = sstyled(View)({
   flexDirection: "row",
@@ -109,3 +149,10 @@ const ActionIcon = (props: dActionIcon) => {
     />
   );
 };
+
+interface dState extends ReturnType<typeof mapStates> {}
+interface dActions extends Partial<typeof mapDispatch> {}
+interface dPlaybackControl extends dSCR_Player, dState, dActions {
+  onNext(): void;
+  onBack(): void;
+}

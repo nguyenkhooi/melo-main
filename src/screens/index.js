@@ -7,7 +7,7 @@ export { default as FoldersScreen } from "./libraries-screens/FoldersScreen";
 export { default as PlaylistsScreen } from "./libraries-screens/PlaylistsScreen";
 export { default as LyricsScreen } from "./lyrics-screen/LyricsScreen";
 export { default as NowPlayingScreen } from "./now-playing-screen/NowPlayingScreen";
-export { default as PlayerScreen } from "./player-screen/PlayerScreen";
+export * from "./player-screen/PlayerScreen";
 export { default as SearchScreen } from "./search-screen/SearchScreen";
 export { default as SettingsScreen } from "./settings-screen/SettingsScreen";
 export { default as ShowContentScreen } from "./show-content-screen/ShowContentScreen";
@@ -16,4 +16,3 @@ export { default as SplashScreen } from "./SplashScreen";
 export { default as TabArrangementScreen } from "./tab-arrangement-screens/TabArrangement";
 export { default as TestScreen } from "./test-screen/TestScreen";
 export { default as TracksScreen } from "./tracks-screen/TrackScreen";
-

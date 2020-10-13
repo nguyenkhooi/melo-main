@@ -7,9 +7,10 @@ import {
 } from "components";
 import Icon from "components/Icon";
 import SearchInput from "components/SearchInput";
-import { connector, dRedux } from "engines";
+import { connector, dRedux, ReduxActions, ReduxStates } from "engines";
 import React, { useEffect, useRef, useState } from "react";
 import { FlatList, View } from "react-native";
+import { connect } from "react-redux";
 import styled from "styled-components/native";
 import {
   backgroundColor,
@@ -18,13 +19,21 @@ import {
 } from "themes/styles";
 import { dSCR, getStatusBarHeight } from "utils";
 
-interface dSCR_Search extends dSCR, dRedux {}
+const mapStates = (state: ReduxStates) => {
+  const {
+    media: { mediaLoaded, mediaFiles },
+  } = state;
+  return { mediaLoaded, mediaFiles };
+};
+
+interface dState extends ReturnType<typeof mapStates> {}
+
+interface dSCR_Search extends dSCR, dState {}
 function SearchScreen(props: dSCR_Search) {
   const {
     navigation,
     //* redux state
-    playback: { currentTrack },
-    media: { mediaFiles },
+    mediaFiles,
   } = props;
 
   const [searchInput, setInput] = useState("");
@@ -56,8 +65,7 @@ function SearchScreen(props: dSCR_Search) {
   }
 
   function renderSearch() {
-    const renderMargin =
-      { flex: 1 };
+    const renderMargin = { flex: 1 };
     return (
       <FlatList
         data={listFilter()}
@@ -126,7 +134,7 @@ function SearchScreen(props: dSCR_Search) {
   );
 }
 
-export default connector(SearchScreen);
+export default connect(mapStates)(SearchScreen);
 
 const Wrapper = styled.View`
   flex: 1;

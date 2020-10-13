@@ -1,4 +1,5 @@
 import React from "react";
+import { connect } from "react-redux";
 import { dSCR } from "utils";
 
 /**
@@ -44,4 +45,12 @@ export function sstyled<Component extends React.ElementType>(
  */
 interface dSstyled extends dSCR {
   style: any;
+}
+
+function SCR(props) {
+  return connect(mapStates)((rxProps) => {
+    const {} = rxProps;
+    const {} = props;
+    return <Comp {...rxS} />;
+  });
 }
