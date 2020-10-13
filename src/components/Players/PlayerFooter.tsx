@@ -23,7 +23,7 @@ import { DEVICE_WIDTH, dSCR, getBottomSpace, scale, spacing } from "utils";
 import { sstyled, Txt } from "../Generals";
 import ProgressBar from "../ProgressBar";
 
-interface P {}
+interface P extends dSCR {}
 
 /**
  * One of the most animated-complex components of the whole project,
@@ -114,7 +114,7 @@ class SS_PlayerFooter extends React.Component<P> {
   }
 }
 
-interface dCOMP_PlayerFooter extends dSCR, dRedux {
+interface dCOMP_PlayerFooter extends dSCR {
   jumpToPlayerScr(): void;
 }
 
@@ -124,7 +124,9 @@ function $_PlayerFooter(props: dCOMP_PlayerFooter) {
     theme,
     jumpToPlayerScr,
   } = props;
-  const currentTrack = useSelector((state) => state.playback.currentTrack);
+  const currentTrack = useSelector(
+    (state: ReduxStates) => state.playback.currentTrack
+  );
   const { position, duration } = useTrackPlayerProgress(100);
 
   const progress = position / duration;
@@ -174,7 +176,7 @@ function $_PlayerFooter(props: dCOMP_PlayerFooter) {
   );
 }
 
-function $_FooterActions(props: dRedux) {
+function $_FooterActions(props: dCOMP_PlayerFooter) {
   //* for debugging
   const isShuffled = useSelector(
     (state: ReduxStates) => state.playback.shuffle

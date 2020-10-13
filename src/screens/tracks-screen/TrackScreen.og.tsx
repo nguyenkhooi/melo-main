@@ -1,23 +1,15 @@
 import { useScrollToTop } from "@react-navigation/native";
 import { CIRCULAR } from "assets";
-import {
-  OptionsModal,
-  PlayerFooter,
-  RenderTrack,
-  sstyled,
-  Txt,
-  Buttoon,
-} from "components";
+import { OptionsModal, PlayerFooter, sstyled, Txt, Buttoon } from "components";
 import RenderActivityIndicator from "components/RenderActivityIndicator";
 import { scanMessage } from "constants";
-import { ReduxActions, ReduxStates, getMedia, setShuffle } from "engines";
+import { connector, dRedux, fn } from "engines";
 import R from "ramda";
 import React, { useEffect, useState } from "react";
-import { Dimensions, StatusBar, View, ViewStyle } from "react-native";
+import { Animated, Dimensions, StatusBar, View, ViewStyle } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 // import { FlatList } from "react-native-gesture-handler";
 import TrackPlayer from "react-native-track-player";
-import { connect } from "react-redux";
 import { DataProvider } from "recyclerlistview";
 // import QuickScrollList from "react-native-quick-scroll";
 import { withTheme } from "styled-components/native";
@@ -42,34 +34,29 @@ const ViewportHeight =
   ScreenHeight - (StatusBarHeight + FooterHeight + BottomTabHeight);
 const itemHeight = 75;
 
-const mapStates = (state: ReduxStates) => {
-  const {
-    media: { mediaLoaded, mediaFiles },
-  } = state;
-  return { mediaLoaded, mediaFiles };
-};
-
-const mapDispatch = {
-  getMedia,
-  setShuffle,
-} as ReduxActions;
-
+interface dSCR_Tracks extends dSCR, dRedux {}
 function TracksScreen(props: dSCR_Tracks) {
   const {
     navigation,
-    mediaLoaded,
-    mediaFiles,
+    //* redux state
+
+    playback: { currentTrack, shuffle },
+    media: { mediaLoaded, mediaFiles, nowPlayingIDs, mediaIDs },
     //* redux actions
     getMedia,
     setShuffle,
+    setCurrentTrackID,
+    sethPlayback,
+    // setCurrentList,
   } = props;
+  const indexedTracks = R.sortBy(R.prop("index"))(mediaFiles);
 
+  const [scrollY] = useState(new Animated.Value(0));
   const [modal, setModal] = useState({ visible: false, item: {} });
   const [_isFetched, shouldFetch] = React.useState(false);
 
   const [_queue, setQueue] = React.useState([]);
-
-  const [] = React.useState(
+  const [_tracks, getTracks] = React.useState(
     new DataProvider((r1, r2) => {
       return r1 !== r2;
     })
@@ -92,12 +79,13 @@ function TracksScreen(props: dSCR_Tracks) {
   }
   React.useEffect(async function updateQueue() {
     const queue = await TrackPlayer.getQueue();
-    const queueIDs = R.pluck("id")(queue);
+    const queueIDs = fn.js.vLookup(queue, "id");
     setQueue(queueIDs);
   }, []);
 
   async function getQueue() {
     const queue = await TrackPlayer.getQueue();
+    const queueIDs = fn.js.vLookup(queue, "id");
     // setQueue(queueIDs);
     setQueue(queue);
   }
@@ -120,26 +108,26 @@ function TracksScreen(props: dSCR_Tracks) {
           {/* <Txt.P1 onPress={fetchMedia}>{"Refresh"}</Txt.P1> */}
           <FlatList
             ref={refMediaList}
-            keyExtractor={(item: TrackProps) => item.id}
+            // keyExtractor={(asset) => asset.id.toString()}
             // data={indexedTracks}
-            data={mediaFiles}
+            data={_queue}
             refreshing={_isFetched}
             onRefresh={fetchMedia}
-            renderItem={({ item }) => (
-              // <Txt.H6
-              //   onPress={() => setCurrentTrackID(item.id)}
-              //   style={{
-              //     fontWeight: item.id == currentTrack.id ? "bold" : "600",
-              //   }}
-              // >
-              //   {JSON.stringify(item.id)}
-              // </Txt.H6>
-              <RenderTrack
-                {...props}
-                parent="track-scr"
-                item={item}
-                setOptions={setModal}
-              />
+            renderItem={({ item }: { item: TrackProps }) => (
+              <Txt.H6
+                onPress={() => setCurrentTrackID(item.id)}
+                style={{
+                  fontWeight: item.id == currentTrack.id ? "bold" : "600",
+                }}
+              >
+                {JSON.stringify(item.id)}
+              </Txt.H6>
+              // <RenderTrack
+              //   {...props}
+              //   parent="track-scr"
+              //   item={item}
+              //   setOptions={setModal}
+              // />
             )}
             getItemLayout={flatListItemLayout}
             scrollEventThrottle={16}
@@ -174,7 +162,8 @@ function TracksScreen(props: dSCR_Tracks) {
               icon={{ name: "shuffle" }}
               // onPress={fetchMedia}
               onPress={async (xong) => {
-                await setShuffle(true, mediaFiles);
+                await TrackPlayer.pause();
+                await setShuffle(true);
                 xong();
               }}
             />
@@ -199,7 +188,7 @@ function TracksScreen(props: dSCR_Tracks) {
   );
 }
 
-export default connect(mapStates, mapDispatch)(withTheme(TracksScreen));
+export default connector(withTheme(TracksScreen));
 
 const CtnrMessage = sstyled(View)({
   flex: 1,
@@ -234,8 +223,3 @@ const styles = {
     paddingBottom: getBottomSpace() + scale(120),
   },
 };
-
-interface dStates extends ReturnType<typeof mapStates> {}
-interface dDispatch extends Partial<typeof mapDispatch> {}
-
-interface dSCR_Tracks extends dSCR, dStates, dDispatch {}

@@ -38,8 +38,9 @@ interface P extends ButtonProps {
   </Buttoon>
  * 
  * @version 0.10.10
+ * @author nguyenkhooi
  */
-export default class Buttoon extends React.PureComponent<P> {
+export class Buttoon extends React.PureComponent<P> {
   constructor(props: P) {
     super(props);
     this.state = {

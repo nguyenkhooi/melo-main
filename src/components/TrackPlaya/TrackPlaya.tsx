@@ -7,7 +7,6 @@ import R from "ramda";
 import React from "react";
 const resolveAssetSource = require("react-native/Libraries/Image/resolveAssetSource");
 // const resolvedImage = resolveAssetSource(myImage);
-interface P extends dRedux {}
 
 /**
  * A wrapper API around TrackPlayer

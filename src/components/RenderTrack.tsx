@@ -1,67 +1,66 @@
 import { CIRCULAR, IconPrimr, img } from "assets";
-import { connector, dRedux } from "engines";
+import { ReduxActions, ReduxStates } from "engines";
 import React from "react";
 import { Image, TouchableOpacity, View } from "react-native";
+import { connect } from "react-redux";
 import { withTheme } from "styled-components/native";
 import { contrastColor, contrastTransColor, foregroundColor } from "themes";
 import { DEVICE_WIDTH, scale, spacing, TrackProps } from "utils";
 import { sstyled, Txt } from "./Generals";
+import { TrackPlaya } from "./TrackPlaya/TrackPlaya";
 
-interface dTrackComp extends dRedux {
-  item: TrackProps;
-  parent:
-    | "track-scr"
-    | "now-playing-scr"
-    | "search-scr"
-    | "contents-scr"
-    | "playlist-scr";
-  setOptions({ visible: boolean, item: TrackProps }): void;
-}
+const DEV_MODE = true;
+
+const mapStates = (states: ReduxStates) => {
+  const {
+    playback: { currentTrack },
+  } = states;
+  return { currentTrack };
+};
+
+const mapDispatch = {} as ReduxActions;
 
 /**
  * Track Info Render used in multiple TrackLists throughout the project
  * Component's behavior depends on its parent
  *
- * @version 0.10.10 *( disable to touch until `onTrackPress()` is done )*
+ * @version 0.10.13 *( connector -> connect() w mapStates and mapDispatch )*
+ * @author nguyenkhooi
  */
 export const RenderTrack: React.FC<dTrackComp> = React.memo(
   (props: dTrackComp) => {
-    const {
-      item,
-      playback: { currentTrack },
-      media: { mediaFiles, mediaIDs },
-      setCurrentTrackID,
-      setNowPlayingTracks,
-      setOptions,
-      parent = "track-scr",
-    } = props;
+    const { currentTrack, item, setOptions, parent = "track-scr" } = props;
 
     const [_isDisabled, shouldDisabled] = React.useState(false);
-
+    const thisTrackPlaya = TrackPlaya.getInstance();
     async function onTrackPress() {
       //* to prevent pressing the same track multiple times
       if (item.id !== currentTrack.id) {
         shouldDisabled(true);
         switch (parent) {
           case "track-scr":
-            // await setCurrentTrackID(item.id);
-            await setNowPlayingTracks(mediaIDs, mediaFiles, true, item.id);
+            await thisTrackPlaya.skipToTrack(item.id);
+            thisTrackPlaya.play();
             return shouldDisabled(false);
             break;
           case "search-scr":
-            await setCurrentTrackID(item.id);
+            await thisTrackPlaya.skipToTrack(item.id);
+            thisTrackPlaya.play();
             return shouldDisabled(false);
             break;
           case "playlist-scr":
-            await setCurrentTrackID(item.id);
+            await thisTrackPlaya.skipToTrack(item.id);
+            thisTrackPlaya.play();
             return shouldDisabled(false);
             break;
           case "now-playing-scr":
-            await setCurrentTrackID(item.id);
+            await thisTrackPlaya.skipToTrack(item.id);
+            thisTrackPlaya.play();
             return shouldDisabled(false);
             break;
           case "contents-scr":
-            await setCurrentTrackID(item.id);
+            await thisTrackPlaya.skipToTrack(item.id);
+            thisTrackPlaya.play();
             return shouldDisabled(false);
             break;
           default:
@@ -87,11 +86,10 @@ export const RenderTrack: React.FC<dTrackComp> = React.memo(
             numberOfLines={1}
             current={item.id === currentTrack.id}
           >
-            {/* {item.title} */}
-            {item.duration}
+            {item.title}
           </Title>
           <Artist {...props} numberOfLines={1}>
-            {item.artist}
+            {`${DEV_MODE && item.id + "•"}${item.artist} `}
           </Artist>
           {/* <Text>{JSON.stringify(Object.keys(item))}</Text> */}
         </CtnrTrackInfo>
@@ -107,13 +105,13 @@ export const RenderTrack: React.FC<dTrackComp> = React.memo(
   },
   (prevProps: dTrackComp, nextProps: dTrackComp) =>
     !(
-      nextProps.playback.currentTrack.id === nextProps.item.id ||
-      prevProps.playback.currentTrack.id === prevProps.item.id ||
+      nextProps.currentTrack.id === nextProps.item.id ||
+      prevProps.currentTrack.id === prevProps.item.id ||
       prevProps.item !== nextProps.item
     )
 );
 
-export default connector(withTheme(RenderTrack));
+export default connect(mapStates, mapDispatch)(withTheme(RenderTrack));
 
 const Touchable = sstyled(TouchableOpacity)({
   flexDirection: "row",
@@ -150,39 +148,15 @@ const Artist = sstyled(Txt.P2)((p) => ({
   color: contrastTransColor(0.75)(p),
 }));
 
-// const Title = styled.Text`
-//   font-family: ${CIRCULAR};
-//   font-size: 14px;
-//   width: ${SCREEN_WIDTH / 2}px;
-//   color: ${(props) =>
-//     props.current ? foregroundColor(props) : contrastColor(props)};
-// `;
-
-// const Artist = styled.Text`
-//   /* font-family: 'CircularLight'; */
-//   font-size: 14px;
-//   width: ${SCREEN_WIDTH / 2}px;
-//   color: ${contrastTransColor(0.75)};
-// `;
-
-// const Touchable = styled.TouchableOpacity`
-//   flex-direction: row;
-//   align-items: center;
-//   height: 65px;
-//   margin-top: 10px;
-//   padding-left: 15px;
-// `;
-
-// const Thumbnail = styled.Image`
-//   height: 50px;
-//   width: 50px;
-//   border-radius: 2px;
-// `;
-
-// const CtnrTrackInfo = styled.View`
-//   flex-direction: column;
-//   flex: 1;
-//   height: 52px;
-//   margin-left: 15px;
-//   justify-content: space-evenly;
-// `;
+interface dState extends ReturnType<typeof mapStates> {}
+interface dActions extends Partial<typeof mapDispatch> {}
+interface dTrackComp extends dState, dActions {
+  item: TrackProps;
+  parent:
+    | "track-scr"
+    | "now-playing-scr"
+    | "search-scr"
+    | "contents-scr"
+    | "playlist-scr";
+  setOptions({ visible: boolean, item: TrackProps }): void;
+}

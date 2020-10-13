@@ -24,7 +24,7 @@ import TopMaterialTabNav from "./libraries.navigator";
 
 const stackOptions = {
   "test-scr": { component: TestScreen },
-  // "tracks-scr": { component: TracksScreen, options: { title: "Your Melo" } },
+  "tracks-scr": { component: TracksScreen, options: { title: "Your Melo" } },
   "search-scr": { component: SearchScreen, options: { title: "Search" } },
   "libraries-scr": {
     component: TopMaterialTabNav,

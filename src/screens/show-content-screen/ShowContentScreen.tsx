@@ -1,5 +1,4 @@
-import { OptionsModal, RenderTrack } from "components";
-import Buttoon from "components/Generals/Buttoon/Buttoon";
+import { OptionsModal, RenderTrack, Buttoon } from "components";
 import { connector, dRedux, fn } from "engines";
 import React, { useState } from "react";
 import { FlatList, View } from "react-native";
@@ -9,7 +8,7 @@ import {
   flatListItemLayout,
   scale,
   spacing,
-  TrackProps
+  TrackProps,
 } from "utils";
 
 interface dSCR_ShowFolder extends dSCR, dRedux {
