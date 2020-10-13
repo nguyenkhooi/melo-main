@@ -178,7 +178,6 @@ export const setShuffle = (
     ToggleShuffleAction | SetCurrentTrackAction | SetNowPlayingTracksAction
   >
 ) => {
-  console.log("hitt");
   let thisTrackPlaya = TrackPlaya.getInstance();
   try {
     const {

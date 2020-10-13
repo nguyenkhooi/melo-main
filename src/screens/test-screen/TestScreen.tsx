@@ -10,8 +10,6 @@ import Player from "./Player";
 import playlistData from "./playlist.json";
 import { useDispatch } from "react-redux";
 
-const USE_REDUX = true;
-
 interface dSCR_Tracks extends dSCR, dRedux {}
 function TestScreen(props: dSCR_Tracks) {
   const {
@@ -24,6 +22,7 @@ function TestScreen(props: dSCR_Tracks) {
   const dispatch = useDispatch();
   const playbackState = usePlaybackState();
   let thisTrackPlaya = TrackPlaya.getInstance();
+  const [USE_REDUX, shouldUseRedux] = React.useState(false);
   const [_currentTrack, setCurrentTrack] = React.useState<TrackProps>(null);
   const [_isShuffled, shouldShuffle] = React.useState(false);
   const [_indexedTracks, setIndexedTracks] = React.useState(mediaFiles);
@@ -149,6 +148,9 @@ function TestScreen(props: dSCR_Tracks) {
     <ScrollView>
       <View style={styles.container}>
         <View>
+          <Text style={styles.state} onPress={() => shouldUseRedux(!USE_REDUX)}>
+            😃 Use Redux? {JSON.stringify(USE_REDUX)}
+          </Text>
           <Text style={styles.state} onPress={playAllTracks}>
             ▶ Play all
           </Text>
