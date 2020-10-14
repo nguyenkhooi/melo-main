@@ -9,7 +9,7 @@ import { DEVICE_WIDTH, dSCR, scale, spacing, TrackProps } from "utils";
 import { sstyled, Txt } from "./Generals";
 import { TrackPlaya } from "./TrackPlaya/TrackPlaya";
 
-const DEV_MODE = true;
+const DEV_MODE = false;
 
 const mapStates = (states: ReduxStates) => {
   const {

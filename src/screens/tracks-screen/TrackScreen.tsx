@@ -111,7 +111,8 @@ function TracksScreen(props: dSCR_Tracks) {
   const refMediaList = React.useRef<FlatList<{}>>();
   useScrollToTop(refMediaList);
 
-  if (mediaLoaded) {
+  // if (mediaLoaded) {
+  if (1 == 1) {
     if (mediaFiles.length > 0) {
       // if (1 == 1) {
       return (

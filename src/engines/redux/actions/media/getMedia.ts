@@ -92,6 +92,7 @@ export const setLoading = (isLoading: boolean): SetLoadingAction => {
  * ---
  *
  * @version 0.10.14
+ * - *(mediaFiles === [] -> !!!mediaFiles[0])*
  * - *(Update logic in `>U_RETURN_TO_APP` to improve loading time)*
  * - *(Build logic for `>U_REFRESH_APP` to get recently added tracks from device)*
  * @author nguyenkhooi
@@ -129,7 +130,14 @@ export const getMedia = (isManual?: "manual") => async (
 
     /** set loading to true */
     // dispatch({ type: set_loading, payload: true });
-
+    console.log(
+      "Granted should be true by now. Getting media...",
+      `${!!mediaFiles[0] ? "have %mediaFiles" : "no %mediaFiles"}|${
+        "track: " + currentTrack.id
+      }|${granted ? "granted" : "no granted"}|${
+        !!isManual ? "manual" : "no manual"
+      }`
+    );
     /**
      * *When u first use the app:
      * ---
@@ -138,16 +146,29 @@ export const getMedia = (isManual?: "manual") => async (
      *
      */
     const U_FIRST_USE_THE_APP =
-      mediaFiles === [] && currentTrack.id === "000" && !granted;
+      granted && !!!mediaFiles[0] && currentTrack.id === "000";
+
     /**
-     * *When u return to the app:
+     * *When u return to the app,
+     * with it being granted, %mediaFiles is fetched,
+     * but u haven't chosen any track/track[] to play yet
+     * ---
+     *
+     * -
+     */
+    const U_RETURN_TO_APP_WO_NP_TRACKS =
+      granted && !!mediaFiles[0] && currentTrack.id === "000" && !!!isManual;
+
+    /**
+     * *When u return to the app, NORMALLY!! (damnit)
      * ---
      * - If `!!%mediaFiles`, just add them to Playa right away
      * *-> load way faster
+     *
+     * todo Should we care about >U_RETURN_TO_APP_WO_NP_TRACKS? yessir
      */
-
-    const U_RETURN_TO_THE_APP =
-      mediaFiles !== [] && currentTrack.id !== "000" && granted && !!!isManual;
+    const U_RETURN_TO_APP_NORMALLY =
+      granted && !!mediaFiles[0] && currentTrack.id !== "000" && !!!isManual;
 
     /**
      * *When u hit refresh:
@@ -156,7 +177,7 @@ export const getMedia = (isManual?: "manual") => async (
      * ? put them in "Recently Added" playlist
      */
     const U_REFRESH_THE_APP =
-      mediaFiles !== [] && currentTrack.id !== "000" && granted && !!isManual;
+      granted && !!mediaFiles[0] && currentTrack.id !== "000" && !!isManual;
 
     if (U_FIRST_USE_THE_APP) {
       console.log("U_FIRST_USE_THE_APP");
@@ -181,9 +202,24 @@ export const getMedia = (isManual?: "manual") => async (
        */
       let trackWithCovers = await getMediaWithCovers();
       dispatch({ type: get_media_success, payload: trackWithCovers });
+      dispatch({ type: set_np_tracks, payload: trackWithCovers });
+      dispatch({ type: set_indexed_tracks, payload: trackWithCovers });
     }
 
-    if (U_RETURN_TO_THE_APP) {
+    if (U_RETURN_TO_APP_WO_NP_TRACKS) {
+      console.log("U_RETURN_TO_APP_WO_NP_TRACKS");
+
+      await thisTrackPlaya.core.add([...mediaFiles]);
+      dispatch({ type: get_media_success, payload: mediaFiles });
+      dispatch({ type: set_np_tracks, payload: mediaFiles });
+
+      //! replace get_media_order w set_indexed_tracks, but need to see the performance
+      // // dispatch({ type: get_media_order, payload: trackIDs });
+      dispatch({ type: set_indexed_tracks, payload: mediaFiles });
+      dispatch({ type: set_loading, payload: false });
+    }
+
+    if (U_RETURN_TO_APP_NORMALLY) {
       console.log("U_RETURN_TO_THE_APP");
       if (!!currentTrack && currentTrack.id !== "000") {
         /**
@@ -224,7 +260,10 @@ export const getMedia = (isManual?: "manual") => async (
         ) as TrackProps[];
         console.log("AC: ", afterCurrentTracks.length);
         const queueTracks = [...afterCurrentTracks, ...beforeCurrentTracks];
-        const _npTracks = [currentTrack, ...queueTracks];
+        const _npTracks = R.reject((track) => track.id === "000", [
+          currentTrack,
+          ...queueTracks,
+        ]);
         // let tracks = R.reject((track) => track.id === currentTrack.id, [
         //   ...mediaFiles,
         // ]);
@@ -245,8 +284,8 @@ export const getMedia = (isManual?: "manual") => async (
         //! replace get_media_order w set_indexed_tracks, but need to see the performance
         // // dispatch({ type: get_media_order, payload: trackIDs });
         dispatch({ type: set_indexed_tracks, payload: mediaFiles });
-        dispatch({ type: set_loading, payload: false });
       }
+      dispatch({ type: set_loading, payload: false });
     }
 
     if (U_REFRESH_THE_APP) {
@@ -265,6 +304,8 @@ export const getMedia = (isManual?: "manual") => async (
   } catch (e) {
     errorReporter(e);
   }
+
+  return console.log("Done getting media!");
 };
 
 const getMediaWithCovers = async () => {

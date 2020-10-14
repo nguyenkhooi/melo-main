@@ -23,7 +23,7 @@ import TopMaterialTabNav from "./libraries.navigator";
 // } from "@gorhom/animated-tabbar";
 
 const stackOptions = {
-  "test-scr": { component: TestScreen },
+  // "test-scr": { component: TestScreen },
   "tracks-scr": { component: TracksScreen, options: { title: "Your Melo" } },
   "search-scr": { component: SearchScreen, options: { title: "Search" } },
   "libraries-scr": {
@@ -149,8 +149,8 @@ function HomeBottomTab(props) {
 
   return (
     <TopTabs.Navigator
-      // initialRouteName="tracks-scr"
-      initialRouteName="test-scr"
+      initialRouteName="tracks-scr"
+      // initialRouteName="test-scr"
       backBehavior="initialRoute"
       tabBarOptions={tabBarOptions}
       lazy={false}

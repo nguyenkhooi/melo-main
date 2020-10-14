@@ -56,6 +56,11 @@ type dSethPlayback = {
  */
 export const sethPlayback = ({ type }: dSethPlayback) => async () => {
   const thisTrackPlaya = TrackPlaya.getInstance();
+  const {
+    media: { nowPlayingTracks },
+    playback: { currentTrack },
+  }: // media: { indexedTracks },
+  dRedux = store.getState();
   try {
     switch (type) {
       case "play":
@@ -74,6 +79,10 @@ export const sethPlayback = ({ type }: dSethPlayback) => async () => {
         break;
       case "fwd":
         await thisTrackPlaya.next();
+        // await store.dispatch({
+        //   type: current_track,
+        //   payload: targetedTrack,
+        // });
         return thisTrackPlaya.play();
         break;
       case "bwd":
@@ -119,7 +128,10 @@ export const setShuffle = (
   indexedTracks: TrackProps[]
 ) => async (
   dispatch: Dispatch<
-    ToggleShuffleAction | SetIndexedTracksAction | SetNowPlayingTracksAction
+    | ToggleShuffleAction
+    | SetIndexedTracksAction
+    | SetNowPlayingTracksAction
+    | SetCurrentTrackAction
   >
 ) => {
   let thisTrackPlaya = TrackPlaya.getInstance();
@@ -128,12 +140,17 @@ export const setShuffle = (
       playback: { currentTrack },
     }: // media: { indexedTracks },
     dRedux = store.getState();
+    const _currentTrack: TrackProps =
+      !!currentTrack && currentTrack.id == "000"
+        ? indexedTracks[0]
+        : currentTrack;
     const targetedTracks = await thisTrackPlaya.toggleShuffle(
       shouldShuffle,
       indexedTracks,
-      currentTrack
+      _currentTrack
     );
     //* modify indicator
+    dispatch({ type: current_track, payload: _currentTrack });
     dispatch({ type: set_shuffle, payload: shouldShuffle });
     dispatch({ type: set_indexed_tracks, payload: indexedTracks });
     dispatch({ type: set_np_tracks, payload: targetedTracks });

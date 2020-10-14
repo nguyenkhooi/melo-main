@@ -6,7 +6,7 @@ import React from "react";
 import { Image, StatusBar, View } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import { useDispatch } from "react-redux";
-import { colors, dSCR } from "utils";
+import { colors, dSCR, scale } from "utils";
 import * as Animatable from "react-native-animatable";
 
 interface dSCR_Splash extends dSCR, dRedux {}
@@ -22,15 +22,13 @@ function SplashScreen() {
       end={{ x: 0.0, y: 1.0 }}
     >
       <StatusBar backgroundColor={"#0000a0"} animated />
-      <Animatable.Image
+      <Image
         source={img.meloLogo}
         resizeMode="center"
-        style={{ width: 90, height: 90 }}
-        animation="pulse"
-        easing="ease-out"
-        duration={2000}
-        iterationCount="infinite"
-      ></Animatable.Image>
+        style={{ width: scale(60), height: scale(60) }}
+        // animation="fadeInUp"
+        // duration={1000}
+      ></Image>
       {/* <Image
 
       // width={150}

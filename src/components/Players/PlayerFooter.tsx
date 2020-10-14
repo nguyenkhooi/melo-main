@@ -182,9 +182,17 @@ function $_PlayerFooter(props: dCOMP_PlayerFooter) {
               paddingVertical: spacing[2],
             }}
             //* for debugging
-            onPress={jumpToPlayerScr}
-          ></TouchableNativeFeedback>
-          <$_FooterActions {...props} />
+          >
+            <Thumbnail source={img.appIcon} />
+            <CtnrTrackInfo>
+              <Title {...props} numberOfLines={1}>
+                Let's Melo
+              </Title>
+              <Artist {...props} numberOfLines={1}>
+                Select a track to start!
+              </Artist>
+            </CtnrTrackInfo>
+          </TouchableNativeFeedback>
         </CtnrFooterContent>
       </>
     )
