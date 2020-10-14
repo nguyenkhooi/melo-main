@@ -20,7 +20,6 @@ function ShowFolderScreen(props: dSCR_ShowFolder) {
     route,
     media: { mediaFiles },
     playback: { shuffle },
-    setNowPlayingTracks,
     buildNowPlayingTracks,
   } = props;
   const [modal, setModal] = useState({ visible: false, item: {} });

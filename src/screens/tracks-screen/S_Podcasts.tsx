@@ -15,17 +15,7 @@ const itemHeight = 75;
 
 interface dSCR_Tracks extends dSCR, dRedux {}
 function TracksScreen(props: dSCR_Tracks) {
-  const {
-    navigation,
-    //* redux state
-    playback: { currentTrack, shuffle },
-    media: { mediaFiles },
-    //* redux actions
-    setShuffle,
-    getMedia,
-    
-    setCurrentList,
-  } = props;
+  const { navigation } = props;
 
   useEffect(() => {
     let unsubscribe = navigation.addListener("focus", () =>

@@ -1,14 +1,13 @@
+import { TrackPlaya } from "components";
 import { fn } from "engines/functions";
 import R from "ramda";
 import MusicFiles from "react-native-get-music-files";
-import TrackPlayer from "react-native-track-player";
 import { Dispatch } from "redux";
 import RNFetchBlob from "rn-fetch-blob";
 import { store } from "store";
 import {
   checkStoragePermissions,
   cleanupMedia,
-  dTracks,
   errorReporter,
   IS_ANDROID,
   trackID,
@@ -20,10 +19,10 @@ import {
   GetMediaOrderAction,
   get_media_order,
   get_media_success,
-  NowPlayingTracksAction,
-  now_playing_tracks,
   SetLoadingAction,
+  SetNowPlayingTracksAction,
   set_loading,
+  set_np_tracks,
 } from "../../types";
 // import MusicFiles from 'react-native-get-music-files-v3dev-test';
 
@@ -109,18 +108,19 @@ export const setLoading = (isLoading: boolean): SetLoadingAction => {
 export const getMedia = (isManual?: "manual") => async (
   dispatch: Dispatch<
     | GetMediaAction
-    | NowPlayingTracksAction
+    | SetNowPlayingTracksAction
     | GetMediaOrderAction
     | SetLoadingAction
   >
 ) => {
+  const thisTrackPlaya = TrackPlaya.getInstance();
   try {
     // let granted = await checkStoragePermissionsOG();
     // if (!granted) await getStoragePermission();
 
     let granted = await checkStoragePermissions();
     let {
-      media: { mediaFiles, mediaLoaded, nowPlayingIDs },
+      media: { mediaFiles, nowPlayingIDs },
       playback: { currentTrack },
     }: dRedux = store.getState();
 
@@ -137,14 +137,14 @@ export const getMedia = (isManual?: "manual") => async (
       console.log("New coming...");
       // let results = await MusicFiles.getAll(options);
       /** Temporary set __MEDIA for ios since it doesn't have local db */
-      let tracks: dTracks = IS_ANDROID
+      let deviceTracks: TrackProps[] = IS_ANDROID
         ? cleanupMedia(await MusicFiles.getAll(options))
         : __MEDIA;
-      const trackIDs = fn.js.vLookup(tracks, "id") as trackID[];
+      const trackIDs = fn.js.vLookup(deviceTracks, "id") as trackID[];
       console.log("adding to TP...");
-      await TrackPlayer.add([...tracks]);
-      dispatch({ type: get_media_success, payload: tracks });
-      dispatch({ type: now_playing_tracks, payload: trackIDs });
+      await thisTrackPlaya.core.add([...deviceTracks]);
+      dispatch({ type: get_media_success, payload: deviceTracks });
+      dispatch({ type: set_np_tracks, payload: deviceTracks });
       dispatch({ type: get_media_order, payload: trackIDs });
 
       /**
@@ -165,7 +165,7 @@ export const getMedia = (isManual?: "manual") => async (
        * they don't have to wait for the whole `tracks` to load
        */
       if (!!currentTrack && currentTrack.id !== "000") {
-        await TrackPlayer.add(currentTrack);
+        await thisTrackPlaya.core.add(currentTrack);
         console.log("add currentTrack to TP...: ");
       }
 
@@ -198,8 +198,8 @@ export const getMedia = (isManual?: "manual") => async (
       // let tracks = R.reject((track) => track.id === currentTrack.id, [
       //   ...deviceTracks,
       // ]);
-      await TrackPlayer.removeUpcomingTracks();
-      await TrackPlayer.add(queueTracks);
+      await thisTrackPlaya.core.removeUpcomingTracks();
+      await thisTrackPlaya.core.add(queueTracks);
       const trackIDs = fn.js.vLookup(deviceTracks, "id") as trackID[];
       console.log(
         "add TP wo currentTrack...: ",
@@ -212,7 +212,7 @@ export const getMedia = (isManual?: "manual") => async (
        *  - 1st time app startup
        */
       if (nowPlayingIDs == []) {
-        dispatch({ type: now_playing_tracks, payload: trackIDs });
+        dispatch({ type: set_np_tracks, payload: deviceTracks });
       }
       dispatch({ type: get_media_success, payload: deviceTracks });
       dispatch({ type: get_media_order, payload: trackIDs });

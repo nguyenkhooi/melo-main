@@ -45,7 +45,6 @@ function TracksScreen(props: dSCR_Tracks) {
     //* redux actions
     getMedia,
     setShuffle,
-    setCurrentTrackID,
     sethPlayback,
     // setCurrentList,
   } = props;
@@ -115,7 +114,7 @@ function TracksScreen(props: dSCR_Tracks) {
             onRefresh={fetchMedia}
             renderItem={({ item }: { item: TrackProps }) => (
               <Txt.H6
-                onPress={() => setCurrentTrackID(item.id)}
+                ////onPress={() => setCurrentTrackID(item.id)}
                 style={{
                   fontWeight: item.id == currentTrack.id ? "bold" : "600",
                 }}

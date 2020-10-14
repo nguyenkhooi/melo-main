@@ -1,5 +1,4 @@
 import { TrackPlaya } from "components";
-import { setShuffle } from "engines";
 //@ts-check
 import {
   canExit,
@@ -14,7 +13,6 @@ import { YellowBox } from "react-native";
 import Toasty from "react-native-toast-message";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import { setupPlayer } from "services";
 import { persistor, store } from "store";
 import SplashScreen from "./src/screens/SplashScreen";
 // import { Toasty } from "components";

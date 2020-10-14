@@ -23,6 +23,7 @@ export interface SetLoadingAction {
 
 /**
  * @deprecated soon
+ * replace with `SetNowPlayingTracksAction`
  */
 export interface NowPlayingTracksAction {
   type: typeof now_playing_tracks;

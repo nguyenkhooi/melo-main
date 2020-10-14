@@ -1,21 +1,29 @@
 import { TrackPlaya } from "components";
-import {
-  dRedux,
-  setCurrentTrackk,
-  sethPlayback,
-} from "engines";
+import { current_track, dRedux, setCurrentTrackk, sethPlayback } from "engines";
 import { Alert } from "react-native";
-import TrackPlayer from "react-native-track-player";
 import { store } from "../store";
 
-
+/**
+ * The gateway between Playa and Rx,
+ * and obviously Playa's background service
+ * ---
+ * @example
+ * ```
+ * TrackPlayer.registerPlaybackService(() => bgService);
+ * ```
+ *
+ * - Think of when u's in background and let the playlist rolling automatically,
+ * `bgService()` takes care of all playback actions
+ * - That's why adjusting Rx accordingly with Playa will make sure the app is united
+ */
 async function bgService() {
+  const thisTrackPlaya = TrackPlaya.getInstance();
   //! Put store.getState() in addEventListener to get latest states
   //// let {
   ////   playback: { currentTrack, loop },
   //// }: dRedux = store.getState();
 
-  TrackPlayer.addEventListener("playback-state", async (e) => {
+  thisTrackPlaya.core.addEventListener("playback-state", async (e) => {
     /**
      * 0  - none
      * 1  - stop
@@ -28,29 +36,29 @@ async function bgService() {
      * ?8  - "ready"
      */
     switch (e.state) {
-      case TrackPlayer.STATE_NONE:
+      case thisTrackPlaya.core.STATE_NONE:
         console.log("none", e);
-        // return store.dispatch({ type: "set_playback", payload: false });
+        // return await store.dispatch({ type: "set_playback", payload: false });
         break;
-      case TrackPlayer.STATE_PLAYING:
+      case thisTrackPlaya.core.STATE_PLAYING:
         console.log("playing", e);
         // console.log("listening play");
-        // return store.dispatch({ type: "set_playback", payload: true });
+        // return await store.dispatch({ type: "set_playback", payload: true });
         break;
-      case TrackPlayer.STATE_PAUSED:
+      case thisTrackPlaya.core.STATE_PAUSED:
         console.log("paused", e);
         // console.log("listening pause");
-        // return store.dispatch({ type: "set_playback", payload: false });
+        // return await store.dispatch({ type: "set_playback", payload: false });
         break;
-      case TrackPlayer.STATE_STOPPED:
+      case thisTrackPlaya.core.STATE_STOPPED:
         console.log("stop", e);
-        // return store.dispatch({ type: "set_playback", payload: false });
+        // return await store.dispatch({ type: "set_playback", payload: false });
         break;
-      case TrackPlayer.STATE_BUFFERING:
+      case thisTrackPlaya.core.STATE_BUFFERING:
         console.log("buffering", e);
-        // return store.dispatch({ type: "set_playback", payload: false });
+        // return await store.dispatch({ type: "set_playback", payload: false });
         break;
-      case TrackPlayer.STATE_READY:
+      case thisTrackPlaya.core.STATE_READY:
         console.log("ready", e);
         break;
       default:
@@ -58,19 +66,19 @@ async function bgService() {
     }
   });
 
-  TrackPlayer.addEventListener("remote-play", () => {
+  thisTrackPlaya.core.addEventListener("remote-play", async () => {
     console.log("remote-playing...");
-    TrackPlayer.play();
-    store.dispatch({ type: "set_playback", payload: true });
+    thisTrackPlaya.core.play();
+    await store.dispatch({ type: "set_playback", payload: true });
   });
 
-  TrackPlayer.addEventListener("remote-pause", () => {
+  thisTrackPlaya.core.addEventListener("remote-pause", async () => {
     console.log("remote-pausing...");
-    TrackPlayer.pause();
-    store.dispatch({ type: "set_playback", payload: false });
+    thisTrackPlaya.core.pause();
+    await store.dispatch({ type: "set_playback", payload: false });
   });
 
-  TrackPlayer.addEventListener("remote-next", () => {
+  thisTrackPlaya.core.addEventListener("remote-next", async () => {
     console.log("remote-next...");
     // let {
     //   playback: { currentTrack, shuffle },
@@ -85,16 +93,16 @@ async function bgService() {
     //     ? mediaFiles[0]
     //     : mediaFiles[currentTrack.index + 1]
     // );
-    store.dispatch(sethPlayback({ type: "fwd" }));
+    await store.dispatch(sethPlayback({ type: "fwd" }));
   });
 
-  TrackPlayer.addEventListener("playback-track-changed", async (e) => {
+  thisTrackPlaya.core.addEventListener("playback-track-changed", async (e) => {
     console.log("track changed listener: ", e);
     let {
       playback: { currentTrack },
     }: dRedux = store.getState();
     try {
-      const playingItemId = await TrackPlaya.getInstance().getCurrentTrackId();
+      const playingItemId = await thisTrackPlaya.getCurrentTrackId();
       // no playing item and therefore listener is being trigged on a abnormal situation (e.g. logging out)
       if (playingItemId === null) {
         return null;
@@ -102,19 +110,19 @@ async function bgService() {
       console.log("currentTrack: ", currentTrack.title);
       console.log(">", currentTrack.id !== "000" && !!e && !!e.nextTrack);
       if (currentTrack.id !== "000" && !!e && !!e.nextTrack) {
-        const targetedTrack = await TrackPlayer.getTrack(e.nextTrack);
-        store.dispatch({
-          type: "current_track",
+        const targetedTrack = await thisTrackPlaya.core.getTrack(e.nextTrack);
+        await store.dispatch({
+          type: current_track,
           payload: targetedTrack,
         });
-        // store.dispatch(sethPlayback({ type: "fwd" }));
+        // await store.dispatch(sethPlayback({ type: "fwd" }));
       }
     } catch (error) {
       console.warn("err track-changed: ", error);
     }
   });
 
-  TrackPlayer.addEventListener("remote-previous", () => {
+  thisTrackPlaya.core.addEventListener("remote-previous", async () => {
     console.log("remote-previous...");
     // let { playback, media }: dRedux = store.getState();
     // let { currentTrack, shuffle } = playback;
@@ -126,7 +134,7 @@ async function bgService() {
     //     ? mediaFiles[mediaFiles.length - 1]
     //     : mediaFiles[currentTrack.index - 1]
     // );
-    store.dispatch(sethPlayback({ type: "bwd" }));
+    await store.dispatch(sethPlayback({ type: "bwd" }));
   });
 
   /**
@@ -134,31 +142,35 @@ async function bgService() {
    * since TP now contains the whole track[]
    *
    */
-  TrackPlayer.addEventListener("playback-queue-ended", ({ position }) => {
-    console.log("remote-queue-end...:", position);
-    let {
-      playback: { currentTrack, loop },
-    }: dRedux = store.getState();
-    // console.log("current state: ", playback);
-    // console.warn("current media: ", mediaFiles.length);
-    if (position > 0) {
-      // if (1 == 1) {
-      if (loop) {
-        // backgroundPlayback(currentTrack);
-        store.dispatch(setCurrentTrackk(currentTrack));
-      } else {
-        Alert.alert("Done!!");
-        store.dispatch(sethPlayback({ type: "fwd" }));
-        // backgroundPlayback(
-        //   shuffle
-        //     ? nowPlayingTracks[getRandomNumber(0, nowPlayingTracks.length)]
-        //     : currentTrack.index === nowPlayingTracks.length - 1
-        //     ? nowPlayingTracks[0]
-        //     : nowPlayingTracks[currentTrack.index + 1]
-        // );
+  thisTrackPlaya.core.addEventListener(
+    "playback-queue-ended",
+    async ({ position }) => {
+      console.log("remote-queue-end...:", position);
+      let {
+        playback: { currentTrack, loop },
+      }: dRedux = store.getState();
+      // console.log("current state: ", playback);
+      // console.warn("current media: ", mediaFiles.length);
+      if (position > 0) {
+        // if (1 == 1) {
+        if (loop) {
+          // backgroundPlayback(currentTrack);
+          await store.dispatch(setCurrentTrackk(currentTrack));
+          await store.dispatch(sethPlayback({ type: "play" }));
+        } else {
+          Alert.alert("Done!!");
+          await store.dispatch(sethPlayback({ type: "fwd" }));
+          // backgroundPlayback(
+          //   shuffle
+          //     ? nowPlayingTracks[getRandomNumber(0, nowPlayingTracks.length)]
+          //     : currentTrack.index === nowPlayingTracks.length - 1
+          //     ? nowPlayingTracks[0]
+          //     : nowPlayingTracks[currentTrack.index + 1]
+          // );
+        }
       }
     }
-  });
+  );
 }
 
 export default bgService;

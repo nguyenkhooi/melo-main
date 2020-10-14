@@ -181,8 +181,8 @@ function $_FooterActions(props: dCOMP_PlayerFooter) {
   const isShuffled = useSelector(
     (state: ReduxStates) => state.playback.shuffle
   );
-  const nowPlayingTracks = useSelector(
-    (state: ReduxStates) => state.media.nowPlayingTracks
+  const indexedTracks = useSelector(
+    (state: ReduxStates) => state.media.indexedTracks
   );
 
   const dispatch = useDispatch();
@@ -230,7 +230,7 @@ function $_FooterActions(props: dCOMP_PlayerFooter) {
         {...props}
         name="shuffle"
         color={isShuffled ? "dodgerblue" : "grey"}
-        onPress={() => dispatch(setShuffle(!isShuffled, nowPlayingTracks))}
+        onPress={() => dispatch(setShuffle(!isShuffled, indexedTracks))}
       /> */}
     </View>
   );

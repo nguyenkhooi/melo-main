@@ -20,10 +20,10 @@ import { dSCR_Player } from "./PlayerScreen";
 
 const mapStates = (state: ReduxStates) => {
   const {
-    media: { nowPlayingTracks },
+    media: { nowPlayingTracks, indexedTracks },
     playback: { loop, shuffle },
   } = state;
-  return { nowPlayingTracks, loop, shuffle };
+  return { indexedTracks, loop, shuffle };
 };
 
 const mapDispatch = {
@@ -46,7 +46,7 @@ export function S_PlaybackControl(p: dPlaybackControl) {
     mapDispatch
   )((rx: dState & dActions) => {
     const {
-      nowPlayingTracks,
+      indexedTracks,
       loop,
       shuffle,
       sethPlayback,
@@ -65,7 +65,7 @@ export function S_PlaybackControl(p: dPlaybackControl) {
           {...props}
           type="sub"
           name="shuffle"
-          onPress={() => setShuffle(!shuffle, nowPlayingTracks)}
+          onPress={() => setShuffle(!shuffle, indexedTracks)}
           color={
             shuffle ? foregroundColor(props) : contrastTransColor(0.35)(props)
           }
