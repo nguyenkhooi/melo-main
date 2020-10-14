@@ -168,7 +168,7 @@ export class TrackPlaya extends React.Component {
      * Behavior when u turn off shuffle
      *
      * ---
-     * - Similar behaviors with getMedia(),
+     * - Similar behaviors with getMedia(_),
      * where `beforeCurrentTracks` and `afterCurrentTracks` are identified,
      * then `targetedTracks = [...afterCurrentTracks, ...beforeCurrentTracks]`
      *

@@ -97,7 +97,7 @@ function TracksScreen(props: dSCR_Tracks) {
 
   function fetchMedia() {
     shouldFetch(true);
-    getMedia();
+    getMedia("manual");
     setTimeout(() => {
       shouldFetch(false);
     }, 1000);

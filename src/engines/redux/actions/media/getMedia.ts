@@ -95,15 +95,15 @@ export const setLoading = (isLoading: boolean): SetLoadingAction => {
  * @author nguyenkhooi
  *
  * @description
- * - Scenarios to use getMedia()
+ * - Scenarios to use getMedia(_)
  *  - **U_FIRST_USE_THE_APP** (User first opens the app):
  *    - states: `{mediaFiles: [], nowPlayingIDs: [], currentTrack: null}`
- *    - getMedia() -> `{mediaFiles: track[](og), nowPlayingIDs: trackID[](og), currentTrack: null}`
+ *    - getMedia(_) -> `{mediaFiles: track[](og), nowPlayingIDs: trackID[](og), currentTrack: null}`
  *    - reset and fill TrackPlayer -> `TP.queue: track[](og)`
  *  !- **U_RETURN_TO_THE_APP** (User returns to the app):
  *    - states: `{mediaFiles: track[](og), nowPlayingIDs: trackID[](og), currentTrack: null}`;
- *    - getMedia() ->
- *    ?- getMedia() now should **add** to `mediaFiles`, instead of replacing it
+ *    - getMedia(_) ->
+ *    ?- getMedia(_) now should **add** to `mediaFiles`, instead of replacing it
  */
 export const getMedia = (isManual?: "manual") => async (
   dispatch: Dispatch<

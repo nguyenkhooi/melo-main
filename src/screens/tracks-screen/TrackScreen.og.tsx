@@ -63,7 +63,7 @@ function TracksScreen(props: dSCR_Tracks) {
 
   useEffect(() => {
     let unsubscribe = navigation.addListener("focus", async () => {
-      // await getMedia(); //* fetch media without showing indicator
+      // await getMedia(_); //* fetch media without showing indicator
       PlayerFooter.open();
     });
     return unsubscribe;
