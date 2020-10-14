@@ -23,49 +23,6 @@ async function bgService() {
   ////   playback: { currentTrack, loop },
   //// }: dRedux = store.getState();
 
-  thisTrackPlaya.core.addEventListener("playback-state", async (e) => {
-    /**
-     * 0  - none
-     * 1  - stop
-     * 2  - pause
-     * 3  - play
-     * ?4  -
-     * ?5  -
-     * 6  - buffering
-     * 7  - connecting
-     * ?8  - "ready"
-     */
-    switch (e.state) {
-      case thisTrackPlaya.core.STATE_NONE:
-        console.log("none", e);
-        // return await store.dispatch({ type: "set_playback", payload: false });
-        break;
-      case thisTrackPlaya.core.STATE_PLAYING:
-        console.log("playing", e);
-        // console.log("listening play");
-        // return await store.dispatch({ type: "set_playback", payload: true });
-        break;
-      case thisTrackPlaya.core.STATE_PAUSED:
-        console.log("paused", e);
-        // console.log("listening pause");
-        // return await store.dispatch({ type: "set_playback", payload: false });
-        break;
-      case thisTrackPlaya.core.STATE_STOPPED:
-        console.log("stop", e);
-        // return await store.dispatch({ type: "set_playback", payload: false });
-        break;
-      case thisTrackPlaya.core.STATE_BUFFERING:
-        console.log("buffering", e);
-        // return await store.dispatch({ type: "set_playback", payload: false });
-        break;
-      case thisTrackPlaya.core.STATE_READY:
-        console.log("ready", e);
-        break;
-      default:
-        console.log("unknown", e);
-    }
-  });
-
   thisTrackPlaya.core.addEventListener("remote-play", async () => {
     console.log("remote-playing...");
     thisTrackPlaya.core.play();
@@ -171,6 +128,49 @@ async function bgService() {
       }
     }
   );
+
+  //// thisTrackPlaya.core.addEventListener("playback-state", async (e) => {
+  ////   /**
+  ////    * 0  - none
+  ////    * 1  - stop
+  ////    * 2  - pause
+  ////    * 3  - play
+  ////    * ?4  -
+  ////    * ?5  -
+  ////    * 6  - buffering
+  ////    * 7  - connecting
+  ////    * ?8  - "ready"
+  ////    */
+  ////   switch (e.state) {
+  ////     case thisTrackPlaya.core.STATE_NONE:
+  ////       console.log("none", e);
+  ////       //// return await store.dispatch({ type: "set_playback", payload: false });
+  ////       break;
+  ////     case thisTrackPlaya.core.STATE_PLAYING:
+  ////       console.log("playing", e);
+  ////       //// console.log("listening play");
+  ////       //// return await store.dispatch({ type: "set_playback", payload: true });
+  ////       break;
+  ////     case thisTrackPlaya.core.STATE_PAUSED:
+  ////       console.log("paused", e);
+  ////       //// console.log("listening pause");
+  ////       //// return await store.dispatch({ type: "set_playback", payload: false });
+  ////       break;
+  ////     case thisTrackPlaya.core.STATE_STOPPED:
+  ////       console.log("stop", e);
+  ////       //// return await store.dispatch({ type: "set_playback", payload: false });
+  ////       break;
+  ////     case thisTrackPlaya.core.STATE_BUFFERING:
+  ////       console.log("buffering", e);
+  ////       //// return await store.dispatch({ type: "set_playback", payload: false });
+  ////       break;
+  ////     case thisTrackPlaya.core.STATE_READY:
+  ////       console.log("ready", e);
+  ////       break;
+  ////     default:
+  ////       console.log("unknown", e);
+  ////   }
+  //// });
 }
 
 export default bgService;

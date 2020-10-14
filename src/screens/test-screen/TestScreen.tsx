@@ -23,7 +23,7 @@ function TestScreen(props: dSCR_Tracks) {
   const dispatch = useDispatch();
   const playbackState = usePlaybackState();
   let thisTrackPlaya = TrackPlaya.getInstance();
-  const [USE_REDUX, shouldUseRedux] = React.useState(false);
+  const [USE_REDUX, shouldUseRedux] = React.useState(true);
   const [_currentTrack, setCurrentTrack] = React.useState<TrackProps>(null);
   const [_isShuffled, shouldShuffle] = React.useState(false);
   const [_indexedTracks, setIndexedTracks] = React.useState(mediaFiles);

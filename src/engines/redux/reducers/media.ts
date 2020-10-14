@@ -4,7 +4,6 @@ import {
   dMediaState,
   get_media_order,
   get_media_success,
-  now_playing_tracks,
   rename_track,
   set_indexed_tracks,
   set_loading,
@@ -15,7 +14,6 @@ const INITIAL_STATE: dMediaState = {
   mediaFiles: [],
   mediaLoaded: false,
   mediaIDs: [],
-  nowPlayingIDs: [],
   indexedTracks: [],
   nowPlayingTracks: [],
 };
@@ -37,9 +35,6 @@ export function media(
         mediaLoaded: true,
         mediaFiles: action.payload,
       } as dMediaState;
-      break;
-    case now_playing_tracks:
-      return { ...state, nowPlayingIDs: action.payload };
       break;
     case get_media_order:
       return { ...state, mediaIDs: action.payload };

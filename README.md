@@ -19,6 +19,8 @@ Melo is a light-weight and minimalist music player for Android and IOS. Inspired
 
 ## Bug fixes
 
+### `react-native-get-music-files` node_modules' error 
+
 On IOS, when `pod install` it shows error:
 
     ```
@@ -29,3 +31,15 @@ On IOS, when `pod install` it shows error:
     ```
 --> Go to `\node_modules\react-native-get-music-files\ios\....podspec` and replace `s.homepage` with:
     `s.homepage = "https://github.com/cinder92/react-native-get-music-files"`
+
+### Disable `Require Cycle: ...` warning
+
+In `node_modules/metro/src/lib/polyfills/require.js (Line 114)`, mask out:
+
+```
+console.warn(
+    "Require cycle: ".concat(cycle.join(" -> "), "\n\n") +
+      "Require cycles are allowed, but can result in uninitialized values. " +
+      "Consider refactoring to remove the need for a cycle."
+  );
+```

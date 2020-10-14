@@ -2,10 +2,6 @@ import { trackID, TrackProps } from "utils";
 
 export const get_media_success = "get_media_success";
 export const set_loading = "set_loading";
-/**
- * @deprecated soon
- */
-export const now_playing_tracks = "now_playing_tracks";
 export const get_media_order = "get_media_order";
 export const rename_track = "rename_track";
 export const delete_track = "delete_track";
@@ -19,16 +15,6 @@ export interface GetMediaAction {
 export interface SetLoadingAction {
   type: typeof set_loading;
   payload: boolean;
-}
-
-/**
- * @deprecated soon
- * replace with `SetNowPlayingTracksAction`
- */
-export interface NowPlayingTracksAction {
-  type: typeof now_playing_tracks;
-  // payload: TrackProps[];
-  payload: trackID[];
 }
 
 export interface GetMediaOrderAction {
@@ -73,15 +59,6 @@ export interface dMediaState {
    * used for shuffling og order of mediaFiles
    */
   mediaIDs: trackID[];
-  /**
-   * Now playing tracklist,
-   * which is the REFERENCE list,
-   * and is not inherited by TrackPlayer
-   *
-   * - playback fn depends on this list
-   * to skip to appropiate track
-   */
-  nowPlayingIDs: trackID[];
 
   /**
    * List of tracks, in original order

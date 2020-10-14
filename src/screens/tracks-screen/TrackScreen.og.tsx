@@ -41,7 +41,7 @@ function TracksScreen(props: dSCR_Tracks) {
     //* redux state
 
     playback: { currentTrack, shuffle },
-    media: { mediaLoaded, mediaFiles, nowPlayingIDs, mediaIDs },
+    media: { mediaLoaded, mediaFiles, mediaIDs },
     //* redux actions
     getMedia,
     setShuffle,
@@ -98,7 +98,6 @@ function TracksScreen(props: dSCR_Tracks) {
       return (
         <View style={{ flex: 1 }}>
           {/* <ScreenTitle title={"Your Melo"} /> */}
-          {/* <Txt.S1>{JSON.stringify(nowPlayingIDs)}</Txt.S1> */}
           <Txt.P1 onPress={getQueue}>
             {JSON.stringify(mediaFiles.length) +
               " - " +

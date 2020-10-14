@@ -117,7 +117,6 @@ function TracksScreen(props: dSCR_Tracks) {
       return (
         <View style={{ flex: 1 }}>
           {/* <ScreenTitle title={"Your Melo"} /> */}
-          {/* <Txt.S1>{JSON.stringify(nowPlayingIDs)}</Txt.S1> */}
           {/* <Txt.P1 onPress={getQueue}>
             {JSON.stringify(mediaFiles.length) +
               " - " +

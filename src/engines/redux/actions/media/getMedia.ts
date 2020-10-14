@@ -16,11 +16,11 @@ import {
 import {
   dRedux,
   GetMediaAction,
-  GetMediaOrderAction,
-  get_media_order,
   get_media_success,
+  SetIndexedTracksAction,
   SetLoadingAction,
   SetNowPlayingTracksAction,
+  set_indexed_tracks,
   set_loading,
   set_np_tracks,
 } from "../../types";
@@ -88,28 +88,31 @@ export const setLoading = (isLoading: boolean): SetLoadingAction => {
 
 /**
  * Get media from device then
- * distribute them to `now_playing_tracks` and `mediaFiles`
+ * distribute them to `np_tracks`, `indexed_tracks`, and `mediaFiles`
  * ---
  *
- * @version 0.10.12 *(Update correct queueTracks in "U_RETURN_TO_THE_APP" )*
+ * @version 0.10.14
+ * - *(Update logic in `>U_RETURN_TO_APP` to improve loading time)*
+ * - *(Build logic for `>U_REFRESH_APP` to get recently added tracks from device)*
  * @author nguyenkhooi
- *
+ * ---
  * @description
  * - Scenarios to use getMedia(_)
  *  - **U_FIRST_USE_THE_APP** (User first opens the app):
- *    - states: `{mediaFiles: [], nowPlayingIDs: [], currentTrack: null}`
- *    - getMedia(_) -> `{mediaFiles: track[](og), nowPlayingIDs: trackID[](og), currentTrack: null}`
- *    - reset and fill TrackPlayer -> `TP.queue: track[](og)`
- *  !- **U_RETURN_TO_THE_APP** (User returns to the app):
- *    - states: `{mediaFiles: track[](og), nowPlayingIDs: trackID[](og), currentTrack: null}`;
+ *    - states: `{%mediaFiles: [], %nowPlayingTracks: [], %currentTrack: null}`
+ *    - getMedia(_) -> `{%mediaFiles: track[](og), %nowPlayingTracks: track[](og), %currentTrack: null}`
+ *    - reset and fill Playa -> `Playa.queue: track[](og)`
+ *  - **U_RETURN_TO_THE_APP** (User returns to the app):
+ *    - states: `{%mediaFiles: track[](og), %nowPlayingTracks: track[](og), %currentTrack: null}`;
  *    - getMedia(_) ->
- *    ?- getMedia(_) now should **add** to `mediaFiles`, instead of replacing it
+ *    ?- getMedia(_) now should **add** to `%mediaFiles`, instead of replacing it
  */
 export const getMedia = (isManual?: "manual") => async (
   dispatch: Dispatch<
     | GetMediaAction
     | SetNowPlayingTracksAction
-    | GetMediaOrderAction
+    | SetIndexedTracksAction
+    //// | GetMediaOrderAction
     | SetLoadingAction
   >
 ) => {
@@ -120,106 +123,144 @@ export const getMedia = (isManual?: "manual") => async (
 
     let granted = await checkStoragePermissions();
     let {
-      media: { mediaFiles, nowPlayingIDs },
+      media: { mediaFiles, nowPlayingTracks },
       playback: { currentTrack },
     }: dRedux = store.getState();
 
     /** set loading to true */
     // dispatch({ type: set_loading, payload: true });
 
-    console.log("U_RETURN_TO_THE_APP: ", mediaFiles !== [] && granted);
-    const U_FIRST_USE_THE_APP = !(mediaFiles !== [] && granted);
-    const U_RETURN_TO_THE_APP = mediaFiles !== [] && granted && !!!isManual;
-    const U_REFRESH_THE_APP = !!isManual;
+    /**
+     * *When u first use the app:
+     * ---
+     * - Get `deviceTracks._` and update `%mediaFiles = deviceTracks._`
+     * - `np_tracks, indexed_tracks = %mediaFiles`
+     *
+     */
+    const U_FIRST_USE_THE_APP =
+      mediaFiles === [] && currentTrack.id === "000" && !granted;
+    /**
+     * *When u return to the app:
+     * ---
+     * - If `!!%mediaFiles`, just add them to Playa right away
+     * *-> load way faster
+     */
 
-    //* CASE: FIRST TIME USER OPENS THE APP
+    const U_RETURN_TO_THE_APP =
+      mediaFiles !== [] && currentTrack.id !== "000" && granted && !!!isManual;
+
+    /**
+     * *When u hit refresh:
+     * ---
+     * - Compare `deviceTracks._` w `%mediaFiles` to get new tracks
+     * ? put them in "Recently Added" playlist
+     */
+    const U_REFRESH_THE_APP =
+      mediaFiles !== [] && currentTrack.id !== "000" && granted && !!isManual;
+
     if (U_FIRST_USE_THE_APP) {
-      console.log("New coming...");
+      console.log("U_FIRST_USE_THE_APP");
       // let results = await MusicFiles.getAll(options);
       /** Temporary set __MEDIA for ios since it doesn't have local db */
       let deviceTracks: TrackProps[] = IS_ANDROID
         ? cleanupMedia(await MusicFiles.getAll(options))
         : __MEDIA;
-      const trackIDs = fn.js.vLookup(deviceTracks, "id") as trackID[];
-      console.log("adding to TP...");
+      // // const trackIDs = fn.js.vLookup(deviceTracks, "id") as trackID[];
+      console.log("adding to Playa...");
       await thisTrackPlaya.core.add([...deviceTracks]);
       dispatch({ type: get_media_success, payload: deviceTracks });
       dispatch({ type: set_np_tracks, payload: deviceTracks });
-      dispatch({ type: get_media_order, payload: trackIDs });
+
+      //! replace get_media_order w set_indexed_tracks, but need to see the performance
+      // // dispatch({ type: get_media_order, payload: trackIDs });
+      dispatch({ type: set_indexed_tracks, payload: deviceTracks });
+      dispatch({ type: set_loading, payload: false });
 
       /**
        * Now get tracks' covers and replace `mediaFiles` with it.
        */
       let trackWithCovers = await getMediaWithCovers();
       dispatch({ type: get_media_success, payload: trackWithCovers });
-      dispatch({ type: set_loading, payload: false });
     }
 
-    //* CASE: WHEN USER RETURNS TO THE APP
     if (U_RETURN_TO_THE_APP) {
-      /**
-       * If `currentTrack` exists, add that track to TP first
-       *
-       * ---
-       * - Why? if user wants to play it,
-       * they don't have to wait for the whole `tracks` to load
-       */
+      console.log("U_RETURN_TO_THE_APP");
       if (!!currentTrack && currentTrack.id !== "000") {
+        /**
+         * If `currentTrack` exists, add that track to Playa first
+         *
+         * ---
+         * - Why? if user wants to play it,
+         * they don't have to wait for the whole `tracks` to load
+         */
+        console.log("add currentTrack to Playa...: ");
         await thisTrackPlaya.core.add(currentTrack);
-        console.log("add currentTrack to TP...: ");
-      }
+        console.log("now continue getting device tracks...");
 
-      /**
-       * Now, we start getting tracks from device
-       *
-       * ---
-       * - Slice deviceTracks into `beforeCurrentTracks` and `afterCurrentTracks`
-       * - Create a queue of `[...afterCurrentTracks, ...beforeCurrentTracks]` to make `nowPlayingTracks` "feels" like `deviceTracks`, tho this list starts with the `currentTrack` instead of `deviceTracks[0]`
-       * //- then remove `currentTrack` above out the list to avoid duplication
-       */
-      let deviceTracks = await getMediaWithCovers();
-      const currentPos = R.indexOf(
-        currentTrack.id,
-        R.pluck("id")(deviceTracks)
-      );
-      let beforeCurrentTracks = R.slice(
-        0,
-        currentPos,
-        deviceTracks
-      ) as TrackProps[];
-      console.log("BC: ", beforeCurrentTracks.length);
-      let afterCurrentTracks = R.slice(
-        currentPos + 1,
-        deviceTracks.length,
-        deviceTracks
-      ) as TrackProps[];
-      console.log("AC: ", afterCurrentTracks.length);
-      const queueTracks = [...afterCurrentTracks, ...beforeCurrentTracks];
-      // let tracks = R.reject((track) => track.id === currentTrack.id, [
-      //   ...deviceTracks,
-      // ]);
-      await thisTrackPlaya.core.removeUpcomingTracks();
-      await thisTrackPlaya.core.add(queueTracks);
-      const trackIDs = fn.js.vLookup(deviceTracks, "id") as trackID[];
-      console.log(
-        "add TP wo currentTrack...: ",
-        deviceTracks.length + " - " + queueTracks.length
-      );
+        /**
+         * Now, we start manipulating tracks from %mediaFiles
+         *
+         * ---
+         * - Slice %mediaFiles into `beforeCurrentTracks` and `afterCurrentTracks`
+         * - Create a queue of `[...afterCurrentTracks, ...beforeCurrentTracks]`
+         * to make `%nowPlayingTracks` "feels" like `%mediaFiles`,
+         * tho this list starts with the `currentTrack` instead of `%mediaFiles[0]`
+         * //- then remove `currentTrack` above out the list to avoid duplication
+         */
+        const currentPos = R.indexOf(
+          currentTrack.id,
+          R.pluck("id")(mediaFiles)
+        );
+        let beforeCurrentTracks = R.slice(
+          0,
+          currentPos,
+          mediaFiles
+        ) as TrackProps[];
+        console.log("BC: ", beforeCurrentTracks.length);
+        let afterCurrentTracks = R.slice(
+          currentPos + 1,
+          mediaFiles.length,
+          mediaFiles
+        ) as TrackProps[];
+        console.log("AC: ", afterCurrentTracks.length);
+        const queueTracks = [...afterCurrentTracks, ...beforeCurrentTracks];
+        const _npTracks = [currentTrack, ...queueTracks];
+        // let tracks = R.reject((track) => track.id === currentTrack.id, [
+        //   ...mediaFiles,
+        // ]);
+        await thisTrackPlaya.core.removeUpcomingTracks();
+        await thisTrackPlaya.core.add(queueTracks);
+        // // const trackIDs = fn.js.vLookup(mediaFiles, "id") as trackID[];
 
-      /**
-       * If `nowPlayingTracks` = []:
-       *  - no queue
-       *  - 1st time app startup
-       */
-      if (nowPlayingIDs == []) {
-        dispatch({ type: set_np_tracks, payload: deviceTracks });
+        /**
+         * If `nowPlayingTracks` = []:
+         *  - no queue
+         *  - 1st time app startup
+         */
+        if (nowPlayingTracks == []) {
+          dispatch({ type: set_np_tracks, payload: mediaFiles });
+        } else {
+          dispatch({ type: set_np_tracks, payload: _npTracks });
+        }
+        //! replace get_media_order w set_indexed_tracks, but need to see the performance
+        // // dispatch({ type: get_media_order, payload: trackIDs });
+        dispatch({ type: set_indexed_tracks, payload: mediaFiles });
+        dispatch({ type: set_loading, payload: false });
       }
-      dispatch({ type: get_media_success, payload: deviceTracks });
-      dispatch({ type: get_media_order, payload: trackIDs });
-      dispatch({ type: set_loading, payload: false });
     }
 
     if (U_REFRESH_THE_APP) {
+      console.log("U_REFRESH_THE_APP");
+      /**
+       * Get deviceTracks and compare w mediaFiles
+       * to get new tracks -> update RecentlyAdded[*]
+       */
+      let deviceTracks = await getMediaWithCovers();
+      const newTracks = R.reject(
+        (track: TrackProps) => R.pluck("id")(mediaFiles).includes(track.id),
+        deviceTracks
+      );
+      console.log("# of New Tracks ", newTracks.length);
     }
   } catch (e) {
     errorReporter(e);

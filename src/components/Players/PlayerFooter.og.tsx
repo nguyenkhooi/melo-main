@@ -97,7 +97,7 @@ interface dFooterCtnr extends dCOMP_PlayerFooter {
 const CtnrFooter = (props: dFooterCtnr) => {
   const {
     player: { isPlaying },
-    media: { mediaFiles, nowPlayingIDs },
+    media: { mediaFiles },
     playback: { currentTrack, shuffle },
     sethPlayback,
     setShuffle,
@@ -388,7 +388,7 @@ const CtnrFooter = (props: dFooterCtnr) => {
           name="shuffle"
           color={shuffle ? "dodgerblue" : "grey"}
           disabled={!footerVisible}
-          onPress={() => setShuffle(!shuffle, nowPlayingIDs)}
+          onPress={() => setShuffle(!shuffle)}
         /> */}
       </Animated.View>
     </View>
