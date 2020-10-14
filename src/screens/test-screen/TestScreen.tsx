@@ -2,13 +2,14 @@ import { TrackPlaya } from "components";
 import { connector, dRedux, playlistShuffle, setShuffle } from "engines";
 import _ from "lodash";
 import React from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import TrackPlayer from "react-native-track-player";
 import { usePlaybackState } from "react-native-track-player/lib/hooks";
 import { dSCR, TrackProps } from "utils";
 import Player from "./Player";
 import playlistData from "./playlist.json";
 import { useDispatch } from "react-redux";
+import { img } from "assets";
 
 interface dSCR_Tracks extends dSCR, dRedux {}
 function TestScreen(props: dSCR_Tracks) {
@@ -147,6 +148,10 @@ function TestScreen(props: dSCR_Tracks) {
   return (
     <ScrollView>
       <View style={styles.container}>
+        <Image
+          source={img.appIcon}
+          style={{ width: 50, height: 50, borderRadius: 100 }}
+        />
         <View>
           <Text style={styles.state} onPress={() => shouldUseRedux(!USE_REDUX)}>
             😃 Use Redux? {JSON.stringify(USE_REDUX)}

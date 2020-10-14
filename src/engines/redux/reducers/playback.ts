@@ -1,9 +1,10 @@
+import { img } from "assets";
 import {
   current_track,
   dPlaybackActions,
   dPlaybackState,
   set_loop,
-  set_shuffle
+  set_shuffle,
 } from "../types";
 
 const INITIAL_STATE: dPlaybackState = {
@@ -15,7 +16,7 @@ const INITIAL_STATE: dPlaybackState = {
     title: "Melo",
     artist: "Khoi Tran",
     duration: 0,
-    artwork: "cover",
+    artwork: null,
     url: "",
   },
   loop: false,

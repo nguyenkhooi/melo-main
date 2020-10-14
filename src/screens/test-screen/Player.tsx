@@ -1,3 +1,4 @@
+import { img } from "assets";
 import PropTypes from "prop-types";
 import React, { useState } from "react";
 import {
@@ -63,9 +64,13 @@ export default function Player(props) {
   React.useEffect(
     function getCurrentTrack() {
       if (!!currentTrack) {
+        const imageSource = currentTrack.artwork
+          ? { uri: currentTrack.artwork }
+          : img.placeholder;
         setTrackTitle(currentTrack.title + " - " + currentTrack.id);
         setTrackArtist(currentTrack.artist);
-        setTrackArtwork(currentTrack.url);
+        setTrackArtwork(imageSource);
+        // setTrackArtwork(img.placeholder);
       }
     },
     [currentTrack]
@@ -82,7 +87,7 @@ export default function Player(props) {
 
   return (
     <View style={[styles.card, style]}>
-      <Image style={styles.cover} source={{ uri: trackArtwork }} />
+      <Image style={styles.cover} source={trackArtwork} />
       <ProgressBar />
       <Text style={styles.title}>{trackTitle}</Text>
       <Text style={styles.artist}>{trackArtist}</Text>

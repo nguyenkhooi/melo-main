@@ -1,4 +1,4 @@
-import { CIRCULAR, IconPrimr } from "assets";
+import { CIRCULAR, IconPrimr, img } from "assets";
 import { sstyled } from "components";
 import { ReduxStates } from "engines";
 import React from "react";
@@ -36,11 +36,11 @@ export function PlayerScreen(p: dSCR_Player) {
       const { navigation } = p;
       const props = { ...p, ...rx };
       const refCarou = React.useRef<Carousel<TrackProps>>();
+      const backgroundSource =
+        theme.current == "light" ? null : { uri: currentTrack.artwork };
       return (
         <ImageBackground
-          source={{
-            uri: theme.current == "light" ? null : currentTrack.artwork,
-          }}
+          source={backgroundSource}
           blurRadius={40}
           style={{ width: "100%", height: "100%" }}
         >

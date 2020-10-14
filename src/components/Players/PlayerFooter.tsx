@@ -138,8 +138,7 @@ function $_PlayerFooter(props: dCOMP_PlayerFooter) {
   return (
     /** NOTE replace with animation. See _toggleFooter() */
     // footerVisible &&
-    !!currentTrack &&
-    currentTrack.id !== "000" && (
+    !!currentTrack && currentTrack.id !== "000" ? (
       <>
         <CtnrFooterContent {...props}>
           <TouchableNativeFeedback
@@ -171,6 +170,22 @@ function $_PlayerFooter(props: dCOMP_PlayerFooter) {
             color={theme.foreground}
           />
         </ProgressWrapper>
+      </>
+    ) : (
+      <>
+        <CtnrFooterContent {...props}>
+          <TouchableNativeFeedback
+            {...props}
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              paddingVertical: spacing[2],
+            }}
+            //* for debugging
+            onPress={jumpToPlayerScr}
+          ></TouchableNativeFeedback>
+          <$_FooterActions {...props} />
+        </CtnrFooterContent>
       </>
     )
   );

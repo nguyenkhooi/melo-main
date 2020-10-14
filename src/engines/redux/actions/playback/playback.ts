@@ -31,7 +31,7 @@ export const setCurrentTrackk = (targetedTrack: TrackProps) => async (
   try {
     await thisTrackPlaya.skipToTrack(targetedTrack.id).catch(async () => {
       await thisTrackPlaya.core.add(targetedTrack);
-      await thisTrackPlaya.skipToTrack(targetedTrack.id)
+      await thisTrackPlaya.skipToTrack(targetedTrack.id);
       // await thisTrackPlaya.core.remove()
     });
     dispatch({
@@ -57,10 +57,6 @@ type dSethPlayback = {
 export const sethPlayback = ({ type }: dSethPlayback) => async () => {
   const thisTrackPlaya = TrackPlaya.getInstance();
   try {
-    const {
-      ,
-    }: dRedux = store.getState();
-
     switch (type) {
       case "play":
         /**

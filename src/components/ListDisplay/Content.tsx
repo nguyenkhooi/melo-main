@@ -1,14 +1,10 @@
 import * as React from "react";
-import {
-  StyleSheet, View,
-} from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
+import { StyleSheet, View } from "react-native";
+import LinearGradient from "react-native-linear-gradient";
 import Animated from "react-native-reanimated";
 import { onScroll } from "react-native-redash";
 
-import {
-  Album, MAX_HEADER_HEIGHT, MIN_HEADER_HEIGHT,
-} from "./Model";
+import { Album, MAX_HEADER_HEIGHT, MIN_HEADER_HEIGHT } from "./Model";
 import Track from "./Track";
 import ShufflePlay, { BUTTON_HEIGHT } from "./ShufflePlay";
 import Header from "./Header";
@@ -18,9 +14,7 @@ interface ContentProps {
   y: Animated.Value<number>;
 }
 
-const {
-  interpolate, Extrapolate,
-} = Animated;
+const { interpolate, Extrapolate } = Animated;
 
 export default ({ album: { artist, tracks }, y }: ContentProps) => {
   const height = interpolate(y, {
@@ -42,9 +36,7 @@ export default ({ album: { artist, tracks }, y }: ContentProps) => {
       stickyHeaderIndices={[1]}
     >
       <View style={styles.cover}>
-        <Animated.View
-          style={[styles.gradient, { height }]}
-        >
+        <Animated.View style={[styles.gradient, { height }]}>
           <LinearGradient
             style={StyleSheet.absoluteFill}
             start={[0, 0.3]}
@@ -53,7 +45,9 @@ export default ({ album: { artist, tracks }, y }: ContentProps) => {
           />
         </Animated.View>
         <View style={styles.artistContainer}>
-          <Animated.Text style={[styles.artist, { opacity }]}>{artist}</Animated.Text>
+          <Animated.Text style={[styles.artist, { opacity }]}>
+            {artist}
+          </Animated.Text>
         </View>
       </View>
       <View style={styles.header}>
@@ -61,14 +55,9 @@ export default ({ album: { artist, tracks }, y }: ContentProps) => {
         <ShufflePlay />
       </View>
       <View style={styles.tracks}>
-        {
-          tracks.map((track, key) => (
-            <Track
-              index={key + 1}
-              {...{ track, key, artist }}
-            />
-          ))
-        }
+        {tracks.map((track, key) => (
+          <Track index={key + 1} {...{ track, key, artist }} />
+        ))}
       </View>
     </Animated.ScrollView>
   );
