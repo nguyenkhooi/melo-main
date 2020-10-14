@@ -9,5 +9,13 @@ const meloMinicon = require("./v4/melo-white.png");
 const meloLogo = require("./v4/melo-logo.png");
 const meloWhite = require("./v4/melo-white.png");
 const placeholder = require("./v4/placeholder.png");
+const meloWordmark = require("./v4/melo-wordmark.png");
 
-export const img = { appIcon, meloLogo, meloMinicon, meloWhite, placeholder };
+export const img = {
+  appIcon,
+  meloLogo,
+  meloMinicon,
+  meloWhite,
+  meloWordmark,
+  placeholder,
+};

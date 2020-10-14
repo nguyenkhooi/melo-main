@@ -34,7 +34,7 @@ const stackOptions = {
   },
   "about-scr": {
     component: AboutScreen,
-    options: { title: "A boat" },
+    options: nConfig.noHeader,
   },
 };
 
