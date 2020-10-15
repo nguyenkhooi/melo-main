@@ -9,19 +9,20 @@ import {
   cleanupMedia,
   errorReporter,
   IS_ANDROID,
-  TrackProps
+  TrackProps,
 } from "utils";
 import {
   current_track,
   dRedux,
   GetMediaAction,
   get_media_success,
+  SetCurrentTrackAction,
   SetIndexedTracksAction,
   SetLoadingAction,
   SetNowPlayingTracksAction,
   set_indexed_tracks,
   set_loading,
-  set_np_tracks
+  set_np_tracks,
 } from "../../types";
 // import MusicFiles from 'react-native-get-music-files-v3dev-test';
 
@@ -112,6 +113,7 @@ export const getMedia = (isManual?: "manual") => async (
     | GetMediaAction
     | SetNowPlayingTracksAction
     | SetIndexedTracksAction
+    | SetCurrentTrackAction
     //// | GetMediaOrderAction
     | SetLoadingAction
   >
