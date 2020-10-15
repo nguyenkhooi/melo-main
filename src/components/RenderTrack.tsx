@@ -41,7 +41,7 @@ export const RenderTrack: React.FC<dTrackComp> = React.memo(
     const thisTrackPlaya = TrackPlaya.getInstance();
     async function onTrackPress() {
       //* to prevent pressing the same track multiple times
-      if (item.id !== currentTrack.id) {
+      if (!!currentTrack && !!currentTrack.id && item.id !== currentTrack.id) {
         shouldDisabled(true);
         switch (parent) {
           case "track-scr":

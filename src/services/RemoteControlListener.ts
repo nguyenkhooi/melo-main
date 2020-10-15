@@ -64,9 +64,12 @@ async function bgService() {
       if (playingItemId === null) {
         return null;
       }
-      console.log("currentTrack: ", currentTrack.title);
-      console.log(">", currentTrack.id !== "000" && !!e && !!e.nextTrack);
-      if (currentTrack.id !== "000" && !!e && !!e.nextTrack) {
+      const noCurrentTrack =
+        (!!currentTrack && currentTrack.id === "000") || !!!currentTrack;
+
+      // console.log(">", !noCurrentTrack && !!e && !!e.nextTrack);
+      if (!noCurrentTrack && !!e && !!e.nextTrack) {
+        console.log("currentTrack: ", currentTrack.title);
         const targetedTrack = await thisTrackPlaya.core.getTrack(e.nextTrack);
         await store.dispatch({
           type: current_track,

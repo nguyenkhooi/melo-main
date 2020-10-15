@@ -3,9 +3,9 @@ import {
   CIRCULAR_LIGHT,
   dIconPrimr,
   IconPrimr,
-  img,
+  img
 } from "assets";
-import { dRedux, ReduxStates, sethPlayback, setShuffle } from "engines";
+import { ReduxStates, sethPlayback } from "engines";
 import { navigate } from "navigation";
 import React from "react";
 import { Image, TouchableOpacity, View } from "react-native";
@@ -14,12 +14,19 @@ import { Modalize } from "react-native-modalize";
 import TrackPlayer from "react-native-track-player";
 import {
   usePlaybackState,
-  useTrackPlayerProgress,
+  useTrackPlayerProgress
 } from "react-native-track-player/lib/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import styled, { withTheme } from "styled-components/native";
 import { contrastColor, contrastTransColor, elevatedBGColor } from "themes";
-import { DEVICE_WIDTH, dSCR, getBottomSpace, scale, spacing } from "utils";
+import {
+  DEVICE_WIDTH,
+  dSCR,
+  getBottomSpace,
+  IS_ANDROID,
+  scale,
+  spacing
+} from "utils";
 import { sstyled, Txt } from "../Generals";
 import ProgressBar from "../ProgressBar";
 
@@ -141,26 +148,23 @@ function $_PlayerFooter(props: dCOMP_PlayerFooter) {
     !!currentTrack && currentTrack.id !== "000" ? (
       <>
         <CtnrFooterContent {...props}>
-          <TouchableNativeFeedback
+          <CtnrTouchie
             {...props}
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              paddingVertical: spacing[2],
-            }}
             //* for debugging
             onPress={jumpToPlayerScr}
           >
-            <Thumbnail source={coverSrc} onPress={jumpToPlayerScr} />
-            <CtnrTrackInfo>
-              <Title {...props} numberOfLines={1}>
-                {currentTrack.title || "unknown"}
-              </Title>
-              <Artist {...props} numberOfLines={1}>
-                {currentTrack.artist || "unknown"}
-              </Artist>
-            </CtnrTrackInfo>
-          </TouchableNativeFeedback>
+            <>
+              <Thumbnail source={coverSrc} onPress={jumpToPlayerScr} />
+              <CtnrTrackInfo>
+                <Title {...props} numberOfLines={1}>
+                  {currentTrack.title || "unknown"}
+                </Title>
+                <Artist {...props} numberOfLines={1}>
+                  {currentTrack.artist || "unknown"}
+                </Artist>
+              </CtnrTrackInfo>
+            </>
+          </CtnrTouchie>
           <$_FooterActions {...props} />
         </CtnrFooterContent>
         <ProgressWrapper>
@@ -174,25 +178,19 @@ function $_PlayerFooter(props: dCOMP_PlayerFooter) {
     ) : (
       <>
         <CtnrFooterContent {...props}>
-          <TouchableNativeFeedback
-            {...props}
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              paddingVertical: spacing[2],
-            }}
-            //* for debugging
-          >
-            <Thumbnail source={img.appIcon} />
-            <CtnrTrackInfo>
-              <Title {...props} numberOfLines={1}>
-                Let's Melo
-              </Title>
-              <Artist {...props} numberOfLines={1}>
-                Select a track to start!
-              </Artist>
-            </CtnrTrackInfo>
-          </TouchableNativeFeedback>
+          <CtnrTouchie {...props}>
+            <>
+              <Thumbnail source={img.appIcon} />
+              <CtnrTrackInfo>
+                <Title {...props} numberOfLines={1}>
+                  Let's Melo
+                </Title>
+                <Artist {...props} numberOfLines={1}>
+                  Select a track to start!
+                </Artist>
+              </CtnrTrackInfo>
+            </>
+          </CtnrTouchie>
         </CtnrFooterContent>
       </>
     )
@@ -215,6 +213,7 @@ function $_FooterActions(props: dCOMP_PlayerFooter) {
       style={{
         flexDirection: "row",
         justifyContent: "center",
+        marginRight: spacing[2],
         //* for debugging
         // position: "absolute",
         // right: 0,
@@ -278,6 +277,14 @@ const ActionIcon = (props: dActionIcon) => {
   );
 };
 
+const Touchie = IS_ANDROID ? TouchableNativeFeedback : TouchableOpacity;
+
+const CtnrTouchie = sstyled(Touchie)({
+  flexDirection: "row",
+  alignItems: "center",
+  paddingVertical: spacing[2],
+});
+
 const Thumbnail = (props) => {
   const { onPress, source } = props;
   return (
@@ -285,10 +292,10 @@ const Thumbnail = (props) => {
       <Image
         source={source}
         style={{
-          height: 42,
-          width: 42,
-          borderRadius: 21,
-          marginLeft: 15,
+          height: scale(42),
+          width: scale(42),
+          borderRadius: 100,
+          marginHorizontal: spacing[2],
           backgroundColor: "#CCCCFF",
         }}
       />
@@ -299,7 +306,8 @@ const Thumbnail = (props) => {
 const CtnrFooterContent = sstyled(View)((p) => ({
   flexDirection: "row",
   alignItems: "center",
-  borderRadius: scale(5),
+  paddingHorizontal: spacing[1],
+  borderRadius: scale(7),
   backgroundColor: elevatedBGColor(p),
 }));
 
@@ -311,7 +319,7 @@ const CtnrTrackInfo = sstyled(View)({
   marginLeft: 15,
 });
 
-const Title = sstyled(Txt.P2)((p) => ({
+const Title = sstyled(Txt.P1)((p) => ({
   fontFamily: CIRCULAR_BOLD,
   color: contrastColor(p),
   width: DEVICE_WIDTH / 2,

@@ -1,17 +1,24 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { CIRCULAR } from "assets";
-import { InputDialog } from "components";
+import { CIRCULAR, CIRCULAR_LIGHT, img } from "assets";
+import { InputDialog, sstyled } from "components";
+import { Txt } from "components/Generals";
 import { connector, dRedux } from "engines";
 import React, { useState } from "react";
+import { Image, View } from "react-native";
+import LinearGradient from "react-native-linear-gradient";
 import Modal from "react-native-modal";
 import Share from "react-native-share";
-import styled from "styled-components/native";
-import { contrastColor, elevatedBGColor } from "themes";
-import { DEVICE_HEIGHT, DEVICE_WIDTH, TrackProps } from "utils";
+import styled, { withTheme } from "styled-components/native";
+import { foregroundColor } from "themes";
+import {
+  DEVICE_HEIGHT,
+  getBottomSpace,
+  scale,
+  spacing,
+  TrackProps
+} from "utils";
 import ConfirmDialog from "../ConfirmDialog";
-import ListItem from "../ListItem";
 import RenderToast from "../RenderToast";
-
 
 interface dCOMP_OptionsModal extends dRedux {
   selectedTrack: TrackProps;
@@ -89,6 +96,7 @@ function OptionsModal(props: dCOMP_OptionsModal) {
 
   return (
     <StyledModal
+      {...props}
       isVisible={isVisible}
       deviceHeight={DEVICE_HEIGHT}
       swipeDirection="down"
@@ -100,26 +108,27 @@ function OptionsModal(props: dCOMP_OptionsModal) {
       animationInTiming={200}
       hideModalContentWhileAnimating
     >
-      <ModalContentWrapper>
-        <TextWrapper>
-          <ModalTitle numberOfLines={1}>{modalTitle}</ModalTitle>
-        </TextWrapper>
-        <ListItem
-          title={optionText}
-          iconProps={icons.playlist}
-          onPress={optionFunc}
-        />
-        <ListItem title="Share" iconProps={icons.share} onPress={onShare} />
-        <ListItem
-          title="Rename"
-          iconProps={icons.rename}
-          onPress={() => setRenameModal(true)}
-        />
-        <ListItem
-          title="Delete"
-          iconProps={icons.delete}
-          onPress={() => setDialogVisible(true)}
-        />
+      <Image
+        source={{ uri: selectedTrack.artwork }}
+        style={{
+          width: scale(150),
+          height: scale(150),
+          margin: spacing[3],
+          borderRadius: scale(6),
+        }}
+      ></Image>
+      <ModalContentWrapper
+        {...props}
+        colors={["transparent", foregroundColor(props)]}
+        start={{ x: 1.0, y: 0.1 }}
+        end={{ x: 1.0, y: 1.0 }}
+      >
+        <TxtTitle numberOfLines={1}>{modalTitle}</TxtTitle>
+
+        <TxtOption onPress={optionFunc}>{optionText}</TxtOption>
+        <TxtOption onPress={onShare}>Share</TxtOption>
+        <TxtOption onPress={() => setRenameModal(true)}>Rename</TxtOption>
+        <TxtOption onPress={() => setDialogVisible(true)}>Delete</TxtOption>
         <InputDialog
           isVisible={isRenameModalVisible}
           onPressSave={onPressRename}
@@ -139,60 +148,63 @@ function OptionsModal(props: dCOMP_OptionsModal) {
           isVisible={isDialogVisible}
         />
       </ModalContentWrapper>
+      <View
+        style={{
+          position: "absolute",
+          bottom: spacing[2],
+          right: spacing[2],
+        }}
+      >
+        <Image
+          source={img.meloLogo}
+          style={{ width: scale(20), height: scale(20) }}
+        />
+      </View>
     </StyledModal>
   );
 }
 
-export default connector(OptionsModal);
+export default connector(withTheme(OptionsModal));
 
-const StyledModal = styled(Modal)`
-  justify-content: flex-end;
-  align-items: center;
-`;
+// const StyledModal = styled(Modal)`
+//   justify-content: flex-end;
+//   align-items: center;
+// `;
 
-const ModalContentWrapper = styled.View`
-  height: 310px;
-  width: ${DEVICE_WIDTH}px;
-  background-color: ${elevatedBGColor};
-  elevation: 5;
-  justify-content: space-evenly;
-  margin-bottom: -20px;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-`;
+const StyledModal = sstyled(Modal)((p) => ({
+  justifyContent: "flex-end",
+  alignItems: "center",
+}));
+
+const ModalContentWrapper = sstyled(LinearGradient)((p) => ({
+  // backgroundColor: elevatedBGColor(p),
+  paddingBottom: getBottomSpace("safe"),
+  height: scale(310),
+  width: "100%",
+  elevation: 5,
+  justifyContent: "space-evenly",
+  borderRadius: scale(10),
+  overflow: "hidden",
+}));
+
+const TxtOption = sstyled(Txt.S1)({
+  padding: spacing[3],
+  color: "white",
+  fontFamily: CIRCULAR_LIGHT,
+});
+
+const TxtTitle = sstyled(Txt.S1)({
+  height: scale(35),
+  justifyContent: "center",
+  margin: spacing[2],
+  padding: spacing[3],
+  color: "white",
+  fontFamily: CIRCULAR,
+  textAlign: "center",
+});
 
 const TextWrapper = styled.View`
   height: 35px;
   justify-content: center;
   margin: 12px 15px 0 15px;
 `;
-
-const ModalTitle = styled.Text`
-  font-family: ${CIRCULAR};
-  font-size: 14px;
-  text-align: center;
-  color: ${contrastColor};
-`;
-
-const icons = {
-  playlist: {
-    name: "list",
-    type: "feather",
-    size: 20,
-  },
-  share: {
-    name: "share-2",
-    type: "feather",
-    size: 20,
-  },
-  rename: {
-    name: "edit",
-    type: "feather",
-    size: 20,
-  },
-  delete: {
-    name: "trash-2",
-    type: "feather",
-    size: 20,
-  },
-};

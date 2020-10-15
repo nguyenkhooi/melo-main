@@ -1,4 +1,4 @@
-import { CIRCULAR, IconPrimr, img } from "assets";
+import { CIRCULAR, IconPrimr } from "assets";
 import { sstyled } from "components";
 import { ReduxStates } from "engines";
 import React from "react";

@@ -1,7 +1,6 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   createMaterialTopTabNavigator,
-  MaterialTopTabBarOptions,
+  MaterialTopTabBarOptions
 } from "@react-navigation/material-top-tabs";
 import { IconPrimr } from "assets";
 import R from "ramda";
@@ -10,12 +9,12 @@ import { ViewStyle } from "react-native";
 import {
   SearchScreen,
   SettingsScreen,
-  TestScreen,
-  TracksScreen,
+
+  TracksScreen
 } from "screens";
 import { withTheme } from "styled-components/native";
 import { backgroundColor } from "themes";
-import { getBottomSpace, KeyOf, scale } from "utils";
+import { getStatusBarHeight, KeyOf, scale } from "utils";
 import TopMaterialTabNav from "./libraries.navigator";
 // import AnimatedTabBar, {
 //   TabsConfig,
@@ -91,6 +90,7 @@ function HomeBottomTab(props) {
       // height: 48,
       borderTopWidth: 0,
       backgroundColor: backgroundColor(props),
+      paddingTop: getStatusBarHeight("safe")
     } as ViewStyle,
     allowFontScaling: false,
   };

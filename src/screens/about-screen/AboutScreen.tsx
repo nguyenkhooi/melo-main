@@ -1,17 +1,17 @@
 import { img, PRODUCT_SANS, PRODUCT_SANS_BOLD } from "assets";
 import { sstyled } from "components";
-import { repoUrl } from "constants/urls";
 import { connector, dRedux } from "engines";
-import React, { useEffect } from "react";
-import { Linking, TouchableOpacity, Image, StatusBar } from "react-native";
-import styled from "styled-components/native";
+import React from "react";
+import { Image, StatusBar } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
-import { contrastColor, contrastTransColor, foregroundColor } from "themes";
+import styled from "styled-components/native";
+import { contrastTransColor } from "themes";
 import { colors, dSCR } from "utils";
 import { version } from "../../../package.json";
 
 interface dSCR_About extends dSCR, dRedux {}
 function AboutScreen(props: dSCR_About) {
+  const { navigation } = props;
   return (
     <CtnrGradient
       colors={["#0000a0", "#0000ff"]}
@@ -27,6 +27,7 @@ function AboutScreen(props: dSCR_About) {
       <DetailTrans>Version {version}</DetailTrans>
       <Heading>Developed by</Heading>
       <DetailTrans>Khoi Tran</DetailTrans>
+      <DetailTrans onPress={() => navigation.goBack()}>{"< Back"}</DetailTrans>
       {/* <Detail>Source code available under MIT License at</Detail>
       <TouchableOpacity onPress={() => Linking.openURL(repoUrl)}>
         <Link>Github</Link>

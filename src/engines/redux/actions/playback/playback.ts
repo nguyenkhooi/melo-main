@@ -1,4 +1,5 @@
-import { TrackPlaya } from "components";
+import { RenderToast, TrackPlaya } from "components";
+import R from "ramda";
 import { Dispatch } from "redux";
 import { store } from "store";
 import { errorReporter, TrackProps } from "utils";
@@ -13,7 +14,7 @@ import {
   set_np_tracks,
   set_shuffle,
   ToggleLoopAction,
-  ToggleShuffleAction,
+  ToggleShuffleAction
 } from "../../types";
 
 /**
@@ -78,16 +79,47 @@ export const sethPlayback = ({ type }: dSethPlayback) => async () => {
         await thisTrackPlaya.pause();
         break;
       case "fwd":
-        await thisTrackPlaya.next();
-        // await store.dispatch({
-        //   type: current_track,
-        //   payload: targetedTrack,
-        // });
-        return thisTrackPlaya.play();
+        await thisTrackPlaya.next().catch((error) => {
+          error.message.includes("There is no tracks left to play") &&
+            RenderToast({ title: "You've reached the end of list!" });
+        });
+        await thisTrackPlaya.play();
+        try {
+          const currentIndex = R.indexOf(
+            currentTrack.id,
+            R.pluck("id")(nowPlayingTracks)
+          );
+          const targetedTrack = nowPlayingTracks[currentIndex + 1];
+          await store.dispatch({
+            type: current_track,
+            payload: targetedTrack,
+          });
+        } catch (error) {
+          console.warn(
+            "fwd error getting targetedTrack w rx. Waiting for Playa to get it... "
+          );
+        }
+
         break;
       case "bwd":
         await thisTrackPlaya.previous();
-        return thisTrackPlaya.play();
+        await thisTrackPlaya.play();
+
+        try {
+          const currentIndex = R.indexOf(
+            currentTrack.id,
+            R.pluck("id")(nowPlayingTracks)
+          );
+          const targetedTrack = nowPlayingTracks[currentIndex - 1];
+          await store.dispatch({
+            type: current_track,
+            payload: targetedTrack,
+          });
+        } catch (error) {
+          console.warn(
+            "bwd error getting targetedTrack w rx. Waiting for Playa to get it... "
+          );
+        }
         break;
     }
   } catch (error) {
