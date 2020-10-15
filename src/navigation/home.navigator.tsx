@@ -1,17 +1,12 @@
 import {
   createMaterialTopTabNavigator,
-  MaterialTopTabBarOptions
+  MaterialTopTabBarOptions,
 } from "@react-navigation/material-top-tabs";
 import { IconPrimr } from "assets";
 import R from "ramda";
 import React from "react";
 import { ViewStyle } from "react-native";
-import {
-  SearchScreen,
-  SettingsScreen,
-
-  TracksScreen
-} from "screens";
+import { SearchScreen, SettingsScreen, TracksScreen } from "screens";
 import { withTheme } from "styled-components/native";
 import { backgroundColor } from "themes";
 import { getStatusBarHeight, KeyOf, scale } from "utils";
@@ -90,7 +85,7 @@ function HomeBottomTab(props) {
       // height: 48,
       borderTopWidth: 0,
       backgroundColor: backgroundColor(props),
-      paddingTop: getStatusBarHeight("safe")
+      paddingTop: getStatusBarHeight("safe", "ios-only"),
     } as ViewStyle,
     allowFontScaling: false,
   };

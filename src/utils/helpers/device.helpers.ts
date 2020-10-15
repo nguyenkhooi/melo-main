@@ -27,10 +27,17 @@ export function ifIphoneX(iphoneXStyle, regularStyle) {
   return regularStyle;
 }
 
-export function getStatusBarHeight(safe?: string) {
+/**
+ * A fn that gets statusbar height,
+ * with option to skip on android,
+ * due to its platform specification
+ * 
+ * @version 0.10.15
+ */
+export function getStatusBarHeight(safe?: string, isIosOnly?: "ios-only") {
   return Platform.select({
     ios: ifIphoneX(safe ? 44 : 30, 20),
-    android: StatusBar.currentHeight,
+    android: isIosOnly ? 0 : StatusBar.currentHeight,
     default: 0,
   });
 }

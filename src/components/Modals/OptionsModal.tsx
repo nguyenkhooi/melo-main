@@ -7,6 +7,7 @@ import React, { useState } from "react";
 import { Image, View } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import Modal from "react-native-modal";
+import { Modalize } from "react-native-modalize";
 import Share from "react-native-share";
 import styled, { withTheme } from "styled-components/native";
 import { foregroundColor } from "themes";
@@ -15,10 +16,78 @@ import {
   getBottomSpace,
   scale,
   spacing,
-  TrackProps
+  TrackProps,
 } from "utils";
 import ConfirmDialog from "../ConfirmDialog";
 import RenderToast from "../RenderToast";
+
+class SS_Options extends React.Component<dCOMP_OptionsModal> {
+  ref$$ = React.createRef<Modalize>();
+  static _ref = null;
+
+  static setRef(ref = {}) {
+    this._ref = ref;
+  }
+
+  static getRef() {
+    return this._ref;
+  }
+
+  static clearRef() {
+    this._ref = null;
+  }
+
+  /**
+   * Show the $$_Options
+   */
+  static open() {
+    this._ref.open();
+  }
+
+  /**
+   * Hide the $$_Options
+   */
+  static close() {
+    this._ref.close();
+  }
+
+  open() {
+    this.ref$$.current.open();
+  }
+
+  close() {
+    this.ref$$.current.close();
+  }
+
+  render() {
+    return (
+      <Modalize
+        ref={this.ref$$}
+        snapPoint={getBottomSpace("safe") + scale(40) + scale(40)}
+        modalHeight={getBottomSpace("safe") + scale(40) + scale(150)}
+        modalStyle={{
+          backgroundColor: "transparent",
+          padding: spacing[3],
+          elevation: 0,
+        }}
+        withOverlay={false}
+        overlayStyle={{ backgroundColor: "transparent" }}
+        alwaysOpen={getBottomSpace("safe") + scale(40) + scale(40)}
+        // snapPoint={HEADER_HEIGHT}
+        withHandle={false}
+        // onPositionChange={(position) => {
+        //   // console.log("position");
+        //   if (position == "top") {
+        //     this.jumpToPlayerScr();
+        //   }
+        // }}
+        // onClosed={() => navigate("player-scr")}
+      >
+        <OptionsModal {...this.props} />
+      </Modalize>
+    );
+  }
+}
 
 interface dCOMP_OptionsModal extends dRedux {
   selectedTrack: TrackProps;
@@ -181,7 +250,7 @@ const ModalContentWrapper = sstyled(LinearGradient)((p) => ({
   paddingBottom: getBottomSpace("safe"),
   height: scale(310),
   width: "100%",
-  elevation: 5,
+  elevation: 0,
   justifyContent: "space-evenly",
   borderRadius: scale(10),
   overflow: "hidden",
@@ -194,7 +263,7 @@ const TxtOption = sstyled(Txt.S1)({
 });
 
 const TxtTitle = sstyled(Txt.S1)({
-  height: scale(35),
+  // height: scale(35),
   justifyContent: "center",
   margin: spacing[2],
   padding: spacing[3],
