@@ -7,7 +7,7 @@ import styled from "styled-components/native";
 import { getBottomSpace } from "utils";
 import { contrastColor, elevatedBGColor } from "../themes/styles";
 import ConfirmDialog from "./ConfirmDialog";
-import { InputDialog } from "./Generals";
+import { InputDialog, Toasty } from "./Generals";
 import ListItem from "./ListItem";
 import RenderToast from "./RenderToast";
 
@@ -44,16 +44,12 @@ function PlaylistOptions(props: dCOMP_PlaylistOptions) {
         setRenameModal(false);
         onPressCancel();
       } else
-        RenderToast({
-          title: "Error",
-          message: "A playlist with the same name already exists",
-          type: "error",
+        Toasty.show("A playlist with the same name already exists", {
+          type: "danger",
         });
     } else
-      RenderToast({
-        title: "Error",
-        message: "Playlists cannot be untitled",
-        type: "error",
+      Toasty.show("Playlists cannot be untitled", {
+        type: "danger",
       });
   }
 

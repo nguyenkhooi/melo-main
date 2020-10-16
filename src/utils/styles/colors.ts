@@ -10,6 +10,9 @@ export const light = {
   contrastTrans: evaLight["color-basic-transparent-600"],
   fgTrans: "rgba(63, 81, 181, ",
   bgTrans: evaLight["color-basic-transparent-100"],
+  success: evaLight["color-success-500"],
+  warning: evaLight["color-warning-500"],
+  danger: evaLight["color-danger-500"],
   current: "light",
 };
 
@@ -22,6 +25,9 @@ export const dark = {
   contrastTrans: evaDark["color-basic-transparent-600"],
   fgTrans: "rgba(30, 215, 96, ",
   bgTrans: "rgba(18, 18, 18, ",
+  success: evaDark["color-success-500"],
+  warning: evaDark["color-warning-500"],
+  danger: evaDark["color-danger-500"],
   current: "dark",
 };
 

@@ -1,3 +1,4 @@
+import { Toasty } from "components";
 import RenderToast from "components/RenderToast";
 import RNFetchBlob from "rn-fetch-blob";
 
@@ -13,11 +14,7 @@ export const deleteTrack = (track) => async (dispatch) => {
     await RNFetchBlob.fs.scanFile([{ path: track.url, mime }]);
     dispatch({ type: "delete_track", payload: track });
   } catch (e) {
-    RenderToast({
-      title: "Error",
-      message: "Please try again later",
-      type: "error",
-    });
+    Toasty.show("Please try again later", { type: "danger" });
     console.warn(JSON.stringify(e));
   }
 };
@@ -36,11 +33,10 @@ export const renameTrack = (track, newName: string) => async (dispatch) => {
     let newPath = pathArr.join("/");
     let exists = await RNFetchBlob.fs.exists(newPath);
     if (exists)
-      return RenderToast({
-        title: "Error",
-        message: "A file with the same name already exists",
-        type: "error",
+      return Toasty.show("A file with the same name already exists", {
+        type: "danger",
       });
+
     await RNFetchBlob.fs.mv(track.url, newPath);
     await RNFetchBlob.fs.scanFile([{ path: newPath, mime }]);
     await RNFetchBlob.fs.scanFile([{ path: track.url, mime }]);
@@ -49,11 +45,7 @@ export const renameTrack = (track, newName: string) => async (dispatch) => {
       payload: { ...track, title: newName, url: newPath },
     });
   } catch (e) {
-    RenderToast({
-      title: "Error",
-      message: "Cannot rename this track",
-      type: "error",
-    });
+    Toasty.show("Cannot rename this track", { type: "danger" });
     console.warn(JSON.stringify(e));
   }
 };

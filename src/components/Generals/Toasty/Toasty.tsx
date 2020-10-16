@@ -1,106 +1,120 @@
-import React, { Component } from "react";
-import { View, StyleSheet, Dimensions, ViewStyle } from "react-native";
-import Toast, { ToastOptions, ToastProps } from "./core";
+import { CIRCULAR_BOLD, IconPrimr } from "assets";
+import React from "react";
+import {
+  ActivityIndicator,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+} from "react-native";
+import Toast from "react-native-fast-toast";
+import { colors, scale } from "utils";
 
-const dims = Dimensions.get("window");
+/**
+ * A Toast component for react-native, supports Android, IOS, Web, Windows
+ *
+ * ---
+ * @example
+ *
+ * ```
+ * <Text onPress={()=> Toasty.show("Hello mf", { type: "success" })}>Toast!</Text>
+ * ```
+ * - In `App.tsx`, add: `<Toasty ref={(ref) => Toasty.setRef(ref)} />`
+ * ---
+ * @version 0.10.16
+ * - *(Preset icon)*
+ * - *(Add `update()`)*
+ * - *(Build this up)*
+ *
+ * @author nguyenkhooi
+ * @see https://github.com/arnnis/react-native-fast-toast
+ */
+export class Toasty extends React.PureComponent<P_> {
+  refToast = React.createRef<Toast>();
 
-interface Props extends ToastOptions {
-  offset?: number;
-  placement: "top" | "bottom";
-}
+  static _ref: null | Toasty = null;
 
-interface State {
-  toasts: Array<ToastProps>;
-}
-
-class ToastContainer extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      toasts: [],
-    };
+  static setRef(ref: null | Toasty = null) {
+    this._ref = ref;
   }
 
-  static defaultProps = {
-    placement: "bottom",
-    offset: 60,
-  };
+  static getRef() {
+    return this._ref;
+  }
 
-  show = (message: string | JSX.Element, toastOptions?: ToastOptions) => {
-    let id = Math.random().toString();
-    const onClose = () => this.hide(id);
-
-    requestAnimationFrame(() => {
-      this.setState({ toasts: this.state.toasts.filter((t) => t.id !== id) });
-      this.setState({
-        toasts: [
-          {
-            id,
-            onClose,
-            message,
-            ...toastOptions,
-          },
-          ...this.state.toasts,
-        ],
-      });
-    });
-
+  static clearRef() {
+    this._ref = null;
+  }
+  static show(message: string, p_: ToastOptions) {
+    let id = this._ref?._show(message, p_);
     return id;
-  };
+  }
 
-  update = (
-    id: string,
-    message: string | JSX.Element,
-    toastOptions?: ToastOptions
-  ) => {
-    this.setState({
-      toasts: this.state.toasts.map((toast) =>
-        toast.id === id ? { ...toast, message, ...toastOptions } : toast
-      ),
-    });
-  };
+  static update(id: string, message: string, p_: ToastOptions) {
+    this._ref?._update(id, message, p_);
+  }
+  /**
+   * SECTION FUNCTION
+   * -------------------------------------
+   */
+  _show(message: string, p_: ToastOptions) {
+    const icon =
+      p_.icon === "loading" ? <ActivityIndicator color="white" /> : p_.icon;
+    const options: ToastOptions = { ...p_, icon };
+    //@ts-ignore
+    let id = this.refToast.current?.show(message, options);
+    return id;
+  }
 
-  hide = (id: string) => {
-    this.setState({ toasts: this.state.toasts.filter((t) => t.id !== id) });
-  };
+  // _show = this.refToast.current?.show;
+
+  _update(id: string, message: string, options: ToastOptions) {
+    //@ts-ignore
+    this.refToast.current?.update(id, message, options);
+  }
 
   render() {
-    const { toasts } = this.state;
-    let { placement, offset } = this.props;
-
-    let style: ViewStyle = {
-      bottom: placement === "bottom" ? offset : undefined,
-      top: placement === "top" ? offset : undefined,
-      justifyContent: placement === "bottom" ? "flex-end" : "flex-start",
-      flexDirection: placement === "bottom" ? "column" : "column-reverse",
-    };
-
     return (
-      <View style={[styles.container, style]} pointerEvents="none">
-        {toasts.map((toast) => (
-          <Toast key={toast.id} {...this.props} {...toast} />
-        ))}
-      </View>
+      <Toast
+        ref={this.refToast}
+        duration={2000}
+        textStyle={{ fontSize: 12, fontFamily: CIRCULAR_BOLD }}
+        style={{ opacity: 0.9, paddingVertical: 5 }}
+        successColor={colors.success}
+        dangerColor={colors.danger}
+        warningColor={colors.warning}
+        successIcon={
+          <IconPrimr preset={"safe"} name={"check"} size={12} color={"white"} />
+        }
+        dangerIcon={
+          <IconPrimr preset={"safe"} name={"x"} size={12} color={"white"} />
+        }
+        warningIcon={
+          <IconPrimr
+            preset={"safe"}
+            name={"exclamation_circle"}
+            size={12}
+            color={"white"}
+          />
+        }
+        {...this.props}
+      />
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 0,
-    position: "absolute",
-    maxWidth: dims.width * 10 * 9,
-    bottom: 100,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    borderRadius: 5,
-    zIndex: 999,
-    left: "10%",
-    right: "10%",
-  },
-  message: {
-    color: "#333",
-  },
-});
+interface P_ extends Partial<Toast> {}
 
-export default ToastContainer;
+export interface ToastOptions {
+  icon?: JSX.Element | "loading";
+  type?: "normal" | "success" | "danger" | "warning";
+  duration?: number;
+  style?: StyleProp<ViewStyle>;
+  textStyle?: StyleProp<TextStyle>;
+  successIcon?: JSX.Element;
+  dangerIcon?: JSX.Element;
+  warningIcon?: JSX.Element;
+  successColor?: string;
+  dangerColor?: string;
+  warningColor?: string;
+  onPress?(id: string): void;
+}

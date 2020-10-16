@@ -1,7 +1,7 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { CIRCULAR, CIRCULAR_LIGHT, img } from "assets";
 import { InputDialog, sstyled } from "components";
-import { Txt } from "components/Generals";
+import { Toasty, Txt } from "components/Generals";
 import { connector, dRedux } from "engines";
 import React, { useState } from "react";
 import { Image, View } from "react-native";
@@ -129,11 +129,7 @@ function OptionsModal(props: dCOMP_OptionsModal) {
       if (index === -1) {
         renameTrack(selectedTrack, newName);
       } else {
-        return RenderToast({
-          title: "Error",
-          message: 'Title should not contain "/"',
-          type: "error",
-        });
+        return Toasty.show('Title should not contain "/', { type: "danger" });
       }
     }
     setRenameModal(false);

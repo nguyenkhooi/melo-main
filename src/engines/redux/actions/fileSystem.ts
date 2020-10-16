@@ -1,4 +1,4 @@
-import { RenderToast } from "components";
+import { RenderToast, Toasty } from "components";
 import { Alert } from "react-native";
 import { Dispatch } from "redux";
 import RNFetchBlob from "rn-fetch-blob";
@@ -39,11 +39,10 @@ export const renameTrack = (track: TrackProps, newName: string) => async (
     let newPath = pathArr.join("/");
     let exists = await RNFetchBlob.fs.exists(newPath);
     if (exists)
-      return RenderToast({
-        title: "Error",
-        message: "A file with the same name already exists",
-        type: "error",
+      return Toasty.show("A file with the same name already exists", {
+        type: "danger",
       });
+
     await RNFetchBlob.fs.mv(track.url, newPath);
     await RNFetchBlob.fs.scanFile([{ path: newPath, mime }]);
     await RNFetchBlob.fs.scanFile([{ path: track.url, mime }]);

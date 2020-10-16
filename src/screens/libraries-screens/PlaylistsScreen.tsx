@@ -1,5 +1,11 @@
 import { IconPrimr } from "assets";
-import { dAccessory, InputDialog, Kitt, PlayerFooter } from "components";
+import {
+  dAccessory,
+  InputDialog,
+  Kitt,
+  PlayerFooter,
+  Toasty,
+} from "components";
 import Icon, { PROPS_Icon } from "components/Icon";
 import ListItem from "components/ListItem";
 import PlaylistOptions from "components/PlaylistOptions";
@@ -19,7 +25,7 @@ function PlaylistsScreen(props: dSCR_Playlists) {
     media: { mediaFiles },
     playback: { currentTrack },
     playlists,
-    
+
     createPlaylist,
   } = props;
   const [isModalVisible, setModal] = useState(false);
@@ -43,17 +49,13 @@ function PlaylistsScreen(props: dSCR_Playlists) {
         createPlaylist(playlistName);
         setModal(false);
       } else {
-        RenderToast({
-          title: "Hold up",
-          message: "A playlist with the same name already exists",
-          type: "info",
+        Toasty.show("A playlist with the same name already exists", {
+          type: "warning",
         });
       }
     } else
-      RenderToast({
-        title: "Try again",
-        message: "Playlists cannot be untitled",
-        type: "error",
+      Toasty.show("Playlists cannot be untitled", {
+        type: "danger",
       });
   }
 

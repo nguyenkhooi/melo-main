@@ -6,8 +6,9 @@ import {
   PlayerFooter,
   RenderTrack,
   sstyled,
+  Toasty,
   TrackPlaya,
-  Txt
+  Txt,
 } from "components";
 import RenderActivityIndicator from "components/RenderActivityIndicator";
 import { scanMessage } from "constants";
@@ -16,7 +17,7 @@ import {
   ReduxActions,
   ReduxStates,
   sethPlayback,
-  setShuffle
+  setShuffle,
 } from "engines";
 import React, { useEffect, useState } from "react";
 import { Dimensions, StatusBar, View, ViewStyle } from "react-native";
@@ -33,7 +34,7 @@ import {
   getStatusBarHeight,
   scale,
   spacing,
-  TrackProps
+  TrackProps,
 } from "utils";
 
 // const QuickScrollList = FlatList;
@@ -175,6 +176,7 @@ function TracksScreen(props: dSCR_Tracks) {
           >
             <Buttoon.Fab
               icon={{ name: "shuffle" }}
+              // onPress={() => Toasty.show("Hello mf", { type: "success" })}
               onPress={async (xong) => {
                 await setShuffle(true, mediaFiles);
                 setTimeout(() => {

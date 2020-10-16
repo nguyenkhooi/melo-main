@@ -1,5 +1,5 @@
 import { CIRCULAR } from "assets";
-import { PlayerFooter } from "components";
+import { PlayerFooter, Toasty } from "components";
 import ListItem from "components/ListItem";
 import RenderToast from "components/RenderToast";
 import { connector, dRedux } from "engines";
@@ -11,7 +11,7 @@ import { dSCR } from "utils";
 
 interface dSCR_AddToPlaylist extends dSCR, dRedux {}
 function AddToPlaylist(props: dSCR_AddToPlaylist) {
-  const { navigation, route, playlists,  addToPlaylist } = props;
+  const { navigation, route, playlists, addToPlaylist } = props;
   useEffect(() => {
     let unsubscribe = navigation.addListener("focus", () =>
       PlayerFooter.close()
@@ -21,9 +21,7 @@ function AddToPlaylist(props: dSCR_AddToPlaylist) {
 
   function addSong(playlistTitle, song) {
     addToPlaylist(playlistTitle, song);
-    RenderToast({
-      title: "Great",
-      message: "Track was added to playlist",
+    Toasty.show("Track was added to playlist", {
       type: "success",
     });
     navigation.goBack();
@@ -35,10 +33,8 @@ function AddToPlaylist(props: dSCR_AddToPlaylist) {
       (file) => file.id === song.id
     );
     if (filtered.length > 0)
-      RenderToast({
-        title: "Hold up",
-        message: "This track is already in this playlist",
-        type: "info",
+      Toasty.show("This track is already in this playlist", {
+        type: "warning",
       });
     else addSong(playlistName, song);
   }

@@ -1,4 +1,5 @@
-import { RenderToast, TrackPlaya } from "components";
+import { IconPrimr } from "assets";
+import { RenderToast, Toasty, TrackPlaya } from "components";
 import R from "ramda";
 import { Dispatch } from "redux";
 import { store } from "store";
@@ -14,7 +15,7 @@ import {
   set_np_tracks,
   set_shuffle,
   ToggleLoopAction,
-  ToggleShuffleAction
+  ToggleShuffleAction,
 } from "../../types";
 
 /**
@@ -22,7 +23,8 @@ import {
  * Think of users pressing specific track to play it
  * ---
  *
- * @version 0.10.13 *(Add await)*
+ * @version 0.10.13
+ * - *(Add await)*
  * @author nguyenkhooi
  */
 export const setCurrentTrackk = (targetedTrack: TrackProps) => async (
@@ -81,7 +83,9 @@ export const sethPlayback = ({ type }: dSethPlayback) => async () => {
       case "fwd":
         await thisTrackPlaya.next().catch((error) => {
           error.message.includes("There is no tracks left to play") &&
-            RenderToast({ title: "You've reached the end of list!" });
+            Toasty.show("You've reached the end of list!", {
+              type: "warning",
+            });
         });
         await thisTrackPlaya.play();
         try {
@@ -151,7 +155,8 @@ export const setLoop = (isLoop: boolean): ToggleLoopAction => {
  *
  * - Then, if TrackPlayer is not playing, play the first track in the list
  *
- * @version 0.10.13 *(add `set_np_tracks` dispatch)*
+ * @version 0.10.13
+ * - *(add `set_np_tracks` dispatch)*
  * @author nguyenkhooi
  */
 export const setShuffle = (
@@ -172,6 +177,16 @@ export const setShuffle = (
       playback: { currentTrack },
     }: // media: { indexedTracks },
     dRedux = store.getState();
+
+    let __toast = Toasty.show(
+      shouldShuffle ? "Shuffling..." : "Unshuffling...",
+      {
+        type: "normal",
+        icon: "loading",
+      }
+    );
+
+    //* Handle null/000 currentTrack
     const _currentTrack: TrackProps =
       !!currentTrack && currentTrack.id == "000"
         ? indexedTracks[0]
@@ -184,6 +199,11 @@ export const setShuffle = (
     //* modify indicator
     dispatch({ type: current_track, payload: _currentTrack });
     dispatch({ type: set_shuffle, payload: shouldShuffle });
+    if (!!__toast) {
+      Toasty.update(__toast, shouldShuffle ? "Shuffle: On" : "Shuffle: Off", {
+        type: "normal",
+      });
+    }
     dispatch({ type: set_indexed_tracks, payload: indexedTracks });
     dispatch({ type: set_np_tracks, payload: targetedTracks });
   } catch (error) {

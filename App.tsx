@@ -1,4 +1,4 @@
-import { TrackPlaya } from "components";
+import { Toasty, TrackPlaya } from "components";
 //@ts-check
 import {
   canExit,
@@ -10,7 +10,7 @@ import {
 } from "navigation";
 import React, { useEffect, useState } from "react";
 import { YellowBox } from "react-native";
-import Toasty from "react-native-toast-message";
+// import Toasty from "react-native-toast-message";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistor, store } from "store";

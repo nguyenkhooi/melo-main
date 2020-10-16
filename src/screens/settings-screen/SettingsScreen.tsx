@@ -1,9 +1,11 @@
+import { IconPrimr } from "assets";
 import {
   InputDialog,
   PlayerFooter,
   PROPS_Icon,
   RenderToast,
   ScreenTitle,
+  Toasty,
 } from "components";
 import ConfirmDialog from "components/ConfirmDialog";
 import ListItem from "components/ListItem";
@@ -30,7 +32,6 @@ function SettingsScreen(props: dSCR_Settings) {
     settings: { foldersToSkip },
     getMedia,
     setSkipFolders,
-    
   } = props;
 
   const [isInputVisible, setInputVisible] = useState(false);
@@ -79,14 +80,31 @@ function SettingsScreen(props: dSCR_Settings) {
       {/* <ScreenTitle title={"Settings"} /> */}
       <ListItem
         onPress={() => {
-          RenderToast({
-            title: "Setting theme...",
-            type: "info",
-            visibilityTime: 500,
+          let __toast = Toasty.show("Setting theme...", {
+            type: "warning",
+            icon: "loading",
           });
           setTimeout(() => {
             setTheme(current === "dark" ? "light" : "dark");
+            !!__toast &&
+              Toasty.update(__toast, "Theme set", {
+                type: "success",
+                icon: (
+                  <IconPrimr
+                    preset={"safe"}
+                    name={"check"}
+                    size={12}
+                    color={"white"}
+                  />
+                ),
+              });
           }, 300);
+
+          // RenderToast({
+          //   title: "Setting theme...",
+          //   type: "info",
+          //   visibilityTime: 500,
+          // });
         }}
         iconProps={icons.darkMode}
         title={settings.darkMode.title}

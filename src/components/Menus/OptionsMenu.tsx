@@ -1,6 +1,6 @@
 import NetInfo from "@react-native-community/netinfo";
 import { useNavigation } from "@react-navigation/native";
-import { Kitt } from "components";
+import { Kitt, Toasty } from "components";
 import { connector, dRedux } from "engines";
 import React from "react";
 import { TouchableOpacity as Touchable } from "react-native";
@@ -46,10 +46,8 @@ export const OptionsMenu = connector((props: dOptionsMenu) => {
       props.resetLyrics();
       navigation.navigate("lyrics-scr");
     } else
-      RenderToast({
-        title: "Error",
-        message: "No internet connection",
-        type: "error",
+      Toasty.show("No internet connection", {
+        type: "danger",
       });
   }
 
