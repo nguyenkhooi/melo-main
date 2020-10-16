@@ -78,7 +78,7 @@ export class Toasty extends React.PureComponent<P_> {
         ref={this.refToast}
         duration={2000}
         textStyle={{ fontSize: 12, fontFamily: CIRCULAR_BOLD }}
-        style={{ opacity: 0.9, paddingVertical: 5 }}
+        style={{ opacity: 0.96, paddingVertical: 5 }}
         successColor={colors.success}
         dangerColor={colors.danger}
         warningColor={colors.warning}

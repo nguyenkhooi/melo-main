@@ -58,28 +58,28 @@ async function bgService() {
     let {
       playback: { currentTrack },
     }: dRedux = store.getState();
-    // try {
-    //   const playingItemId = await thisTrackPlaya.core.getCurrentTrack();
-    //   // no playing item and therefore listener is being trigged on a abnormal situation (e.g. logging out)
-    //   if (playingItemId === null) {
-    //     return null;
-    //   }
-    //   const noCurrentTrack =
-    //     (!!currentTrack && currentTrack.id === "000") || !!!currentTrack;
+    try {
+      const playingItemId = await thisTrackPlaya.core.getCurrentTrack();
+      // no playing item and therefore listener is being trigged on a abnormal situation (e.g. logging out)
+      if (playingItemId === null) {
+        return null;
+      }
+      const noCurrentTrack =
+        (!!currentTrack && currentTrack.id === "000") || !!!currentTrack;
 
-    //   // console.log(">", !noCurrentTrack && !!e && !!e.nextTrack);
-    //   if (!noCurrentTrack && !!e && !!e.nextTrack) {
-    //     console.log("currentTrack: ", currentTrack.title);
-    //     const targetedTrack = await thisTrackPlaya.core.getTrack(e.nextTrack);
-    //     await store.dispatch({
-    //       type: current_track,
-    //       payload: targetedTrack,
-    //     });
-    //     // await store.dispatch(sethPlayback({ type: "fwd" }));
-    //   }
-    // } catch (error) {
-    //   console.warn("err track-changed: ", error);
-    // }
+      // console.log(">", !noCurrentTrack && !!e && !!e.nextTrack);
+      if (!noCurrentTrack && !!e && !!e.nextTrack) {
+        console.log("currentTrack: ", currentTrack.title);
+        const targetedTrack = await thisTrackPlaya.core.getTrack(e.nextTrack);
+        await store.dispatch({
+          type: current_track,
+          payload: targetedTrack,
+        });
+        // await store.dispatch(sethPlayback({ type: "fwd" }));
+      }
+    } catch (error) {
+      console.warn("err track-changed: ", error);
+    }
   });
 
   thisTrackPlaya.core.addEventListener("remote-previous", async () => {
@@ -118,8 +118,7 @@ async function bgService() {
           await store.dispatch(setCurrentTrackk(currentTrack));
           await store.dispatch(sethPlayback({ type: "play" }));
         } else {
-          Alert.alert("Done!!");
-          await store.dispatch(sethPlayback({ type: "fwd" }));
+          // await store.dispatch(sethPlayback({ type: "fwd" }));
           // backgroundPlayback(
           //   shuffle
           //     ? nowPlayingTracks[getRandomNumber(0, nowPlayingTracks.length)]
