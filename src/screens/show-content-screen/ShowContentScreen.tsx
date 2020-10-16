@@ -70,7 +70,7 @@ function ShowFolderScreen(props: dSCR_ShowFolder) {
             setTimeout(() => {
               xong();
               navigation.navigate("player-scr");
-              thisTrackPlaya.togglePlay();
+              thisTrackPlaya.play();
             }, 500);
           }}
         ></Buttoon.Fab>

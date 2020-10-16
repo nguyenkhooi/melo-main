@@ -1,6 +1,13 @@
 import { useScrollToTop } from "@react-navigation/native";
 import { CIRCULAR } from "assets";
-import { OptionsModal, PlayerFooter, sstyled, Txt, Buttoon } from "components";
+import {
+  OptionsModal,
+  PlayerFooter,
+  sstyled,
+  Txt,
+  Buttoon,
+  TrackPlaya,
+} from "components";
 import RenderActivityIndicator from "components/RenderActivityIndicator";
 import { scanMessage } from "constants";
 import { connector, dRedux, fn } from "engines";
@@ -61,6 +68,8 @@ function TracksScreen(props: dSCR_Tracks) {
     })
   );
 
+  const thisPlaya = TrackPlaya.getInstance();
+
   useEffect(() => {
     let unsubscribe = navigation.addListener("focus", async () => {
       // await getMedia(_); //* fetch media without showing indicator
@@ -77,13 +86,13 @@ function TracksScreen(props: dSCR_Tracks) {
     }, 1000);
   }
   React.useEffect(async function updateQueue() {
-    const queue = await TrackPlayer.getQueue();
+    const queue = await thisPlaya.core.getQueue();
     const queueIDs = fn.js.vLookup(queue, "id");
     setQueue(queueIDs);
   }, []);
 
   async function getQueue() {
-    const queue = await TrackPlayer.getQueue();
+    const queue = await thisPlaya.core.getQueue();
     const queueIDs = fn.js.vLookup(queue, "id");
     // setQueue(queueIDs);
     setQueue(queue);
@@ -160,7 +169,7 @@ function TracksScreen(props: dSCR_Tracks) {
               icon={{ name: "shuffle" }}
               // onPress={fetchMedia}
               onPress={async (xong) => {
-                await TrackPlayer.pause();
+                await thisPlaya.core.pause();
                 await setShuffle(true);
                 xong();
               }}

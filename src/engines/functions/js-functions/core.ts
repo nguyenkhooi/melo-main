@@ -45,3 +45,7 @@ export function formatTime(date: Date, showSeconds: boolean) {
  */
 export const capitalize = (string: string) =>
   !!string && R.compose(R.join(""), R.over(R.lensIndex(0), R.toUpper))(string);
+
+export function between(x: number, min: number, max: number) {
+  return x >= min && x <= max;
+}

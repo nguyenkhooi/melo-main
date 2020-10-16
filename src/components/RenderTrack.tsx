@@ -114,13 +114,23 @@ export const RenderTrack: React.FC<dTrackComp> = React.memo(
       </Touchable>
     );
   },
-  (prevProps: dTrackComp, nextProps: dTrackComp) =>
-    !(
-      nextProps.currentTrack.id === nextProps.item.id ||
-      prevProps.currentTrack.id === prevProps.item.id ||
-      prevProps.item !== nextProps.item ||
-      prevProps.theme.current !== nextProps.theme.current
-    )
+  (prevProps: dTrackComp, nextProps: dTrackComp) => {
+    if (!!prevProps.currentTrack || !!nextProps.currentTrack) {
+      !(
+        // nextProps.currentTrack.id === nextProps.item.id ||
+        (
+          prevProps.currentTrack.id === prevProps.item.id ||
+          prevProps.item !== nextProps.item ||
+          prevProps.theme.current !== nextProps.theme.current
+        )
+      );
+    } else {
+      !(
+        prevProps.item !== nextProps.item ||
+        prevProps.theme.current !== nextProps.theme.current
+      );
+    }
+  }
 );
 
 export default connect(mapStates, mapDispatch)(withTheme(RenderTrack));

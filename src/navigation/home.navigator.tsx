@@ -6,7 +6,7 @@ import { IconPrimr } from "assets";
 import R from "ramda";
 import React from "react";
 import { ViewStyle } from "react-native";
-import { SearchScreen, SettingsScreen, TracksScreen } from "screens";
+import { SearchScreen, SettingsScreen, TestScreen, TracksScreen } from "screens";
 import { withTheme } from "styled-components/native";
 import { backgroundColor } from "themes";
 import { getStatusBarHeight, KeyOf, scale } from "utils";
@@ -17,7 +17,7 @@ import TopMaterialTabNav from "./libraries.navigator";
 // } from "@gorhom/animated-tabbar";
 
 const stackOptions = {
-  // "test-scr": { component: TestScreen },
+  "test-scr": { component: TestScreen },
   "tracks-scr": { component: TracksScreen, options: { title: "Your Melo" } },
   "search-scr": { component: SearchScreen, options: { title: "Search" } },
   "libraries-scr": {
@@ -144,8 +144,8 @@ function HomeBottomTab(props) {
 
   return (
     <TopTabs.Navigator
-      initialRouteName="tracks-scr"
-      // initialRouteName="test-scr"
+      // initialRouteName="tracks-scr"
+      initialRouteName="test-scr"
       backBehavior="initialRoute"
       tabBarOptions={tabBarOptions}
       lazy={false}

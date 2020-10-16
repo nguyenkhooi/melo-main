@@ -1,11 +1,18 @@
 import { TrackPlaya } from "components";
-import { connector, dRedux, playlistShuffle, setShuffle } from "engines";
+import {
+  connector,
+  dRedux,
+  playlistShuffle,
+  setCurrentTrackk,
+  setLoop,
+  setShuffle,
+} from "engines";
 import _ from "lodash";
 import React from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import TrackPlayer from "react-native-track-player";
 import { usePlaybackState } from "react-native-track-player/lib/hooks";
-import { dSCR, TrackProps } from "utils";
+import { dSCR, trackID, TrackProps } from "utils";
 import Player from "./Player";
 import playlistData from "./playlist.json";
 import { useDispatch } from "react-redux";
@@ -14,7 +21,7 @@ import { img } from "assets";
 interface dSCR_Tracks extends dSCR, dRedux {}
 function TestScreen(props: dSCR_Tracks) {
   const {
-    playback: { currentTrack, shuffle },
+    playback: { currentTrack, shuffle, loop },
     media: { nowPlayingTracks, mediaFiles, indexedTracks },
     sethPlayback,
     // setShuffle,
@@ -25,7 +32,9 @@ function TestScreen(props: dSCR_Tracks) {
   let thisTrackPlaya = TrackPlaya.getInstance();
   const [USE_REDUX, shouldUseRedux] = React.useState(true);
   const [_currentTrack, setCurrentTrack] = React.useState<TrackProps>(null);
+  const [_playaCurrent, setPlayaCurrent] = React.useState<trackID>(null);
   const [_isShuffled, shouldShuffle] = React.useState(false);
+  const [_isLooped, shouldLoop] = React.useState(false);
   const [_indexedTracks, setIndexedTracks] = React.useState(mediaFiles);
   const [_npTracks, setNPTracks] = React.useState([]);
   const [_playaTracks, setPlayaTracks] = React.useState([]);
@@ -39,9 +48,12 @@ function TestScreen(props: dSCR_Tracks) {
     },
     [currentTrack]
   );
-
+  const _getTPCurrent = async () => {
+    const current = await thisTrackPlaya.core.getCurrentTrack();
+    setPlayaCurrent(current);
+  };
   const _getTPQueue = async () => {
-    const queue = await thisTrackPlaya.getQueue();
+    const queue = await thisTrackPlaya.core.getQueue();
     // console.log(">>>>>", queue);
     setPlayaTracks(queue);
   };
@@ -61,26 +73,47 @@ function TestScreen(props: dSCR_Tracks) {
     }
   }
 
+  async function toggleLoop() {
+    if (USE_REDUX) {
+      await dispatch(setLoop(!loop));
+    } else {
+      // const targetedTracks = await thisTrackPlaya.toggleShuffle(
+      //   !_isShuffled,
+      //   _indexedTracks,
+      //   _currentTrack
+      // );
+
+      // setNPTracks(targetedTracks);
+      shouldLoop(!_isLooped);
+    }
+  }
+
   const togglePlayback = () => {
     if (USE_REDUX) {
+      playbackState === TrackPlayer.STATE_PLAYING
+        ? sethPlayback({ type: "pause" })
+        : sethPlayback({ type: "play" });
       // sethPlayback({ type: "play" });
-      return thisTrackPlaya.togglePlay();
-    }
-    return thisTrackPlaya.togglePlay();
+    } else
+      return playbackState === TrackPlayer.STATE_PLAYING
+        ? thisTrackPlaya.pause()
+        : thisTrackPlaya.play();
   };
 
   const skipToNext = () => {
     if (USE_REDUX) {
       return sethPlayback({ type: "fwd" });
+    } else {
+      return thisTrackPlaya.next();
     }
-    return thisTrackPlaya.next();
   };
 
   const skipToPrevious = () => {
     if (USE_REDUX) {
       sethPlayback({ type: "bwd" });
+    } else {
+      return thisTrackPlaya.previous();
     }
-    return thisTrackPlaya.previous();
   };
 
   const playAllTracks = async () => {
@@ -90,11 +123,6 @@ function TestScreen(props: dSCR_Tracks) {
         : mediaFiles;
 
       buildNowPlayingTracks(targetedPlaylist, mediaFiles);
-
-      setTimeout(() => {
-        _getTPQueue();
-        thisTrackPlaya.togglePlay();
-      }, 500);
     } else {
       const targetedPlaylist = _isShuffled
         ? playlistShuffle(mediaFiles, "normal")
@@ -102,11 +130,12 @@ function TestScreen(props: dSCR_Tracks) {
       thisTrackPlaya.setPlaylist(targetedPlaylist);
       setNPTracks(targetedPlaylist);
       setIndexedTracks(mediaFiles);
-      setTimeout(() => {
-        _getTPQueue();
-        thisTrackPlaya.togglePlay();
-      }, 500);
     }
+    setTimeout(() => {
+      _getTPQueue();
+      _getTPCurrent();
+      thisTrackPlaya.play();
+    }, 500);
   };
 
   const playCustomTracks = async (givenTracks: TrackProps[]) => {
@@ -116,10 +145,6 @@ function TestScreen(props: dSCR_Tracks) {
         : givenTracks;
 
       buildNowPlayingTracks(targetedPlaylist, givenTracks);
-      setTimeout(() => {
-        _getTPQueue();
-        thisTrackPlaya.togglePlay();
-      }, 500);
     } else {
       const targetedPlaylist = _isShuffled
         ? playlistShuffle(givenTracks, "normal")
@@ -127,31 +152,33 @@ function TestScreen(props: dSCR_Tracks) {
       thisTrackPlaya.setPlaylist(targetedPlaylist);
       setNPTracks(targetedPlaylist);
       setIndexedTracks(givenTracks);
-      setTimeout(() => {
-        _getTPQueue();
-        thisTrackPlaya.togglePlay();
-      }, 500);
     }
+    setTimeout(() => {
+      _getTPQueue();
+      _getTPCurrent();
+      thisTrackPlaya.play();
+    }, 500);
   };
 
   const playSingleTrack = (targetedTrack: TrackProps) => {
-    setCurrentTrack(targetedTrack);
-    thisTrackPlaya.skipToTrack(targetedTrack.id);
+    if (USE_REDUX) {
+      dispatch(setCurrentTrackk(targetedTrack));
+    } else {
+      setCurrentTrack(targetedTrack);
+      thisTrackPlaya.core.skip(targetedTrack.id);
+    }
     setTimeout(() => {
       _getTPQueue();
-      thisTrackPlaya.togglePlay();
+      _getTPCurrent();
+      thisTrackPlaya.play();
     }, 500);
   };
 
   const NP_TRACKS = USE_REDUX ? nowPlayingTracks : _npTracks;
 
   return (
-    <ScrollView>
+    <ScrollView style={{ backgroundColor: "white" }}>
       <View style={styles.container}>
-        <Image
-          source={img.appIcon}
-          style={{ width: 50, height: 50, borderRadius: 100 }}
-        />
         <View>
           <Text style={styles.state} onPress={() => shouldUseRedux(!USE_REDUX)}>
             😃 Use Redux? {JSON.stringify(USE_REDUX)}
@@ -183,10 +210,23 @@ function TestScreen(props: dSCR_Tracks) {
             toggleShuffle();
             setTimeout(() => {
               _getTPQueue();
+              _getTPCurrent();
             }, 500);
           }}
         >
           {`🔀 Shuffle: ${USE_REDUX ? shuffle : _isShuffled}`}
+        </Text>
+        <Text
+          style={styles.state}
+          onPress={async () => {
+            toggleLoop();
+            setTimeout(() => {
+              _getTPQueue();
+              _getTPCurrent();
+            }, 500);
+          }}
+        >
+          {`➰ Loop: ${USE_REDUX ? loop : _isLooped}`}
         </Text>
       </View>
 
@@ -234,9 +274,9 @@ function TestScreen(props: dSCR_Tracks) {
             <Text
               style={[
                 styles.description,
-                !!_currentTrack &&
-                  !!_currentTrack.id &&
-                  track.id === _currentTrack.id && { fontWeight: "bold" },
+                !!_playaCurrent &&
+                  !!_playaCurrent.id &&
+                  track.id === _playaCurrent.id && { fontWeight: "bold" },
               ]}
             >
               {track.id}

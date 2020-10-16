@@ -221,7 +221,7 @@ function OptionsModal(props: dCOMP_OptionsModal) {
         }}
       >
         <Image
-          source={img.meloLogo}
+          source={img.meloWhite}
           style={{ width: scale(20), height: scale(20) }}
         />
       </View>

@@ -101,7 +101,7 @@ function TracksScreen(props: dSCR_Tracks) {
     }, 1000);
   }
   // React.useEffect(async function updateQueue() {
-  //   const queue = await TrackPlayer.getQueue();
+  //   const queue = await thisTrackPlaya.core.getQueue();
   //   const queueIDs = R.pluck("id")(queue);
   //   setQueue(queueIDs);
   // }, []);

@@ -1,6 +1,7 @@
 import { CIRCULAR, IconPrimr } from "assets";
 import { OptionsModal, RenderTrack, sstyled } from "components";
 import { connector, dRedux } from "engines";
+import R from "ramda";
 import React, { useState } from "react";
 import { FlatList, Text, View } from "react-native";
 import DraggableFlatList from "react-native-draggable-flatlist";
@@ -18,8 +19,43 @@ function NowPlayingScreen(props: dSCR_Tracks) {
   } = props;
 
   const [_queue, setQueue] = React.useState<TrackProps[]>([]);
-  React.useEffect(function fetchListfromIDs() {
-    setQueue(nowPlayingTracks);
+  React.useEffect(function fetchNowPlayingList() {
+    /**
+     * Now, we start manipulating tracks from %mediaFiles
+     *
+     * ---
+     * - Slice %mediaFiles into `beforeCurrentTracks` and `afterCurrentTracks`
+     * - Create a queue of `[...afterCurrentTracks, ...beforeCurrentTracks]`
+     * to make `%nowPlayingTracks` "feels" like `%mediaFiles`,
+     * tho this list starts with the `currentTrack` instead of `%mediaFiles[0]`
+     * //- then remove `currentTrack` above out the list to avoid duplication
+     */
+    const currentPos = R.indexOf(
+      currentTrack.id,
+      R.pluck("id")(nowPlayingTracks)
+    );
+    let beforeCurrentTracks = R.slice(
+      0,
+      currentPos,
+      nowPlayingTracks
+    ) as TrackProps[];
+    console.log("BC: ", beforeCurrentTracks.length);
+    let afterCurrentTracks = R.slice(
+      currentPos + 1,
+      nowPlayingTracks.length,
+      nowPlayingTracks
+    ) as TrackProps[];
+    console.log("AC: ", afterCurrentTracks.length);
+    const queueTracks = [
+      currentTrack,
+      ...afterCurrentTracks,
+      ...beforeCurrentTracks,
+    ];
+    // const _npTracks = R.reject((track) => track.id === "000", [
+    //   currentTrack,
+    //   ...queueTracks,
+    // ]);
+    setQueue(queueTracks);
   }, []);
   // React.useEffect(() => {
   //   let unsubscribe = navigation.addListener("focus", () =>
@@ -38,21 +74,7 @@ function NowPlayingScreen(props: dSCR_Tracks) {
   return (
     <View style={{ flex: 1 }}>
       <CtnrNowPlaying {...props}>
-        <TxtSub
-          {...props}
-          onPress={() => {
-            try {
-              refList.current.scrollToIndex({
-                animated: true,
-                index: currentTrack.index,
-              });
-            } catch (error) {
-              console.warn(error);
-            }
-          }}
-        >
-          Coming up next • {_queue.length}
-        </TxtSub>
+        <TxtSub {...props}>Coming up next • {_queue.length}</TxtSub>
         <IconPrimr
           preset={"safe"}
           name={"chevron_down"}
@@ -63,7 +85,6 @@ function NowPlayingScreen(props: dSCR_Tracks) {
       </CtnrNowPlaying>
 
       <DraggableFlatList
-        ref={refList}
         keyExtractor={(asset) => asset.id.toString()}
         data={_queue}
         onDragEnd={({ data }) => setQueue(data)}
@@ -76,15 +97,15 @@ function NowPlayingScreen(props: dSCR_Tracks) {
             // setOptions={setModal}
           />
         )}
-        onScrollToIndexFailed={(info) => {
-          const wait = new Promise((resolve) => setTimeout(resolve, 500));
-          wait.then(() => {
-            refList.current?.scrollToIndex({
-              index: info.index,
-              animated: true,
-            });
-          });
-        }}
+        // onScrollToIndexFailed={(info) => {
+        //   const wait = new Promise((resolve) => setTimeout(resolve, 500));
+        //   wait.then(() => {
+        //     refList.current?.scrollToIndex({
+        //       index: info.index,
+        //       animated: true,
+        //     });
+        //   });
+        // }}
       />
 
       <OptionsModal

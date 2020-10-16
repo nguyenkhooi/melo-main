@@ -26,49 +26,6 @@ import {
 } from "../../types";
 // import MusicFiles from 'react-native-get-music-files-v3dev-test';
 
-const __MEDIA = [
-  {
-    id: "1111",
-    url:
-      "https://public.bn.files.1drv.com/y4mWAjfXUaX3MzwmEcxUB45BbNjTNY558YqL-Lth8YYXnNiH7XTGLR69Ydy4TsqL0gN2bx34zMkdhMPPt-gyHDtlTEcyqkfMV2ZJ8MlIPaSHzz_mqg29k_bth1jHZ1gNWLSw3TTh6of7D6oEbXorGaCdgHTvYmKNxoWRyEwNi6WoeVq_s0TuvGTB3Yb1oCQ0aAS91uI01S7ztLNhEDJ1aWAWYtLChQXyjUSHgNyUZpU7W4?",
-    title: "Better Man",
-    artist: "Westlife",
-    artwork:
-      "https://cms-assets.tutsplus.com/uploads/users/114/posts/34296/image/Final-image.jpg",
-    duration: 197,
-  },
-  {
-    id: "2222",
-    url:
-      "https://public.bn.files.1drv.com/y4muaFchxLV7UzJJFJbRAXkEMTEZRLiZKJOXipitiTVmR9-acUOhv8K8LDQkDfVvrbJedhAIo77ER_V_xU2Yg2Qyuoq6qRcLpXf5hzNm61gqpZo4ELdZWvrDH5mJcR7LWslXCI6HIsiiZovn-tkRb0jLvQsSWdZ2MhW5Q-w6Od7Tj7Eo0pvYuP9dDHXuGLHSp8DxpG6YgHFV-Xrv-iX9SBQB4kEfC6-ZXyHokH-dsHBDoA?",
-    title: "#Catena",
-    artist: "Toc Tien",
-    artwork:
-      "https://images-na.ssl-images-amazon.com/images/I/717VbeZb0bL._AC_SL1500_.jpg",
-    duration: 269,
-  },
-  {
-    id: "3333",
-    url:
-      "https://public.bn.files.1drv.com/y4mnV7bTKO72j_Xgu4x9Cu-bXWhPv_pDvZE4dPN_QNgAnFgfCCEmWxDkXZ9grjds-Ww4WuQzFTq1FFdePZbzwKsLcCbCH_-kDhW2KQ3mQ1WMchVmoB0sRfOPkl7yJiZz0iY8pw6I_luykIef4eYpWdKRsI5QlU1sqkRdwcmpslC_4jmcRzHFZ5nJiXdIMsxf6OLCRthzHY8JMW8w2xjvGE0tpnJQV7ISQC2zgH8dzTNppU?",
-    title: "Di theo anh",
-    artist: "Mar D ",
-    artwork:
-      "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/59dd3a65996579.5b073c5b3628d.gif",
-    duration: 211,
-  },
-  {
-    id: "4444",
-    url:
-      "https://public.bn.files.1drv.com/y4mxLaYyJngI9Lew4xbyeTr2733OCyaxvgYq7MB3aAXDzUxc_OpwaR7NCyANb-uewWyOUt1etCvieWzsRw0zqIGHtNXpYz2-Rx9Dy5TQ2uF6hlhqe6M5nb4RuvG1r4HRl5YNbL_KTPWijqp2KAX1-GGAiFhV1hVzhzRd43RMCFOq1AywpjEODFdbOaIKLj3h9NS2b1lShUV9nXncK-V9Un2-G6x__Wf1yO-5HBwQyVZDr4?",
-    title: "Prism",
-    artist: "Claris",
-    artwork:
-      "https://www.digitalmusicnews.com/wp-content/uploads/2020/04/DaBaby-Blame-It-On-Baby.jpg",
-    duration: 276,
-  },
-];
-
 const options = {
   cover: false,
   batchSize: 0,
@@ -80,10 +37,6 @@ const options = {
   album: true,
   duration: true,
   blured: false,
-};
-
-export const setLoading = (isLoading: boolean): SetLoadingAction => {
-  return { type: "set_loading", payload: isLoading };
 };
 
 /**
@@ -234,7 +187,7 @@ export const getMedia = (isManual?: "manual") => async (
     }
 
     if (U_RETURN_TO_APP_NORMALLY) {
-      console.log("U_RETURN_TO_THE_APP");
+      console.log("U_RETURN_TO_APP_NORMALLY");
 
       /**
        * If `currentTrack` exists, add that track to Playa first
@@ -328,3 +281,50 @@ const getMediaWithCovers = async () => {
   });
   return cleanupMedia(results);
 };
+
+export const setLoading = (isLoading: boolean): SetLoadingAction => {
+  return { type: "set_loading", payload: isLoading };
+};
+
+const __MEDIA = [
+  {
+    id: "1111",
+    url:
+      "https://public.bn.files.1drv.com/y4mWAjfXUaX3MzwmEcxUB45BbNjTNY558YqL-Lth8YYXnNiH7XTGLR69Ydy4TsqL0gN2bx34zMkdhMPPt-gyHDtlTEcyqkfMV2ZJ8MlIPaSHzz_mqg29k_bth1jHZ1gNWLSw3TTh6of7D6oEbXorGaCdgHTvYmKNxoWRyEwNi6WoeVq_s0TuvGTB3Yb1oCQ0aAS91uI01S7ztLNhEDJ1aWAWYtLChQXyjUSHgNyUZpU7W4?",
+    title: "Better Man",
+    artist: "Westlife",
+    artwork:
+      "https://cms-assets.tutsplus.com/uploads/users/114/posts/34296/image/Final-image.jpg",
+    duration: 197,
+  },
+  {
+    id: "2222",
+    url:
+      "https://public.bn.files.1drv.com/y4muaFchxLV7UzJJFJbRAXkEMTEZRLiZKJOXipitiTVmR9-acUOhv8K8LDQkDfVvrbJedhAIo77ER_V_xU2Yg2Qyuoq6qRcLpXf5hzNm61gqpZo4ELdZWvrDH5mJcR7LWslXCI6HIsiiZovn-tkRb0jLvQsSWdZ2MhW5Q-w6Od7Tj7Eo0pvYuP9dDHXuGLHSp8DxpG6YgHFV-Xrv-iX9SBQB4kEfC6-ZXyHokH-dsHBDoA?",
+    title: "#Catena",
+    artist: "Toc Tien",
+    artwork:
+      "https://images-na.ssl-images-amazon.com/images/I/717VbeZb0bL._AC_SL1500_.jpg",
+    duration: 269,
+  },
+  {
+    id: "3333",
+    url:
+      "https://public.bn.files.1drv.com/y4mnV7bTKO72j_Xgu4x9Cu-bXWhPv_pDvZE4dPN_QNgAnFgfCCEmWxDkXZ9grjds-Ww4WuQzFTq1FFdePZbzwKsLcCbCH_-kDhW2KQ3mQ1WMchVmoB0sRfOPkl7yJiZz0iY8pw6I_luykIef4eYpWdKRsI5QlU1sqkRdwcmpslC_4jmcRzHFZ5nJiXdIMsxf6OLCRthzHY8JMW8w2xjvGE0tpnJQV7ISQC2zgH8dzTNppU?",
+    title: "Di theo anh",
+    artist: "Mar D ",
+    artwork:
+      "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/59dd3a65996579.5b073c5b3628d.gif",
+    duration: 211,
+  },
+  {
+    id: "4444",
+    url:
+      "https://public.bn.files.1drv.com/y4mxLaYyJngI9Lew4xbyeTr2733OCyaxvgYq7MB3aAXDzUxc_OpwaR7NCyANb-uewWyOUt1etCvieWzsRw0zqIGHtNXpYz2-Rx9Dy5TQ2uF6hlhqe6M5nb4RuvG1r4HRl5YNbL_KTPWijqp2KAX1-GGAiFhV1hVzhzRd43RMCFOq1AywpjEODFdbOaIKLj3h9NS2b1lShUV9nXncK-V9Un2-G6x__Wf1yO-5HBwQyVZDr4?",
+    title: "Prism",
+    artist: "Claris",
+    artwork:
+      "https://www.digitalmusicnews.com/wp-content/uploads/2020/04/DaBaby-Blame-It-On-Baby.jpg",
+    duration: 276,
+  },
+];
