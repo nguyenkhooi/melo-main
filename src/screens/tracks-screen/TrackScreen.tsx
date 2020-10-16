@@ -1,29 +1,26 @@
 import { useScrollToTop } from "@react-navigation/native";
 import { CIRCULAR } from "assets";
 import {
+  Buttoon,
   OptionsModal,
   PlayerFooter,
   RenderTrack,
   sstyled,
-  Txt,
-  Buttoon,
   TrackPlaya,
+  Txt
 } from "components";
 import RenderActivityIndicator from "components/RenderActivityIndicator";
 import { scanMessage } from "constants";
 import {
+  getMedia,
   ReduxActions,
   ReduxStates,
-  getMedia,
-  setShuffle,
   sethPlayback,
+  setShuffle
 } from "engines";
-import R from "ramda";
 import React, { useEffect, useState } from "react";
 import { Dimensions, StatusBar, View, ViewStyle } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
-// import { FlatList } from "react-native-gesture-handler";
-import TrackPlayer from "react-native-track-player";
 import { connect } from "react-redux";
 import { DataProvider } from "recyclerlistview";
 // import QuickScrollList from "react-native-quick-scroll";
@@ -36,7 +33,7 @@ import {
   getStatusBarHeight,
   scale,
   spacing,
-  TrackProps,
+  TrackProps
 } from "utils";
 
 // const QuickScrollList = FlatList;
@@ -77,7 +74,7 @@ function TracksScreen(props: dSCR_Tracks) {
   const [modal, setModal] = useState({ visible: false, item: {} });
   const [_isFetched, shouldFetch] = React.useState(false);
 
-  const [, setQueue] = React.useState([]);
+  const [_queue, setQueue] = React.useState(mediaFiles);
 
   const [] = React.useState(
     new DataProvider((r1, r2) => {
@@ -102,11 +99,11 @@ function TracksScreen(props: dSCR_Tracks) {
       shouldFetch(false);
     }, 1000);
   }
-  React.useEffect(async function updateQueue() {
-    const queue = await TrackPlayer.getQueue();
-    const queueIDs = R.pluck("id")(queue);
-    setQueue(queueIDs);
-  }, []);
+  // React.useEffect(async function updateQueue() {
+  //   const queue = await TrackPlayer.getQueue();
+  //   const queueIDs = R.pluck("id")(queue);
+  //   setQueue(queueIDs);
+  // }, []);
 
   const refMediaList = React.useRef<FlatList<{}>>();
   useScrollToTop(refMediaList);

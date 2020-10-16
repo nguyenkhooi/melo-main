@@ -1,8 +1,9 @@
-import { IconPrimr, CIRCULAR } from "assets";
+import { CIRCULAR, IconPrimr } from "assets";
 import { OptionsModal, RenderTrack, sstyled } from "components";
 import { connector, dRedux } from "engines";
 import React, { useState } from "react";
 import { FlatList, Text, View } from "react-native";
+import DraggableFlatList from "react-native-draggable-flatlist";
 import { withTheme } from "styled-components";
 import { contrastTransColor } from "themes";
 import { dSCR, spacing, TrackProps } from "utils";
@@ -35,7 +36,7 @@ function NowPlayingScreen(props: dSCR_Tracks) {
   const [modal, setModal] = useState({ visible: false, item: {} });
   const refList = React.useRef<FlatList>();
   return (
-    <View style={{}}>
+    <View style={{ flex: 1 }}>
       <CtnrNowPlaying {...props}>
         <TxtSub
           {...props}
@@ -61,16 +62,18 @@ function NowPlayingScreen(props: dSCR_Tracks) {
         />
       </CtnrNowPlaying>
 
-      <FlatList
+      <DraggableFlatList
         ref={refList}
         keyExtractor={(asset) => asset.id.toString()}
         data={_queue}
-        renderItem={({ item }) => (
+        onDragEnd={({ data }) => setQueue(data)}
+        renderItem={({ item, drag }) => (
           <RenderTrack
             {...props}
             parent="now-playing-scr"
             item={item}
-            setOptions={setModal}
+            onLongPress={drag}
+            // setOptions={setModal}
           />
         )}
         onScrollToIndexFailed={(info) => {

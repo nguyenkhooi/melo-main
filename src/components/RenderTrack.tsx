@@ -33,6 +33,7 @@ export const RenderTrack: React.FC<dTrackComp> = React.memo(
       currentTrack,
       setCurrentTrackk,
       item,
+      onLongPress,
       setOptions,
       parent = "default",
     } = props;
@@ -84,7 +85,9 @@ export const RenderTrack: React.FC<dTrackComp> = React.memo(
       <Touchable
         disabled={_isDisabled}
         onPress={() => onTrackPress()}
-        onLongPress={() => setOptions({ visible: true, item })}
+        onLongPress={() =>
+          !!onLongPress ? onLongPress() : setOptions({ visible: true, item })
+        }
         activeOpacity={0.4}
       >
         <Thumbnail {...props} source={coverSrc} />
@@ -169,4 +172,5 @@ interface dTrackComp extends dState, dActions, dSCR {
     | "contents-scr"
     | "playlist-scr";
   setOptions({ visible: boolean, item: TrackProps }): void;
+  onLongPress(): void;
 }

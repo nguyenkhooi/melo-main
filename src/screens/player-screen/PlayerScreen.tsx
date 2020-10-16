@@ -26,7 +26,8 @@ const mapStates = (state: ReduxStates) => {
  *
  * ---
  *
- * @version 0.10.13 *("default" -> "renderfied")*
+ * @version 0.10.13 
+ * - *("default" -> "renderfied")*
  * @author nguyenkhooi
  */
 export function PlayerScreen(p: dSCR_Player) {
