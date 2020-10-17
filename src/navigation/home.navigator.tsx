@@ -6,7 +6,12 @@ import { IconPrimr } from "assets";
 import R from "ramda";
 import React from "react";
 import { ViewStyle } from "react-native";
-import { SearchScreen, SettingsScreen, TestScreen, TracksScreen } from "screens";
+import {
+  SearchScreen,
+  SettingsScreen,
+  TestScreen,
+  TracksScreen,
+} from "screens";
 import { withTheme } from "styled-components/native";
 import { backgroundColor } from "themes";
 import { getStatusBarHeight, KeyOf, scale } from "utils";

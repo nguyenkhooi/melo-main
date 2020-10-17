@@ -316,8 +316,8 @@ async function toggleShuffle(
 }
 
 /**
- * Insert given queue to the Playa
- *
+ * Insert given queue to the Playa,
+ * return `updatedTracks`
  * ---
  * - Queue is track[] AFTER currentTrack.
  * - Used when u give new queue to play
@@ -331,6 +331,9 @@ async function toggleShuffle(
 async function setQueue(givenQueue: TrackProps[]) {
   await TrackPlayer.removeUpcomingTracks();
   await TrackPlayer.add([...givenQueue]);
+
+  const updatedTracks = await TrackPlayer.getQueue();
+  return updatedTracks;
 }
 
 async function togglePlay(isPlaying) {

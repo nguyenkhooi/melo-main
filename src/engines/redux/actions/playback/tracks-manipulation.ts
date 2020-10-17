@@ -139,6 +139,19 @@ export const displayCurrentTracks = (targetedTracks?: TrackProps[]) => async (
   // dispatch({ type: "set_np_tracks", payload: currentTracks });
 };
 
+export const updateQueue = (givenQueue: TrackProps[]) => async (
+  dispatch: Dispatch<SetNowPlayingTracksAction>
+) => {
+  try {
+    const thisTrackPlaya = TrackPlaya.getInstance();
+    const updatedTracks = await thisTrackPlaya.setQueue(givenQueue);
+
+    return dispatch({ type: set_np_tracks, payload: updatedTracks });
+  } catch (error) {
+    return errorReporter(error, "setQueue");
+  }
+};
+
 export function playlistShuffle(
   array: any[],
   type: "knuth" | "normal" = "knuth"

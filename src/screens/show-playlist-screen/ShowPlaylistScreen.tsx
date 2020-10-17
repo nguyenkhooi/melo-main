@@ -1,11 +1,11 @@
 import { CIRCULAR } from "assets";
-import { OptionsModal, RenderTrack } from "components";
-import { connector, dRedux } from "engines";
-import React, { useEffect, useState } from "react";
-import { Button, FlatList, View } from "react-native";
+import { Buttoon, OptionsModal, RenderTrack, TrackPlaya } from "components";
+import { connector, dRedux, playlistShuffle } from "engines";
+import React, { useState } from "react";
+import { FlatList, View } from "react-native";
 import styled from "styled-components/native";
 import { contrastColor } from "themes";
-import { dSCR, flatListItemLayout } from "utils";
+import { dSCR, flatListItemLayout, scale, spacing, TrackProps } from "utils";
 
 interface dSCR_ShowPlaylist extends dSCR, dRedux {}
 function ShowPlaylistScreen(props: dSCR_ShowPlaylist) {
@@ -13,21 +13,16 @@ function ShowPlaylistScreen(props: dSCR_ShowPlaylist) {
     navigation,
     route,
     playback: { shuffle },
-    setCurrentList,
+    buildNowPlayingTracks,
   } = props;
   const [modal, setModal] = useState({ visible: false, item: {} });
 
-  let listData = route.params.content;
-  return listData.length > 0 ? (
+  let givenTracks = route.params.content as TrackProps[];
+  let thisTrackPlaya = TrackPlaya.getInstance();
+  return givenTracks.length > 0 ? (
     <View style={{ flex: 1 }}>
-      <Button
-        onPress={() => {
-          setCurrentList(listData, shuffle);
-        }}
-        title={"Play"}
-      />
       <FlatList
-        data={listData}
+        data={givenTracks}
         keyExtractor={(asset) => asset.id.toString()}
         renderItem={({ item }) => (
           <RenderTrack
@@ -39,6 +34,29 @@ function ShowPlaylistScreen(props: dSCR_ShowPlaylist) {
         )}
         getItemLayout={flatListItemLayout}
       />
+      <View
+        style={{
+          position: "absolute",
+          bottom: scale(25),
+          right: spacing[5],
+        }}
+      >
+        <Buttoon.Fab
+          icon={{ name: "play" }}
+          onPress={(xong) => {
+            const targetedPlaylist = shuffle
+              ? playlistShuffle(givenTracks, "normal")
+              : givenTracks;
+
+            buildNowPlayingTracks(targetedPlaylist, givenTracks);
+            setTimeout(() => {
+              xong();
+              navigation.navigate("player-scr");
+              thisTrackPlaya.play();
+            }, 500);
+          }}
+        ></Buttoon.Fab>
+      </View>
       <OptionsModal
         selectedTrack={modal.item}
         isVisible={modal.visible}

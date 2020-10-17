@@ -1,10 +1,17 @@
 import { CIRCULAR, IconPrimr } from "assets";
 import { OptionsModal, RenderTrack, sstyled } from "components";
-import { connector, dRedux } from "engines";
+import {
+  connector,
+  dRedux,
+  SetCurrentTrackAction,
+  SetNowPlayingTracksAction,
+} from "engines";
 import R from "ramda";
 import React, { useState } from "react";
 import { FlatList, Text, View } from "react-native";
 import DraggableFlatList from "react-native-draggable-flatlist";
+import { useDispatch } from "react-redux";
+import { Dispatch } from "redux";
 import { withTheme } from "styled-components";
 import { contrastTransColor } from "themes";
 import { dSCR, spacing, TrackProps } from "utils";
@@ -17,7 +24,7 @@ function NowPlayingScreen(props: dSCR_Tracks) {
     playback: { currentTrack },
     // setCurrentList,
   } = props;
-
+  const dispatch = useDispatch<Dispatch<SetNowPlayingTracksAction>>();
   const [_queue, setQueue] = React.useState<TrackProps[]>([]);
   React.useEffect(function fetchNowPlayingList() {
     /**
@@ -57,6 +64,7 @@ function NowPlayingScreen(props: dSCR_Tracks) {
     // ]);
     setQueue(queueTracks);
   }, []);
+
   // React.useEffect(() => {
   //   let unsubscribe = navigation.addListener("focus", () =>
   //     {
@@ -68,6 +76,13 @@ function NowPlayingScreen(props: dSCR_Tracks) {
   //   );
   //   return unsubscribe;
   // }, [navigation]);
+
+  // React.useEffect(
+  //   function updateQueue() {
+  //     dispatch(updateQueue(_queue));
+  //   },
+  //   [_queue]
+  // );
 
   const [modal, setModal] = useState({ visible: false, item: {} });
   const refList = React.useRef<FlatList>();

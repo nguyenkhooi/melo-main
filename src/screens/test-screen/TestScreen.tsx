@@ -17,6 +17,7 @@ import Player from "./Player";
 import playlistData from "./playlist.json";
 import { useDispatch } from "react-redux";
 import { img } from "assets";
+import DraggableFlatList from "react-native-draggable-flatlist";
 
 interface dSCR_Tracks extends dSCR, dRedux {}
 function TestScreen(props: dSCR_Tracks) {
@@ -90,7 +91,7 @@ function TestScreen(props: dSCR_Tracks) {
 
   const togglePlayback = () => {
     if (USE_REDUX) {
-      playbackState === TrackPlayer.STATE_PLAYING
+      return playbackState === TrackPlayer.STATE_PLAYING
         ? sethPlayback({ type: "pause" })
         : sethPlayback({ type: "play" });
       // sethPlayback({ type: "play" });
@@ -110,7 +111,7 @@ function TestScreen(props: dSCR_Tracks) {
 
   const skipToPrevious = () => {
     if (USE_REDUX) {
-      sethPlayback({ type: "bwd" });
+      return sethPlayback({ type: "bwd" });
     } else {
       return thisTrackPlaya.previous();
     }
@@ -252,19 +253,25 @@ function TestScreen(props: dSCR_Tracks) {
           <Text style={{ fontWeight: "bold" }}>
             Now Playing {NP_TRACKS.length}
           </Text>
-          {NP_TRACKS.map((track) => (
-            <Text
-              onPress={() => playSingleTrack(track)}
-              style={[
-                styles.description,
-                !!_currentTrack &&
-                  !!_currentTrack.id &&
-                  track.id === _currentTrack.id && { fontWeight: "bold" },
-              ]}
-            >
-              {track.id}
-            </Text>
-          ))}
+          <DraggableFlatList
+            data={NP_TRACKS}
+            keyExtractor={(asset) => asset.id.toString()}
+            onDragEnd={({ data }) => setNPTracks(data)}
+            renderItem={({ item, drag }) => (
+              <Text
+                onPress={() => playSingleTrack(item)}
+                onLongPress={drag}
+                style={[
+                  styles.description,
+                  !!_currentTrack &&
+                    !!_currentTrack.id &&
+                    item.id === _currentTrack.id && { fontWeight: "bold" },
+                ]}
+              >
+                {item.id}
+              </Text>
+            )}
+          />
         </View>
         <View>
           <Text style={{ fontWeight: "bold" }} onPress={_getTPQueue}>
