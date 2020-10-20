@@ -2,10 +2,10 @@ import { TrackPlaya } from "components";
 import { Dispatch } from "redux";
 import { errorReporter, TrackProps } from "utils";
 import {
-  SetIndexedTracksAction,
-  SetNowPlayingTracksAction,
-  set_indexed_tracks,
-  set_np_tracks,
+    SetIndexedTracksAction,
+    SetNowPlayingTracksAction,
+    set_indexed_tracks,
+    set_np_tracks
 } from "../../types";
 
 /**
@@ -14,7 +14,7 @@ import {
  * ---
  * - Think of users playing specific albums, artists, playlists...
  *
- * @version 0.10.13 *(Created)*
+ * @version 0.10.13 *Created*
  * @author nguyenkhooi
  */
 export const buildNowPlayingTracks = (

@@ -4,16 +4,16 @@ import { Dispatch } from "redux";
 import { store } from "store";
 import { errorReporter, TrackProps } from "utils";
 import {
-  current_track,
-  dRedux,
-  SetCurrentTrackAction,
-  SetIndexedTracksAction,
-  SetNowPlayingTracksAction,
-  set_indexed_tracks,
-  set_np_tracks,
-  set_shuffle,
-  ToggleLoopAction,
-  ToggleShuffleAction,
+    current_track,
+    dRedux,
+    SetCurrentTrackAction,
+    SetIndexedTracksAction,
+    SetNowPlayingTracksAction,
+    set_indexed_tracks,
+    set_np_tracks,
+    set_shuffle,
+    ToggleLoopAction,
+    ToggleShuffleAction
 } from "../../types";
 
 export const setLoop = (isLoop: boolean): ToggleLoopAction => {
@@ -41,7 +41,7 @@ export const setLoop = (isLoop: boolean): ToggleLoopAction => {
  * - Then, if TrackPlayer is not playing, play the first track in the list
  *
  * @version 0.10.13
- * - *(add `set_np_tracks` dispatch)*
+ * - *add `set_np_tracks` dispatch*
  * @author nguyenkhooi
  */
 export const setShuffle = (

@@ -1,13 +1,13 @@
 import { CIRCULAR_BOLD, IconPrimr } from "assets";
 import React from "react";
 import {
-  ActivityIndicator,
-  StyleProp,
-  TextStyle,
-  ViewStyle,
+    ActivityIndicator,
+    StyleProp,
+    TextStyle,
+    ViewStyle
 } from "react-native";
 import Toast from "react-native-fast-toast";
-import { colors, scale } from "utils";
+import { colors } from "utils";
 
 /**
  * A Toast component for react-native, supports Android, IOS, Web, Windows
@@ -21,9 +21,9 @@ import { colors, scale } from "utils";
  * - In `App.tsx`, add: `<Toasty ref={(ref) => Toasty.setRef(ref)} />`
  * ---
  * @version 0.10.16
- * - *(Preset icon)*
- * - *(Add `update()`)*
- * - *(Build this up)*
+ * - *Preset icon*
+ * - *Add `update()`*
+ * - *Build this up*
  *
  * @author nguyenkhooi
  * @see https://github.com/arnnis/react-native-fast-toast

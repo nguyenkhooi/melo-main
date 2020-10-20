@@ -1,10 +1,10 @@
-import TrackPlayer, { Track } from "react-native-track-player";
 import { img } from "assets";
-import { errorReporter, trackID, TrackProps } from "utils";
-import _ from "lodash";
 import { fn, playlistShuffle } from "engines";
+import _ from "lodash";
 import R from "ramda";
 import React from "react";
+import TrackPlayer, { Track } from "react-native-track-player";
+import { errorReporter, trackID, TrackProps } from "utils";
 const resolveAssetSource = require("react-native/Libraries/Image/resolveAssetSource");
 // const resolvedImage = resolveAssetSource(myImage);
 
@@ -15,7 +15,7 @@ const resolveAssetSource = require("react-native/Libraries/Image/resolveAssetSou
  * by exposing methods to do common things.
  *
  * @version 0.10.16
- * - *(Move all function outside the class for hierarchy)*
+ * - *Move all function outside the class for hierarchy*
  * @author nguyenkhooi
  * @see https://medium.com/finimize-engineering/building-a-global-audio-player-in-react-native-dd065fc64b02
  */
@@ -30,7 +30,7 @@ export class TrackPlaya extends React.Component {
    * and stops us reinitialising the player
    * ---
    *
-   * @version 0.10.12 *(Build `toggleShuffle()`, `setPlaylist()`)*
+   * @version 0.10.12 *Build `toggleShuffle()`, `setPlaylist()`*
    * @author nguyenkhooi
    */
   static getInstance() {
@@ -236,7 +236,7 @@ async function createPlaylist(
  * Note that when shuffle = false, `npTracks` return to `indexedTracks`
  * ---
  *
- * @version 0.10.12 *( build separated behaviors for U_TURN_OFF_SHUFFLE and U_TURN_ON_SHUFFLE )*
+ * @version 0.10.12 * build separated behaviors for U_TURN_OFF_SHUFFLE and U_TURN_ON_SHUFFLE *
  * @author nguyenkhooi
  *
  */

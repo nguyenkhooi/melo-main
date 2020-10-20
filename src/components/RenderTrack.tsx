@@ -24,7 +24,7 @@ const mapDispatch = { setCurrentTrackk } as ReduxActions;
  * Track Info Render used in multiple TrackLists throughout the project
  * Component's behavior depends on its parent
  *
- * @version 0.10.13 *( connector -> connect() w mapStates and mapDispatch )*
+ * @version 0.10.13 * connector -> connect() w mapStates and mapDispatch *
  * @author nguyenkhooi
  */
 export const RenderTrack: React.FC<dTrackComp> = React.memo(

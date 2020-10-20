@@ -5,24 +5,24 @@ import { Dispatch } from "redux";
 import RNFetchBlob from "rn-fetch-blob";
 import { store } from "store";
 import {
-  checkStoragePermissions,
-  cleanupMedia,
-  errorReporter,
-  IS_ANDROID,
-  TrackProps,
+    checkStoragePermissions,
+    cleanupMedia,
+    errorReporter,
+    IS_ANDROID,
+    TrackProps
 } from "utils";
 import {
-  current_track,
-  dRedux,
-  GetMediaAction,
-  get_media_success,
-  SetCurrentTrackAction,
-  SetIndexedTracksAction,
-  SetLoadingAction,
-  SetNowPlayingTracksAction,
-  set_indexed_tracks,
-  set_loading,
-  set_np_tracks,
+    current_track,
+    dRedux,
+    GetMediaAction,
+    get_media_success,
+    SetCurrentTrackAction,
+    SetIndexedTracksAction,
+    SetLoadingAction,
+    SetNowPlayingTracksAction,
+    set_indexed_tracks,
+    set_loading,
+    set_np_tracks
 } from "../../types";
 // import MusicFiles from 'react-native-get-music-files-v3dev-test';
 
@@ -45,9 +45,9 @@ const options = {
  * ---
  *
  * @version 0.10.14
- * - *(mediaFiles === [] -> !!!mediaFiles[0])*
- * - *(Update logic in `>U_RETURN_TO_APP` to improve loading time)*
- * - *(Build logic for `>U_REFRESH_APP` to get recently added tracks from device)*
+ * - *mediaFiles === [] -> !!!mediaFiles[0]*
+ * - *Update logic in `>U_RETURN_TO_APP` to improve loading time*
+ * - *Build logic for `>U_REFRESH_APP` to get recently added tracks from device*
  * @author nguyenkhooi
  * ---
  * @description

@@ -1,16 +1,15 @@
 import { Toasty, TrackPlaya } from "components";
+import { fn } from "engines/functions";
 import R from "ramda";
 import { Dispatch } from "redux";
 import { store } from "store";
 import { errorReporter, TrackProps } from "utils";
 import {
-  current_track,
-  dRedux,
-  SetCurrentTrackAction,
-  SetPlayerAction,
+    current_track,
+    dRedux,
+    SetCurrentTrackAction,
+    SetPlayerAction
 } from "../../types";
-import TrackPlayer from "react-native-track-player";
-import { fn } from "engines/functions";
 
 /**
  * Set current track to play.
@@ -18,7 +17,7 @@ import { fn } from "engines/functions";
  * ---
  *
  * @version 0.10.13
- * - *(Add await)*
+ * - *Add await*
  * @author nguyenkhooi
  */
 export const setCurrentTrackk = (targetedTrack: TrackProps) => async (
@@ -49,8 +48,8 @@ type dSethPlayback = {
  * ---
  *
  * @version 0.10.16
- * - *(bwd seekTo(0) if timePos in [0,5])*
- * - *(fwd and bwd w loop option)*
+ * - *bwd seekTo(0) if timePos in [0,5]*
+ * - *fwd and bwd w loop option*
  * @author nguyenkhooi
  */
 export const sethPlayback = ({ type }: dSethPlayback) => async () => {

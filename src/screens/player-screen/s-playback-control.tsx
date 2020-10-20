@@ -1,13 +1,11 @@
 import { dIconPrimr, IconPrimr } from "assets";
 import { sstyled } from "components";
 import {
-  connector,
-  dRedux,
-  ReduxActions,
-  ReduxStates,
-  sethPlayback,
-  setShuffle,
-  setLoop,
+    ReduxActions,
+    ReduxStates,
+    sethPlayback,
+
+    setLoop, setShuffle
 } from "engines";
 import React from "react";
 import { View } from "react-native";
@@ -37,7 +35,7 @@ const mapDispatch = {
  *
  * ---
  *
- * @version 0.10.13 *("default" -> "renderfied")*
+ * @version 0.10.13 *"default" -> "renderfied"*
  * @author nguyenkhooi
  */
 export function S_PlaybackControl(p: dPlaybackControl) {
