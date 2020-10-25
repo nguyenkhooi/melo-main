@@ -6,9 +6,9 @@ import {
   PlayerFooter,
   RenderTrack,
   sstyled,
-  Toasty,
+
   TrackPlaya,
-  Txt,
+  Txt
 } from "components";
 import RenderActivityIndicator from "components/RenderActivityIndicator";
 import { scanMessage } from "constants";
@@ -17,11 +17,11 @@ import {
   ReduxActions,
   ReduxStates,
   sethPlayback,
-  setShuffle,
+  setShuffle
 } from "engines";
 import React, { useEffect, useState } from "react";
-import { Dimensions, StatusBar, View, ViewStyle } from "react-native";
-import { FlatList } from "react-native-gesture-handler";
+import { Dimensions, FlatList, StatusBar, View, ViewStyle } from "react-native";
+// import { FlatList } from "react-native-gesture-handler";
 import { connect } from "react-redux";
 import { DataProvider } from "recyclerlistview";
 // import QuickScrollList from "react-native-quick-scroll";
@@ -34,7 +34,7 @@ import {
   getStatusBarHeight,
   scale,
   spacing,
-  TrackProps,
+  TrackProps
 } from "utils";
 
 // const QuickScrollList = FlatList;
