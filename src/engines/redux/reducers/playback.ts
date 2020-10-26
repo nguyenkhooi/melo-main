@@ -1,10 +1,9 @@
-import { img } from "assets";
 import {
   current_track,
   dPlaybackActions,
   dPlaybackState,
   set_loop,
-  set_shuffle,
+  set_shuffle
 } from "../types";
 
 const INITIAL_STATE: dPlaybackState = {
@@ -26,7 +25,7 @@ const INITIAL_STATE: dPlaybackState = {
 export function playback(
   state: dPlaybackState = INITIAL_STATE,
   action: dPlaybackActions
-) {
+): dPlaybackState {
   switch (action.type) {
     case current_track:
       return { ...state, currentTrack: action.payload };

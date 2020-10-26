@@ -1,5 +1,5 @@
 import { img } from "assets";
-import { fn, playlistShuffle } from "engines";
+import { eLoop, fn, playlistShuffle } from "engines";
 import _ from "lodash";
 import R from "ramda";
 import React from "react";
@@ -105,7 +105,7 @@ export class TrackPlaya extends React.Component {
 
   setPlaylist = setPlaylist;
   appendToQueue = appendToQueue;
-  prependToQueue = prependToQueue;
+  // prependToQueue = prependToQueue;
   createPlaylist = createPlaylist;
   toggleShuffle = toggleShuffle;
   setQueue = setQueue;
@@ -118,12 +118,18 @@ function play() {
 function pause() {
   return TrackPlayer.pause();
 }
-async function next(isLooped: boolean = false) {
-  console.log("is looped:", isLooped);
-  if (isLooped) {
-    await TrackPlayer.seekTo(0);
-  } else {
-    return TrackPlayer.skipToNext();
+async function next(loopType: eLoop = eLoop.all) {
+  console.log("is looped:", loopType);
+  switch (loopType) {
+    case eLoop.all:
+      return await TrackPlayer.skipToNext();
+      break;
+    case eLoop.one:
+      return await TrackPlayer.seekTo(0);
+      break;
+    case eLoop.off:
+      return await TrackPlayer.skipToNext();
+      break;
   }
 }
 async function previous(isLooped: boolean = false) {
@@ -184,20 +190,20 @@ function appendToQueue(playables: TrackProps[] | TrackProps) {
  * ---
  * @deprecated for now
  */
-async function prependToQueue(playables: TrackProps[] | TrackProps) {
-  /**
-   * The types here simply specify that we're expecting either
-   * an array of items we can play, or a single item we can play
-   */
-  const audioFiles = _.isArray(playables)
-    ? playables.map((item) => createTrack(item))
-    : this.createTrack(playables);
+// async function prependToQueue(playables: TrackProps[] | TrackProps) {
+//   /**
+//    * The types here simply specify that we're expecting either
+//    * an array of items we can play, or a single item we can play
+//    */
+//   const audioFiles = _.isArray(playables)
+//     ? playables.map((item) => createTrack(item))
+//     : this.createTrack(playables);
 
-  const currentTrackId = await TrackPlayer.getCurrentTrack();
-  // const beforeCurrentTracks = R.slice
-  TrackPlayer.remove();
-  TrackPlayer.add(audioFiles, currentTrackId);
-}
+//   const currentTrackId = await TrackPlayer.getCurrentTrack();
+//   // const beforeCurrentTracks = R.slice
+//   TrackPlayer.remove();
+//   TrackPlayer.add(audioFiles, currentTrackId);
+// }
 
 async function createPlaylist(
   givenTracks: TrackProps[],

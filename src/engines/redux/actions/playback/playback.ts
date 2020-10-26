@@ -5,10 +5,11 @@ import { Dispatch } from "redux";
 import { store } from "store";
 import { errorReporter, TrackProps } from "utils";
 import {
-    current_track,
-    dRedux,
-    SetCurrentTrackAction,
-    SetPlayerAction
+  current_track,
+  dRedux,
+  eLoop,
+  SetCurrentTrackAction,
+  SetPlayerAction
 } from "../../types";
 
 /**
@@ -79,9 +80,16 @@ export const sethPlayback = ({ type }: dSethPlayback) => async () => {
         await thisTrackPlaya
           .next(loop)
           .then(async (r) => {
+            switch (loop) {
+              case eLoop.all:
+                break;
+              case eLoop.all:
+                break;
+            }
             if (loop) {
               return null;
             } else {
+              //*
               if (fn.js.between(timePos, 0, 5)) {
                 try {
                   const currentIndex = R.indexOf(
@@ -102,6 +110,9 @@ export const sethPlayback = ({ type }: dSethPlayback) => async () => {
             }
           })
           .catch((error) => {
+            if (error.message.includes("There is no tracks left to play")) {
+              // loop == eLoop.all ? thisTrackPlaya
+            }
             error.message.includes("There is no tracks left to play") &&
               Toasty.show("You've reached the end of list!", {
                 type: "warning",

@@ -4,6 +4,18 @@ export const current_track = "current_track";
 export const set_loop = "set_loop";
 export const set_shuffle = "set_shuffle";
 
+export enum ePlayback {
+  current_track,
+  set_loop,
+  set_shuffle,
+}
+
+export enum eLoop {
+  one = "one",
+  all = "all",
+  off = "off",
+}
+
 export interface SetCurrentTrackAction {
   type: typeof current_track;
   payload: TrackProps;
@@ -11,7 +23,7 @@ export interface SetCurrentTrackAction {
 
 export interface ToggleLoopAction {
   type: typeof set_loop;
-  payload: boolean;
+  payload: eLoop;
 }
 
 export interface ToggleShuffleAction {
@@ -20,7 +32,7 @@ export interface ToggleShuffleAction {
 }
 
 /** ---------------------------------------------------- */
-export interface dPlaybackState {
+export type dPlaybackState = {
   /**
    * Current Track (likely is currently playing)
    */
@@ -28,13 +40,13 @@ export interface dPlaybackState {
   /**
    * Is the playback in loop?
    */
-  loop: boolean;
+  loop: eLoop;
 
   /**
    * Is the playback in shuffle
    */
   shuffle: boolean;
-}
+};
 
 export type dPlaybackActions =
   | ToggleLoopAction
