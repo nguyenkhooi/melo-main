@@ -17,7 +17,8 @@ import {
 } from "../../types";
 
 export const setLoop = (type: LOOP): ToggleLoopAction => {
-  return { type: "PLAYBACK.LOOP", payload: type };
+  Toasty.show("Loop " + type, { type: "normal" });
+  return { type: PLAYBACK.SET_LOOP, payload: type };
 };
 
 /**
@@ -82,8 +83,8 @@ export const setShuffle = (
       _currentTrack
     );
     //* modify indicator
-    dispatch({ type: "PLAYBACK.CURRENT_TRACK", payload: _currentTrack });
-    dispatch({ type: "PLAYBACK.SET_SHUFFLE", payload: shouldShuffle });
+    dispatch({ type: PLAYBACK.CURRENT_TRACK, payload: _currentTrack });
+    dispatch({ type: PLAYBACK.SET_SHUFFLE, payload: shouldShuffle });
     if (!!__toast) {
       Toasty.update(__toast, shouldShuffle ? "Shuffle: On" : "Shuffle: Off", {
         type: "normal",

@@ -163,7 +163,7 @@ export const getMedia = (isManual?: "manual") => async (
     if (U_RETURN_TO_APP_WO_NP_TRACKS) {
       console.log("U_RETURN_TO_APP_WO_NP_TRACKS");
       dispatch({
-        type: "PLAYBACK.CURRENT_TRACK",
+        type: PLAYBACK.CURRENT_TRACK,
         payload: {
           /** Assuming index is the og position of this track in mediaFiles */
           // index: 0,

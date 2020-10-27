@@ -103,33 +103,27 @@ export class TrackPlaya extends React.Component {
 
   /**
    * Play next track.
-   * * loop == "all":
-   *  - If current one is the last track,
-   *    - Reset the queue, add the same queue,
-   *    - with the current one on top
-   *    - U will technically play the current one one more time
-   * * loop == "one":
-   *  - currentTrack.seekTo(0)
-   * * loop == "off":
-   *  - If current one is the last track,
-   *    - Stop playing. Reset queue (default TrackPlayer behavior)
    *
+   * ---
+   * * next(_) cares if loop == "one" or not,
+   * where it'll run `currentTrack.seekTo(0)`,
+   * else, `skipToNext(_)`
+   *
+   * - Other types of loop handle externally (e.g. Rx)
    */
   next = next;
 
   /**
    * Play previous track.
-   * * loop == "all":
-   *  - If current one is the first track,
-   *    - Reset the queue, add the same queue,
-   *    - with the current one on top
-   *    - U will technically play the current one one more time
-   * * loop == "one":
-   *  - currentTrack.seekTo(0)
-   * * loop == "off":
-   *  - If current one is the first track,
-   *    - Stop playing. Reset queue (default TrackPlayer behavior)
    *
+   * ---
+   * * previous(_) cares if loop == "one" or not,
+   * where it'll run `currentTrack.seekTo(0)`,
+   * else, `skipToPrevious(_)`
+   *  - Other types of loop handle externally (e.g. Rx)
+   * * Also, previous(_) cares if **track is playing within 5s**,
+   * where it'll run `currentTrack.seekTo(0)`,
+   * else, `skipToPrevious(_)`
    */
   previous = previous;
 
@@ -155,20 +149,6 @@ async function next(loopType: LOOP = LOOP.ALL) {
   } else {
     return await TrackPlayer.skipToNext();
   }
-  // switch (loopType) {
-  //   case eLoop.all:
-  //     return await TrackPlayer.skipToNext();
-  //     break;
-  //   case eLoop.one:
-  //     return await TrackPlayer.seekTo(0);
-  //     break;
-  //   case eLoop.off:
-  //     return await TrackPlayer.skipToNext();
-  //     break;
-  //   default:
-  //     return await TrackPlayer.skipToNext();
-  //     break;
-  // }
 }
 async function previous(loopType: LOOP = LOOP.ALL) {
   if (loopType == LOOP.ONE) {
@@ -179,26 +159,6 @@ async function previous(loopType: LOOP = LOOP.ALL) {
       await TrackPlayer.skipToPrevious();
     } else await TrackPlayer.seekTo(0);
   }
-  // switch (loopType) {
-  //   case eLoop.all:
-  //     if (fn.js.between(timePos, 0, 5)) {
-  //       await TrackPlayer.skipToPrevious();
-  //     } else await TrackPlayer.seekTo(0);
-  //     break;
-  //   case eLoop.one:
-  //     return await TrackPlayer.seekTo(0);
-  //     break;
-  //   case eLoop.off:
-  //     if (fn.js.between(timePos, 0, 5)) {
-  //       await TrackPlayer.skipToPrevious();
-  //     } else await TrackPlayer.seekTo(0);
-  //     break;
-  //   default:
-  //     if (fn.js.between(timePos, 0, 5)) {
-  //       await TrackPlayer.skipToPrevious();
-  //     } else await TrackPlayer.seekTo(0);
-  //     break;
-  // }
 }
 
 /**

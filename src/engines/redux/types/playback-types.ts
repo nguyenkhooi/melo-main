@@ -13,17 +13,17 @@ export enum LOOP {
 }
 
 export interface SetCurrentTrackAction {
-  type: "PLAYBACK.CURRENT_TRACK";
+  type: PLAYBACK.CURRENT_TRACK;
   payload: TrackProps;
 }
 
 export interface ToggleLoopAction {
-  type: "PLAYBACK.SET_LOOP";
+  type: PLAYBACK.SET_LOOP;
   payload: LOOP;
 }
 
 export interface ToggleShuffleAction {
-  type: "PLAYBACK.SET_SHUFFLE";
+  type: PLAYBACK.SET_SHUFFLE;
   payload: boolean;
 }
 

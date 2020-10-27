@@ -21,11 +21,11 @@ export function playback(
   action: dPlaybackActions
 ): dPlaybackState {
   switch (action.type) {
-    case "PLAYBACK.CURRENT_TRACK":
+    case PLAYBACK.CURRENT_TRACK:
       return { ...state, currentTrack: action.payload };
-    case "PLAYBACK.SET_LOOP":
+    case PLAYBACK.SET_LOOP:
       return { ...state, loop: action.payload };
-    case "PLAYBACK.SET_SHUFFLE":
+    case PLAYBACK.SET_SHUFFLE:
       return { ...state, shuffle: action.payload };
     default:
       return state;

@@ -80,6 +80,7 @@ function TestScreen(props: dSCR_Tracks) {
 
   async function toggleLoop(type: LOOP) {
     if (USE_REDUX) {
+      shouldLoop(type);
       await dispatch(setLoop(type));
     } else {
       // const targetedTracks = await thisTrackPlaya.toggleShuffle(

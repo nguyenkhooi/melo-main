@@ -31,7 +31,7 @@ export const setCurrentTrackk = (targetedTrack: TrackProps) => async (
       // await thisTrackPlaya.core.remove()
     });
     dispatch({
-      type: "PLAYBACK.CURRENT_TRACK",
+      type: PLAYBACK.CURRENT_TRACK,
       payload: targetedTrack,
     });
   } catch (e) {
@@ -96,7 +96,7 @@ export const sethPlayback = ({ type }: dSethPlayback) => async () => {
           //       );
           //       const targetedTrack = nowPlayingTracks[currentIndex + 1];
           //       await store.dispatch({
-          //         type: "PLAYBACK.CURRENT_TRACK",
+          //         type: PLAYBACK.CURRENT_TRACK,
           //         payload: targetedTrack,
           //       });
           //     } catch (error) {
@@ -130,7 +130,7 @@ export const sethPlayback = ({ type }: dSethPlayback) => async () => {
                   return await thisTrackPlaya.core.add(restartedTracks);
                   //! i'll play the currentTrack again, so we don't have to dispatch it
                   // await store.dispatch({
-                  //   type: "PLAYBACK.CURRENT_TRACK",
+                  //   type: PLAYBACK.CURRENT_TRACK,
                   //   payload: targetedTrack,
                   // });
                   break;
@@ -169,7 +169,7 @@ export const sethPlayback = ({ type }: dSethPlayback) => async () => {
           //       );
           //       const targetedTrack = nowPlayingTracks[currentIndex - 1];
           //       await store.dispatch({
-          //         type: "PLAYBACK.CURRENT_TRACK",
+          //         type: PLAYBACK.CURRENT_TRACK,
           //         payload: targetedTrack,
           //       });
           //     } catch (error) {
@@ -209,7 +209,7 @@ export const sethPlayback = ({ type }: dSethPlayback) => async () => {
 
                   // return await thisTrackPlaya.core.removeUpcomingTracks();
                   // await store.dispatch({
-                  //   type: "PLAYBACK.CURRENT_TRACK",
+                  //   type: PLAYBACK.CURRENT_TRACK,
                   //   payload: targetedTrack,
                   // });
                   break;

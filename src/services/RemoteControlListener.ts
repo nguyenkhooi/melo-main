@@ -71,7 +71,7 @@ async function bgService() {
         console.log("currentTrack: ", currentTrack.title);
         const targetedTrack = await thisTrackPlaya.core.getTrack(e.nextTrack);
         await store.dispatch({
-          type: "PLAYBACK.CURRENT_TRACK",
+          type: PLAYBACK.CURRENT_TRACK,
           payload: targetedTrack,
         });
         // await store.dispatch(sethPlayback({ type: "fwd" }));

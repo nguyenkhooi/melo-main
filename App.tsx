@@ -25,7 +25,7 @@ export default function App() {
     setTimeout(() => setTimePassed(true), 1000);
     store.dispatch({ type: "set_playback", payload: false }); // To make sure currentTrack is paused at startup
     store.dispatch({ type: "set_loading", payload: true });
-    store.dispatch({ type: "PLAYBACK.SET_SHUFFLE", payload: false }); // Tempor disable shuffle at startup since getMedia(_) will return `indexedTracks`
+    store.dispatch({ type: PLAYBACK.SET_SHUFFLE, payload: false }); // Tempor disable shuffle at startup since getMedia(_) will return `indexedTracks`
     // setupPlayer();
     TrackPlaya.getInstance();
     // if (Text.defaultProps == null) Text.defaultProps = {};

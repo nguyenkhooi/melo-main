@@ -102,7 +102,15 @@ export function S_PlaybackControl(p: dPlaybackControl) {
           {...props}
           type="sub"
           name={loop == LOOP.ONE ? "loop_one" : "loop"}
-          onPress={() => setLoop(loop)}
+          onPress={() =>
+            setLoop(
+              loop == LOOP.ALL
+                ? LOOP.ONE
+                : loop == LOOP.ONE
+                ? LOOP.OFF
+                : LOOP.ALL
+            )
+          }
           color={
             loop == LOOP.OFF
               ? contrastTransColor(0.35)(props)
