@@ -1,6 +1,5 @@
 import { TrackPlaya } from "components";
-import { current_track, dRedux, setCurrentTrackk, sethPlayback } from "engines";
-import { Alert } from "react-native";
+import { dRedux, PLAYBACK, setCurrentTrackk, sethPlayback } from "engines";
 import { store } from "../store";
 
 /**
@@ -72,7 +71,7 @@ async function bgService() {
         console.log("currentTrack: ", currentTrack.title);
         const targetedTrack = await thisTrackPlaya.core.getTrack(e.nextTrack);
         await store.dispatch({
-          type: current_track,
+          type: "PLAYBACK.CURRENT_TRACK",
           payload: targetedTrack,
         });
         // await store.dispatch(sethPlayback({ type: "fwd" }));

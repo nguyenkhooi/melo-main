@@ -2,11 +2,10 @@ import { PlayerFooter, TrackPlaya } from "components";
 import {
   connector,
   dRedux,
-  eLoop,
+  LOOP,
   playlistShuffle,
   setCurrentTrackk,
   setLoop,
-  setLoopp,
   setShuffle,
 } from "engines";
 import _ from "lodash";
@@ -37,7 +36,7 @@ function TestScreen(props: dSCR_Tracks) {
   const [_currentTrack, setCurrentTrack] = React.useState<TrackProps>(null);
   const [_playaCurrent, setPlayaCurrent] = React.useState<trackID>(null);
   const [_isShuffled, shouldShuffle] = React.useState(false);
-  const [_isLooped, shouldLoop] = React.useState<eLoop>(eLoop.all);
+  const [_isLooped, shouldLoop] = React.useState<LOOP>(LOOP.ALL);
   const [_indexedTracks, setIndexedTracks] = React.useState(mediaFiles);
   const [_npTracks, setNPTracks] = React.useState([]);
   const [_playaTracks, setPlayaTracks] = React.useState([]);
@@ -79,9 +78,9 @@ function TestScreen(props: dSCR_Tracks) {
     }
   }
 
-  async function toggleLoop(type: eLoop) {
+  async function toggleLoop(type: LOOP) {
     if (USE_REDUX) {
-      await dispatch(setLoopp(type));
+      await dispatch(setLoop(type));
     } else {
       // const targetedTracks = await thisTrackPlaya.toggleShuffle(
       //   !_isShuffled,
@@ -213,12 +212,12 @@ function TestScreen(props: dSCR_Tracks) {
         <Text
           style={[
             styles.state,
-            _isLooped == eLoop.all && { fontWeight: "bold" },
-            loop == eLoop.all && { fontWeight: "bold" },
+            _isLooped == LOOP.ALL && { fontWeight: "bold" },
+            loop == LOOP.ALL && { fontWeight: "bold" },
           ]}
           onPress={async () => {
-            toggleLoop(eLoop.all);
-            shouldLoop(eLoop.all);
+            toggleLoop(LOOP.ALL);
+            shouldLoop(LOOP.ALL);
             setTimeout(() => {
               _getTPQueue();
               _getTPCurrent();
@@ -230,12 +229,12 @@ function TestScreen(props: dSCR_Tracks) {
         <Text
           style={[
             styles.state,
-            _isLooped == eLoop.one && { fontWeight: "bold" },
-            loop == eLoop.one && { fontWeight: "bold" },
+            _isLooped == LOOP.ONE && { fontWeight: "bold" },
+            loop == LOOP.ONE && { fontWeight: "bold" },
           ]}
           onPress={async () => {
-            toggleLoop(eLoop.one);
-            shouldLoop(eLoop.one);
+            toggleLoop(LOOP.ONE);
+            shouldLoop(LOOP.ONE);
             setTimeout(() => {
               _getTPQueue();
               _getTPCurrent();
@@ -247,12 +246,12 @@ function TestScreen(props: dSCR_Tracks) {
         <Text
           style={[
             styles.state,
-            _isLooped == eLoop.off && { fontWeight: "bold" },
-            loop == eLoop.off && { fontWeight: "bold" },
+            _isLooped == LOOP.OFF && { fontWeight: "bold" },
+            loop == LOOP.OFF && { fontWeight: "bold" },
           ]}
           onPress={async () => {
-            toggleLoop(eLoop.off);
-            shouldLoop(eLoop.off);
+            toggleLoop(LOOP.OFF);
+            shouldLoop(LOOP.OFF);
             setTimeout(() => {
               _getTPQueue();
               _getTPCurrent();

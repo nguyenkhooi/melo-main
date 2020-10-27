@@ -5,24 +5,24 @@ import { Dispatch } from "redux";
 import RNFetchBlob from "rn-fetch-blob";
 import { store } from "store";
 import {
-    checkStoragePermissions,
-    cleanupMedia,
-    errorReporter,
-    IS_ANDROID,
-    TrackProps
+  checkStoragePermissions,
+  cleanupMedia,
+  errorReporter,
+  IS_ANDROID,
+  TrackProps,
 } from "utils";
 import {
-    current_track,
-    dRedux,
-    GetMediaAction,
-    get_media_success,
-    SetCurrentTrackAction,
-    SetIndexedTracksAction,
-    SetLoadingAction,
-    SetNowPlayingTracksAction,
-    set_indexed_tracks,
-    set_loading,
-    set_np_tracks
+  dRedux,
+  GetMediaAction,
+  get_media_success,
+  PLAYBACK,
+  SetCurrentTrackAction,
+  SetIndexedTracksAction,
+  SetLoadingAction,
+  SetNowPlayingTracksAction,
+  set_indexed_tracks,
+  set_loading,
+  set_np_tracks,
 } from "../../types";
 // import MusicFiles from 'react-native-get-music-files-v3dev-test';
 
@@ -163,7 +163,7 @@ export const getMedia = (isManual?: "manual") => async (
     if (U_RETURN_TO_APP_WO_NP_TRACKS) {
       console.log("U_RETURN_TO_APP_WO_NP_TRACKS");
       dispatch({
-        type: current_track,
+        type: "PLAYBACK.CURRENT_TRACK",
         payload: {
           /** Assuming index is the og position of this track in mediaFiles */
           // index: 0,

@@ -1,5 +1,5 @@
 import { img } from "assets";
-import { eLoop, fn, playlistShuffle } from "engines";
+import { LOOP, fn, playlistShuffle } from "engines";
 import _ from "lodash";
 import R from "ramda";
 import React from "react";
@@ -148,9 +148,9 @@ function play() {
 function pause() {
   return TrackPlayer.pause();
 }
-async function next(loopType: eLoop = eLoop.all) {
+async function next(loopType: LOOP = LOOP.ALL) {
   console.log("loop type:", loopType);
-  if (loopType == eLoop.one) {
+  if (loopType == LOOP.ONE) {
     return await TrackPlayer.seekTo(0);
   } else {
     return await TrackPlayer.skipToNext();
@@ -170,8 +170,8 @@ async function next(loopType: eLoop = eLoop.all) {
   //     break;
   // }
 }
-async function previous(loopType: eLoop = eLoop.all) {
-  if (loopType == eLoop.one) {
+async function previous(loopType: LOOP = LOOP.ALL) {
+  if (loopType == LOOP.ONE) {
     return await TrackPlayer.seekTo(0);
   } else {
     const timePos = await TrackPlayer.getPosition();

@@ -1,13 +1,11 @@
 import { Toasty, TrackPlaya } from "components";
-import { fn } from "engines/functions";
-import R from "ramda";
 import { Dispatch } from "redux";
 import { store } from "store";
 import { errorReporter, TrackProps } from "utils";
 import {
-  current_track,
   dRedux,
-  eLoop,
+  LOOP,
+  PLAYBACK,
   SetCurrentTrackAction,
   SetPlayerAction,
 } from "../../types";
@@ -33,7 +31,7 @@ export const setCurrentTrackk = (targetedTrack: TrackProps) => async (
       // await thisTrackPlaya.core.remove()
     });
     dispatch({
-      type: current_track,
+      type: "PLAYBACK.CURRENT_TRACK",
       payload: targetedTrack,
     });
   } catch (e) {
@@ -51,7 +49,7 @@ type dSethPlayback = {
  *
  * @version 0.10.27
  * - *expand functionality for `fwd` and `bwd` with `loopType`*
- * - *tempo deprecate dispatch current_track w Rx due to bug w `currentTrack.id`. Currect track will be dispatched w Playa listener instead*
+ * - *tempo deprecate dispatch currentTrack w Rx due to bug w `currentTrack.id`. Currect track will be dispatched w Playa listener instead*
  * @author nguyenkhooi
  */
 export const sethPlayback = ({ type }: dSethPlayback) => async () => {
@@ -98,7 +96,7 @@ export const sethPlayback = ({ type }: dSethPlayback) => async () => {
           //       );
           //       const targetedTrack = nowPlayingTracks[currentIndex + 1];
           //       await store.dispatch({
-          //         type: current_track,
+          //         type: "PLAYBACK.CURRENT_TRACK",
           //         payload: targetedTrack,
           //       });
           //     } catch (error) {
@@ -123,7 +121,7 @@ export const sethPlayback = ({ type }: dSethPlayback) => async () => {
                  *    - Stop playing. Reset queue (default TrackPlayer behavior)
                  *
                  */
-                case eLoop.all:
+                case LOOP.ALL:
                   // Toasty.show("Back to the start", {
                   //   type: "normal",
                   // });
@@ -132,14 +130,14 @@ export const sethPlayback = ({ type }: dSethPlayback) => async () => {
                   return await thisTrackPlaya.core.add(restartedTracks);
                   //! i'll play the currentTrack again, so we don't have to dispatch it
                   // await store.dispatch({
-                  //   type: current_track,
+                  //   type: "PLAYBACK.CURRENT_TRACK",
                   //   payload: targetedTrack,
                   // });
                   break;
-                case eLoop.one:
+                case LOOP.ONE:
                   return null;
                   break;
-                case eLoop.off:
+                case LOOP.OFF:
                   return Toasty.show("You've reached the end of list!", {
                     type: "warning",
                   });
@@ -153,7 +151,6 @@ export const sethPlayback = ({ type }: dSethPlayback) => async () => {
 
         break;
       case "bwd":
-        const timePos = await thisTrackPlaya.core.getPosition();
         await thisTrackPlaya
           .previous(loop)
           // .then(async (r) => {
@@ -172,7 +169,7 @@ export const sethPlayback = ({ type }: dSethPlayback) => async () => {
           //       );
           //       const targetedTrack = nowPlayingTracks[currentIndex - 1];
           //       await store.dispatch({
-          //         type: current_track,
+          //         type: "PLAYBACK.CURRENT_TRACK",
           //         payload: targetedTrack,
           //       });
           //     } catch (error) {
@@ -197,7 +194,7 @@ export const sethPlayback = ({ type }: dSethPlayback) => async () => {
              */
             if (error.message.includes("no previous track")) {
               switch (loop) {
-                case eLoop.all:
+                case LOOP.ALL:
                   Toasty.show("To the end of queue", {
                     type: "normal",
                   });
@@ -212,14 +209,14 @@ export const sethPlayback = ({ type }: dSethPlayback) => async () => {
 
                   // return await thisTrackPlaya.core.removeUpcomingTracks();
                   // await store.dispatch({
-                  //   type: current_track,
+                  //   type: "PLAYBACK.CURRENT_TRACK",
                   //   payload: targetedTrack,
                   // });
                   break;
-                case eLoop.one:
+                case LOOP.ONE:
                   return null;
                   break;
-                case eLoop.off:
+                case LOOP.OFF:
                   return Toasty.show("You've reached the end of list!", {
                     type: "warning",
                   });

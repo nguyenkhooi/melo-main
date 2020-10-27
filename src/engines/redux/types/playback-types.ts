@@ -1,33 +1,29 @@
 import { TrackProps } from "utils";
 
-export const current_track = "current_track";
-export const set_loop = "set_loop";
-export const set_shuffle = "set_shuffle";
-
-export enum ePlayback {
-  current_track,
-  set_loop,
-  set_shuffle,
+export enum PLAYBACK {
+  CURRENT_TRACK,
+  SET_LOOP,
+  SET_SHUFFLE,
 }
 
-export enum eLoop {
-  one = "one",
-  all = "all",
-  off = "off",
+export enum LOOP {
+  ONE = "one",
+  ALL = "all",
+  OFF = "off",
 }
 
 export interface SetCurrentTrackAction {
-  type: typeof current_track;
+  type: "PLAYBACK.CURRENT_TRACK";
   payload: TrackProps;
 }
 
 export interface ToggleLoopAction {
-  type: typeof set_loop;
-  payload: eLoop;
+  type: "PLAYBACK.SET_LOOP";
+  payload: LOOP;
 }
 
 export interface ToggleShuffleAction {
-  type: typeof set_shuffle;
+  type: "PLAYBACK.SET_SHUFFLE";
   payload: boolean;
 }
 
@@ -40,7 +36,7 @@ export type dPlaybackState = {
   /**
    * Is the playback in loop?
    */
-  loop: eLoop;
+  loop: LOOP;
 
   /**
    * Is the playback in shuffle

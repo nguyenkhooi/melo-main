@@ -1,11 +1,12 @@
 import { dIconPrimr, IconPrimr } from "assets";
 import { sstyled } from "components";
 import {
-    ReduxActions,
-    ReduxStates,
-    sethPlayback,
-
-    setLoop, setShuffle
+  LOOP,
+  ReduxActions,
+  ReduxStates,
+  sethPlayback,
+  setLoop,
+  setShuffle,
 } from "engines";
 import React from "react";
 import { View } from "react-native";
@@ -100,9 +101,13 @@ export function S_PlaybackControl(p: dPlaybackControl) {
         <ActionIcon
           {...props}
           type="sub"
-          name={loop ? "loop_one" : "loop"}
-          onPress={() => setLoop(!loop)}
-          color={foregroundColor(props)}
+          name={loop == LOOP.ONE ? "loop_one" : "loop"}
+          onPress={() => setLoop(loop)}
+          color={
+            loop == LOOP.OFF
+              ? contrastTransColor(0.35)(props)
+              : foregroundColor(props)
+          }
         />
       </CtnrMain>
     );

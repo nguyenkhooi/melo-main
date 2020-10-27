@@ -1,11 +1,4 @@
-import {
-  current_track,
-  dPlaybackActions,
-  dPlaybackState,
-  eLoop,
-  set_loop,
-  set_shuffle,
-} from "../types";
+import { dPlaybackActions, dPlaybackState, LOOP, PLAYBACK } from "../types";
 
 const INITIAL_STATE: dPlaybackState = {
   currentTrack: {
@@ -19,7 +12,7 @@ const INITIAL_STATE: dPlaybackState = {
     artwork: null,
     url: "",
   },
-  loop: eLoop.all,
+  loop: LOOP.ALL,
   shuffle: false,
 };
 
@@ -28,11 +21,11 @@ export function playback(
   action: dPlaybackActions
 ): dPlaybackState {
   switch (action.type) {
-    case current_track:
+    case "PLAYBACK.CURRENT_TRACK":
       return { ...state, currentTrack: action.payload };
-    case set_loop:
+    case "PLAYBACK.SET_LOOP":
       return { ...state, loop: action.payload };
-    case set_shuffle:
+    case "PLAYBACK.SET_SHUFFLE":
       return { ...state, shuffle: action.payload };
     default:
       return state;

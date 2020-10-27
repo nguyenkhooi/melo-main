@@ -4,25 +4,20 @@ import { Dispatch } from "redux";
 import { store } from "store";
 import { errorReporter, TrackProps } from "utils";
 import {
-  current_track,
+  PLAYBACK,
   dRedux,
-  eLoop,
+  LOOP,
   SetCurrentTrackAction,
   SetIndexedTracksAction,
   SetNowPlayingTracksAction,
   set_indexed_tracks,
   set_np_tracks,
-  set_shuffle,
   ToggleLoopAction,
   ToggleShuffleAction,
 } from "../../types";
 
-export const setLoop = (isLoop: boolean): ToggleLoopAction => {
-  return { type: "set_loop", payload: isLoop };
-};
-
-export const setLoopp = (type: eLoop): ToggleLoopAction => {
-  return { type: "set_loop", payload: type };
+export const setLoop = (type: LOOP): ToggleLoopAction => {
+  return { type: "PLAYBACK.LOOP", payload: type };
 };
 
 /**
@@ -87,8 +82,8 @@ export const setShuffle = (
       _currentTrack
     );
     //* modify indicator
-    dispatch({ type: current_track, payload: _currentTrack });
-    dispatch({ type: set_shuffle, payload: shouldShuffle });
+    dispatch({ type: "PLAYBACK.CURRENT_TRACK", payload: _currentTrack });
+    dispatch({ type: "PLAYBACK.SET_SHUFFLE", payload: shouldShuffle });
     if (!!__toast) {
       Toasty.update(__toast, shouldShuffle ? "Shuffle: On" : "Shuffle: Off", {
         type: "normal",
