@@ -2,8 +2,9 @@ import {
   current_track,
   dPlaybackActions,
   dPlaybackState,
+  eLoop,
   set_loop,
-  set_shuffle
+  set_shuffle,
 } from "../types";
 
 const INITIAL_STATE: dPlaybackState = {
@@ -18,7 +19,7 @@ const INITIAL_STATE: dPlaybackState = {
     artwork: null,
     url: "",
   },
-  loop: false,
+  loop: eLoop.all,
   shuffle: false,
 };
 

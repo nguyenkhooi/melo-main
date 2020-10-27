@@ -87,10 +87,14 @@ export default function Player(props) {
 
   return (
     <View style={[styles.card, style]}>
-      <Image style={styles.cover} source={trackArtwork} />
+      <View style={{ flexDirection: "row", paddingVertical: 5 }}>
+        <Image style={styles.cover} source={trackArtwork} />
+        <View>
+          <Text style={styles.title}>{trackTitle}</Text>
+          <Text style={styles.artist}>{trackArtist}</Text>
+        </View>
+      </View>
       <ProgressBar />
-      <Text style={styles.title}>{trackTitle}</Text>
-      <Text style={styles.artist}>{trackArtist}</Text>
       <View style={styles.controls}>
         <ControlButton title={"<<"} onPress={onPrevious} />
         <ControlButton title={middleButtonText} onPress={onTogglePlayback} />
@@ -113,20 +117,13 @@ Player.defaultProps = {
 
 const styles = StyleSheet.create({
   card: {
-    width: "80%",
-    elevation: 1,
-    borderRadius: 4,
-    shadowRadius: 2,
-    shadowOpacity: 0.1,
     alignItems: "center",
-    shadowColor: "black",
-    backgroundColor: "white",
-    shadowOffset: { width: 0, height: 1 },
+    backgroundColor: "gold",
   },
   cover: {
-    width: 140,
-    height: 140,
-    marginTop: 20,
+    width: 40,
+    height: 40,
+    marginHorizontal: 20,
     backgroundColor: "grey",
   },
   progress: {
@@ -136,13 +133,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   title: {
-    marginTop: 10,
+    // marginTop: 10,
   },
   artist: {
     fontWeight: "bold",
   },
   controls: {
-    marginVertical: 20,
+    marginVertical: 10,
     flexDirection: "row",
   },
   controlButtonContainer: {

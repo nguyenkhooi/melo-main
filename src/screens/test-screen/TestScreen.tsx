@@ -1,10 +1,12 @@
-import { TrackPlaya } from "components";
+import { PlayerFooter, TrackPlaya } from "components";
 import {
   connector,
   dRedux,
+  eLoop,
   playlistShuffle,
   setCurrentTrackk,
   setLoop,
+  setLoopp,
   setShuffle,
 } from "engines";
 import _ from "lodash";
@@ -35,11 +37,14 @@ function TestScreen(props: dSCR_Tracks) {
   const [_currentTrack, setCurrentTrack] = React.useState<TrackProps>(null);
   const [_playaCurrent, setPlayaCurrent] = React.useState<trackID>(null);
   const [_isShuffled, shouldShuffle] = React.useState(false);
-  const [_isLooped, shouldLoop] = React.useState(false);
+  const [_isLooped, shouldLoop] = React.useState<eLoop>(eLoop.all);
   const [_indexedTracks, setIndexedTracks] = React.useState(mediaFiles);
   const [_npTracks, setNPTracks] = React.useState([]);
   const [_playaTracks, setPlayaTracks] = React.useState([]);
 
+  React.useEffect(function hideFooter() {
+    PlayerFooter.close();
+  }, []);
   React.useEffect(function updateCurrentTrack() {
     setCurrentTrack(currentTrack);
   }, []);
@@ -74,9 +79,9 @@ function TestScreen(props: dSCR_Tracks) {
     }
   }
 
-  async function toggleLoop() {
+  async function toggleLoop(type: eLoop) {
     if (USE_REDUX) {
-      await dispatch(setLoop(!loop));
+      await dispatch(setLoopp(type));
     } else {
       // const targetedTracks = await thisTrackPlaya.toggleShuffle(
       //   !_isShuffled,
@@ -85,7 +90,7 @@ function TestScreen(props: dSCR_Tracks) {
       // );
 
       // setNPTracks(targetedTracks);
-      shouldLoop(!_isLooped);
+      shouldLoop(type);
     }
   }
 
@@ -101,17 +106,19 @@ function TestScreen(props: dSCR_Tracks) {
         : thisTrackPlaya.play();
   };
 
-  const skipToNext = () => {
+  const skipToNext = async () => {
     if (USE_REDUX) {
-      return sethPlayback({ type: "fwd" });
+      await sethPlayback({ type: "fwd" });
+      return _getTPCurrent();
     } else {
       return thisTrackPlaya.next();
     }
   };
 
-  const skipToPrevious = () => {
+  const skipToPrevious = async () => {
     if (USE_REDUX) {
-      return sethPlayback({ type: "bwd" });
+      await sethPlayback({ type: "bwd" });
+      return _getTPCurrent();
     } else {
       return thisTrackPlaya.previous();
     }
@@ -178,31 +185,15 @@ function TestScreen(props: dSCR_Tracks) {
   const NP_TRACKS = USE_REDUX ? nowPlayingTracks : _npTracks;
 
   return (
-    <ScrollView style={{ backgroundColor: "white" }}>
+    <ScrollView style={{ backgroundColor: "white" }} stickyHeaderIndices={[0]}>
+      <Player
+        currentTrack={_currentTrack}
+        onNext={skipToNext}
+        // style={styles.player}
+        onPrevious={skipToPrevious}
+        onTogglePlayback={togglePlayback}
+      />
       <View style={styles.container}>
-        <View>
-          <Text style={styles.state} onPress={() => shouldUseRedux(!USE_REDUX)}>
-            😃 Use Redux? {JSON.stringify(USE_REDUX)}
-          </Text>
-          <Text style={styles.state} onPress={playAllTracks}>
-            ▶ Play all
-          </Text>
-          <Text
-            style={styles.state}
-            onPress={async () => {
-              playCustomTracks(playlistData);
-            }}
-          >
-            ▶ Play custom
-          </Text>
-        </View>
-        <Player
-          currentTrack={_currentTrack}
-          onNext={skipToNext}
-          style={styles.player}
-          onPrevious={skipToPrevious}
-          onTogglePlayback={togglePlayback}
-        />
         {/* <Text style={styles.state}>{JSON.stringify(_currentTrack)}</Text> */}
         <Text style={styles.state}>{getStateName(playbackState)}</Text>
         <Text
@@ -217,20 +208,84 @@ function TestScreen(props: dSCR_Tracks) {
         >
           {`🔀 Shuffle: ${USE_REDUX ? shuffle : _isShuffled}`}
         </Text>
+      </View>
+      <View style={{ flexDirection: "row" }}>
         <Text
-          style={styles.state}
+          style={[
+            styles.state,
+            _isLooped == eLoop.all && { fontWeight: "bold" },
+            loop == eLoop.all && { fontWeight: "bold" },
+          ]}
           onPress={async () => {
-            toggleLoop();
+            toggleLoop(eLoop.all);
+            shouldLoop(eLoop.all);
             setTimeout(() => {
               _getTPQueue();
               _getTPCurrent();
             }, 500);
           }}
         >
-          {`➰ Loop: ${USE_REDUX ? loop : _isLooped}`}
+          {`➰ All`}
+        </Text>
+        <Text
+          style={[
+            styles.state,
+            _isLooped == eLoop.one && { fontWeight: "bold" },
+            loop == eLoop.one && { fontWeight: "bold" },
+          ]}
+          onPress={async () => {
+            toggleLoop(eLoop.one);
+            shouldLoop(eLoop.one);
+            setTimeout(() => {
+              _getTPQueue();
+              _getTPCurrent();
+            }, 500);
+          }}
+        >
+          {`➰ One`}
+        </Text>
+        <Text
+          style={[
+            styles.state,
+            _isLooped == eLoop.off && { fontWeight: "bold" },
+            loop == eLoop.off && { fontWeight: "bold" },
+          ]}
+          onPress={async () => {
+            toggleLoop(eLoop.off);
+            shouldLoop(eLoop.off);
+            setTimeout(() => {
+              _getTPQueue();
+              _getTPCurrent();
+            }, 500);
+          }}
+        >
+          {`➰ Off`}
         </Text>
       </View>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
 
+          backgroundColor: "tomato",
+        }}
+      >
+        <Text style={styles.state} onPress={() => shouldUseRedux(!USE_REDUX)}>
+          ®️ Redux? {JSON.stringify(USE_REDUX)}
+        </Text>
+        <Text style={styles.state} onPress={playAllTracks}>
+          ▶ all
+        </Text>
+        <Text
+          style={styles.state}
+          onPress={async () => {
+            playCustomTracks(playlistData);
+          }}
+        >
+          ▶ custom
+        </Text>
+      </View>
       <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
         <View>
           <Text style={{ fontWeight: "bold" }}>
@@ -274,7 +329,13 @@ function TestScreen(props: dSCR_Tracks) {
           />
         </View>
         <View>
-          <Text style={{ fontWeight: "bold" }} onPress={_getTPQueue}>
+          <Text
+            style={{ fontWeight: "bold" }}
+            onPress={() => {
+              _getTPQueue();
+              _getTPCurrent();
+            }}
+          >
             Queue {_playaTracks.length}
           </Text>
           {_playaTracks.map((track) => (
@@ -282,8 +343,7 @@ function TestScreen(props: dSCR_Tracks) {
               style={[
                 styles.description,
                 !!_playaCurrent &&
-                  !!_playaCurrent.id &&
-                  track.id === _playaCurrent.id && { fontWeight: "bold" },
+                  track.id === _playaCurrent && { fontWeight: "bold" },
               ]}
             >
               {track.id}
@@ -317,8 +377,10 @@ function getStateName(state) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#F5FCFF",
+    paddingHorizontal: 10,
+    backgroundColor: "dodgerblue",
   },
   description: {
     // width: "80%",
@@ -329,7 +391,8 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   state: {
-    marginTop: 20,
+    flex: 1,
+    marginVertical: 10,
   },
 });
 

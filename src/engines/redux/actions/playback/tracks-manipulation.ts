@@ -14,7 +14,7 @@ import {
   set_np_tracks,
   set_shuffle,
   ToggleLoopAction,
-  ToggleShuffleAction
+  ToggleShuffleAction,
 } from "../../types";
 
 export const setLoop = (isLoop: boolean): ToggleLoopAction => {
@@ -112,9 +112,7 @@ export const setShuffle = (
  * tho this list starts with the `currentTrack` instead of `%mediaFiles[0]`
  * //- then remove `currentTrack` above out the list to avoid duplication
  */
-export const displayCurrentTracks = (targetedTracks?: TrackProps[]) => async (
-  dispatch: Dispatch<SetNowPlayingTracksAction>
-) => {
+export const setQueueWCurrentOnTop = (targetedTracks?: TrackProps[]) => {
   let {
     media: { nowPlayingTracks },
     playback: { currentTrack },

@@ -64,7 +64,7 @@ async function bgService() {
       if (playingItemId === null) {
         return null;
       }
-      const noCurrentTrack =
+      let noCurrentTrack =
         (!!currentTrack && currentTrack.id === "000") || !!!currentTrack;
 
       // console.log(">", !noCurrentTrack && !!e && !!e.nextTrack);

@@ -9,8 +9,9 @@ import {
   dRedux,
   eLoop,
   SetCurrentTrackAction,
-  SetPlayerAction
+  SetPlayerAction,
 } from "../../types";
+import { setQueueWCurrentOnTop } from "./tracks-manipulation";
 
 /**
  * Set current track to play.
@@ -48,9 +49,9 @@ type dSethPlayback = {
  *
  * ---
  *
- * @version 0.10.16
- * - *bwd seekTo(0) if timePos in [0,5]*
- * - *fwd and bwd w loop option*
+ * @version 0.10.27
+ * - *expand functionality for `fwd` and `bwd` with `loopType`*
+ * - *tempo deprecate dispatch current_track w Rx due to bug w `currentTrack.id`. Currect track will be dispatched w Playa listener instead*
  * @author nguyenkhooi
  */
 export const sethPlayback = ({ type }: dSethPlayback) => async () => {
@@ -76,47 +77,77 @@ export const sethPlayback = ({ type }: dSethPlayback) => async () => {
          */
         await thisTrackPlaya.pause();
         break;
+
       case "fwd":
         await thisTrackPlaya
           .next(loop)
-          .then(async (r) => {
-            switch (loop) {
-              case eLoop.all:
-                break;
-              case eLoop.all:
-                break;
-            }
-            if (loop) {
-              return null;
-            } else {
-              //*
-              if (fn.js.between(timePos, 0, 5)) {
-                try {
-                  const currentIndex = R.indexOf(
-                    currentTrack.id,
-                    R.pluck("id")(nowPlayingTracks)
-                  );
-                  const targetedTrack = nowPlayingTracks[currentIndex + 1];
-                  await store.dispatch({
-                    type: current_track,
-                    payload: targetedTrack,
+          // .then(async (r) => {
+          //   /**
+          //    *!There's a bug with currentTrack.id, so it's deprecated for now
+          //    * If loop != "one" &&
+          //    * Dispatch currentTrack = next track with Rx
+          //    * (instead of Playa's listener)
+          //    * For faster current track display
+          //    */
+          //   if (loop != eLoop.one) {
+          //     //? && fn.js.between(timePos, 0, 5)
+          //     try {
+          //       const currentIndex = R.indexOf(
+          //         currentTrack.id,
+          //         R.pluck("id")(nowPlayingTracks)
+          //       );
+          //       const targetedTrack = nowPlayingTracks[currentIndex + 1];
+          //       await store.dispatch({
+          //         type: current_track,
+          //         payload: targetedTrack,
+          //       });
+          //     } catch (error) {
+          //       console.warn(
+          //         "fwd error getting targetedTrack w rx. Waiting for Playa to get it... "
+          //       );
+          //     }
+          //   }
+          // })
+          .catch(async (error) => {
+            if (error.message.includes("There is no tracks left to play")) {
+              switch (loop) {
+                /**
+                 * - If current one is the last track,
+                 * * loop == "all":
+                 *    - Reset the queue, add the same queue,
+                 *    - with the current one on top
+                 *    - U will technically play the current one one more time
+                 * * loop == "one":
+                 *    - currentTrack.seekTo(0)
+                 * * loop == "off":
+                 *    - Stop playing. Reset queue (default TrackPlayer behavior)
+                 *
+                 */
+                case eLoop.all:
+                  // Toasty.show("Back to the start", {
+                  //   type: "normal",
+                  // });
+                  const restartedTracks = setQueueWCurrentOnTop();
+                  await thisTrackPlaya.core.reset();
+                  return await thisTrackPlaya.core.add(restartedTracks);
+                  //! i'll play the currentTrack again, so we don't have to dispatch it
+                  // await store.dispatch({
+                  //   type: current_track,
+                  //   payload: targetedTrack,
+                  // });
+                  break;
+                case eLoop.one:
+                  return null;
+                  break;
+                case eLoop.off:
+                  return Toasty.show("You've reached the end of list!", {
+                    type: "warning",
                   });
-                } catch (error) {
-                  console.warn(
-                    "fwd error getting targetedTrack w rx. Waiting for Playa to get it... "
-                  );
-                }
+                  break;
+                default:
+                  return null;
               }
             }
-          })
-          .catch((error) => {
-            if (error.message.includes("There is no tracks left to play")) {
-              // loop == eLoop.all ? thisTrackPlaya
-            }
-            error.message.includes("There is no tracks left to play") &&
-              Toasty.show("You've reached the end of list!", {
-                type: "warning",
-              });
           });
         await thisTrackPlaya.play();
 
@@ -125,34 +156,82 @@ export const sethPlayback = ({ type }: dSethPlayback) => async () => {
         const timePos = await thisTrackPlaya.core.getPosition();
         await thisTrackPlaya
           .previous(loop)
-          .then(async (r) => {
-            if (loop) {
-              return null;
-            } else {
-              if (fn.js.between(timePos, 0, 5)) {
-                try {
-                  const currentIndex = R.indexOf(
-                    currentTrack.id,
-                    R.pluck("id")(nowPlayingTracks)
-                  );
-                  const targetedTrack = nowPlayingTracks[currentIndex - 1];
-                  await store.dispatch({
-                    type: current_track,
-                    payload: targetedTrack,
+          // .then(async (r) => {
+          //   /**
+          //    *!There's a bug with currentTrack.id, so it's deprecated for now
+          //    * If loop != "one" && track is playing within 5s
+          //    * Dispatch currentTrack = previous track with Rx
+          //    * (instead of Playa's listener)
+          //    * For faster current track display
+          //    */
+          //   if (loop != eLoop.one && timePos >= 0 && timePos <= 5) {
+          //     try {
+          //       const currentIndex = R.indexOf(
+          //         currentTrack.id,
+          //         R.pluck("id")(nowPlayingTracks)
+          //       );
+          //       const targetedTrack = nowPlayingTracks[currentIndex - 1];
+          //       await store.dispatch({
+          //         type: current_track,
+          //         payload: targetedTrack,
+          //       });
+          //     } catch (error) {
+          //       console.warn(
+          //         "bwd error getting targetedTrack w rx. Waiting for Playa to get it... "
+          //       );
+          //     }
+          //   }
+          // })
+          .catch(async (error) => {
+            /**
+             * - If current one is the first track,
+             * * loop == "all":
+             *    - Reset the queue, add the same queue,
+             *    - with the current one on top
+             *    - U will technically play the current one one more time
+             * * loop == "one":
+             *    - currentTrack.seekTo(0)
+             * * loop == "off":
+             *    - Stop playing. Reset queue (default TrackPlayer behavior)
+             *
+             */
+            if (error.message.includes("no previous track")) {
+              switch (loop) {
+                case eLoop.all:
+                  Toasty.show("To the end of queue", {
+                    type: "normal",
                   });
-                } catch (error) {
-                  console.warn(
-                    "bwd error getting targetedTrack w rx. Waiting for Playa to get it... "
+                  const queueWoCurrent = nowPlayingTracks.filter(
+                    (track) => track.id != currentTrack.id
                   );
-                }
+                  await thisTrackPlaya.core.removeUpcomingTracks();
+                  return await thisTrackPlaya.core.add(
+                    queueWoCurrent,
+                    currentTrack.id
+                  );
+
+                  // return await thisTrackPlaya.core.removeUpcomingTracks();
+                  // await store.dispatch({
+                  //   type: current_track,
+                  //   payload: targetedTrack,
+                  // });
+                  break;
+                case eLoop.one:
+                  return null;
+                  break;
+                case eLoop.off:
+                  return Toasty.show("You've reached the end of list!", {
+                    type: "warning",
+                  });
+                  break;
+                default:
+                  return null;
               }
             }
-          })
-          .catch((error) => {
-            error.message.includes("no previous track") &&
-              Toasty.show("You've reached the end of list!", {
-                type: "warning",
-              });
+
+            Toasty.show("You've reached the end of list!", {
+              type: "warning",
+            });
           });
         await thisTrackPlaya.play();
 
