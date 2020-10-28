@@ -1,3 +1,4 @@
+import { THEME } from "engines";
 import { evaDark, evaLight } from "utils";
 
 export const light = {
@@ -8,7 +9,7 @@ export const light = {
   contrastTrans: evaLight["color-basic-transparent-600"],
   fgTrans: evaLight["color-primary-transparent-500"],
   bgTrans: evaLight["color-basic-transparent-100"],
-  current: "light",
+  current: THEME.LIGHT,
   /**
    * The colors is available to use, but prefer using the name.
    */

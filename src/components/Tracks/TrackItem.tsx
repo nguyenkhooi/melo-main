@@ -1,13 +1,15 @@
-import { CIRCULAR, IconPrimr, img } from "assets";
-import { ReduxActions, ReduxStates, setCurrentTrackk } from "engines";
+import { CIRCULAR, CIRCULAR_BOLD, IconPrimr, img } from "assets";
+import { sstyled, TrackPlaya, Txt } from "components";
+import {
+  ReduxActions,
+  ReduxStates,
+  setCurrentTrackk,
+  useAppContext
+} from "engines";
 import React from "react";
 import { Image, TouchableOpacity, View } from "react-native";
-import { connect, useDispatch } from "react-redux";
-import { withTheme } from "styled-components/native";
-import { contrastColor, contrastTransColor, foregroundColor } from "themes";
-import { DEVICE_WIDTH, dSCR, scale, spacing, TrackProps } from "utils";
-import { sstyled, Txt } from "./Generals";
-import { TrackPlaya } from "./TrackPlaya/TrackPlaya";
+import { connect } from "react-redux";
+import { DEVICE_WIDTH, scale, spacing, TrackProps } from "utils";
 
 const DEV_MODE = false;
 
@@ -29,16 +31,21 @@ const _mapDispatch = { setCurrentTrackk } as ReduxActions;
  * @author nguyenkhooi
  */
 export function TrackItem(p: dTrackComp) {
-  const RENDER: React.FC<dTrackComp> = React.memo(
+  const RENDER = React.memo(
     connect(
       _mapStates,
       _mapDispatch
     )(
       (rx: dState & dActions) => {
-        const { currentTrack, setCurrentTrackk } = rx;
-        const { item, onLongPress, setOptions, parent = "default" } = p;
-        const props = { ...rx, ...p };
-        const dispatch = useDispatch();
+        const {
+          currentTrack,
+          setCurrentTrackk,
+          item,
+          onLongPress,
+          setOptions,
+          parent = "default",
+        } = { ...p, ...rx };
+        const { C } = useAppContext();
         const [_isDisabled, shouldDisabled] = React.useState(false);
         const thisTrackPlaya = TrackPlaya.getInstance();
         async function onTrackPress() {
@@ -97,16 +104,12 @@ export function TrackItem(p: dTrackComp) {
             }
             activeOpacity={0.4}
           >
-            <Thumbnail {...p} source={coverSrc} />
+            <Thumbnail source={coverSrc} />
             <CtnrTrackInfo>
-              <Title
-                {...p}
-                numberOfLines={1}
-                current={item.id === currentTrack.id}
-              >
+              <Title numberOfLines={1} current={item.id === currentTrack.id}>
                 {item.title}
               </Title>
-              <Artist {...p} numberOfLines={1}>
+              <Artist numberOfLines={1}>
                 {`${DEV_MODE ? item.id + "•" : ""}${item.artist} `}
               </Artist>
               {/* <Text>{JSON.stringify(Object.keys(item))}</Text> */}
@@ -115,7 +118,7 @@ export function TrackItem(p: dTrackComp) {
               preset={`safe`}
               name={"dots_vertical"}
               size={20}
-              color={contrastTransColor(0.75)(p)}
+              color={C.dim}
               onPress={() => setOptions({ visible: true, item })}
             />
           </Touchable>
@@ -144,8 +147,6 @@ export function TrackItem(p: dTrackComp) {
   return <RENDER />;
 }
 
-export default withTheme(TrackItem);
-
 const Touchable = sstyled(TouchableOpacity)({
   flexDirection: "row",
   alignItems: "center",
@@ -158,7 +159,7 @@ const Thumbnail = sstyled(Image)((p) => ({
   height: scale(50),
   width: scale(50),
   borderRadius: scale(3),
-  backgroundColor: p.theme.elevatedBG,
+  backgroundColor: p.C.surface,
 }));
 
 const CtnrTrackInfo = sstyled(View)({
@@ -170,20 +171,20 @@ const CtnrTrackInfo = sstyled(View)({
 });
 
 const Title = sstyled(Txt.P1)((p) => ({
-  fontFamily: CIRCULAR,
+  fontFamily: CIRCULAR_BOLD,
   width: DEVICE_WIDTH / 2,
-  color: p.current ? foregroundColor(p) : contrastColor(p),
+  color: p.current ? p.C.primary : p.C.text,
 }));
 
 const Artist = sstyled(Txt.P2)((p) => ({
   fontFamily: CIRCULAR,
   width: DEVICE_WIDTH / 2,
-  color: contrastTransColor(0.75)(p),
+  color: p.C.dim,
 }));
 
 interface dState extends ReturnType<typeof _mapStates> {}
 interface dActions extends Partial<typeof _mapDispatch> {}
-interface dTrackComp extends dSCR {
+interface dTrackComp {
   item: TrackProps;
   parent:
     | "default"
@@ -192,6 +193,6 @@ interface dTrackComp extends dSCR {
     | "search-scr"
     | "contents-scr"
     | "playlist-scr";
-  setOptions({ visible: boolean, item: TrackProps }): void;
-  onLongPress(): void;
+  setOptions?({ visible: boolean, item: TrackProps }): void;
+  onLongPress?(): void;
 }

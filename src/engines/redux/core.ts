@@ -13,7 +13,7 @@ const mapState = (state: ReduxStates) => state;
 /**
  * Actions Dispatch of redux
  */
-const mapDispatch = {
+const _mapDispatch = {
   ...actions,
 };
 
@@ -21,5 +21,5 @@ const mapDispatch = {
  * An HOC extending redux `connect()` with standard `states` and `actions`
  * for predictable, universal `props` imports
  */
-export const connector = connect(mapState, mapDispatch);
+export const connector = connect(mapState, _mapDispatch);
 export type ReduxPRops = ConnectedProps<typeof connector>;

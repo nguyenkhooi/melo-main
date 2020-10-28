@@ -1,12 +1,12 @@
 import { useScrollToTop } from "@react-navigation/native";
 import { CIRCULAR } from "assets";
 import {
-  OptionsModal,
+  Buttoon, OptionsModal,
   PlayerFooter,
   sstyled,
-  Txt,
-  Buttoon,
-  TrackPlaya,
+
+
+  TrackPlaya, Txt
 } from "components";
 import RenderActivityIndicator from "components/RenderActivityIndicator";
 import { scanMessage } from "constants";
@@ -15,8 +15,6 @@ import R from "ramda";
 import React, { useEffect, useState } from "react";
 import { Animated, Dimensions, StatusBar, View, ViewStyle } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
-// import { FlatList } from "react-native-gesture-handler";
-import TrackPlayer from "react-native-track-player";
 import { DataProvider } from "recyclerlistview";
 // import QuickScrollList from "react-native-quick-scroll";
 import { withTheme } from "styled-components/native";
@@ -28,7 +26,7 @@ import {
   getStatusBarHeight,
   scale,
   spacing,
-  TrackProps,
+  TrackProps
 } from "utils";
 
 // const QuickScrollList = FlatList;
@@ -129,7 +127,7 @@ function TracksScreen(props: dSCR_Tracks) {
               >
                 {JSON.stringify(item.id)}
               </Txt.H6>
-              // <RenderTrack
+              // <TrackItem
               //   {...props}
               //   parent="track-scr"
               //   item={item}

@@ -6,7 +6,7 @@ import {
   ReduxStates,
   sethPlayback,
   setLoop,
-  setShuffle,
+  setShuffle
 } from "engines";
 import React from "react";
 import { View } from "react-native";
@@ -17,7 +17,7 @@ import { contrastColor, contrastTransColor, foregroundColor } from "themes";
 import { DEVICE_WIDTH, scale } from "utils";
 import { dSCR_Player } from "./PlayerScreen";
 
-const mapStates = (state: ReduxStates) => {
+const _mapStates = (state: ReduxStates) => {
   const {
     media: { nowPlayingTracks, indexedTracks },
     playback: { loop, shuffle },
@@ -25,7 +25,7 @@ const mapStates = (state: ReduxStates) => {
   return { indexedTracks, loop, shuffle };
 };
 
-const mapDispatch = {
+const _mapDispatch = {
   sethPlayback,
   setShuffle,
   setLoop,
@@ -41,8 +41,8 @@ const mapDispatch = {
  */
 export function S_PlaybackControl(p: dPlaybackControl) {
   const Render = connect(
-    mapStates,
-    mapDispatch
+    _mapStates,
+    _mapDispatch
   )((rx: dState & dActions) => {
     const {
       indexedTracks,
@@ -124,7 +124,7 @@ export function S_PlaybackControl(p: dPlaybackControl) {
   return <Render />;
 }
 
-// export default connect(mapStates, mapDispatch)(S_PlaybackControl);
+// export default connect(_mapStates, _mapDispatch)(S_PlaybackControl);
 
 const CtnrMain = sstyled(View)({
   flexDirection: "row",
@@ -161,8 +161,8 @@ const ActionIcon = (props: dActionIcon) => {
   );
 };
 
-interface dState extends ReturnType<typeof mapStates> {}
-interface dActions extends Partial<typeof mapDispatch> {}
+interface dState extends ReturnType<typeof _mapStates> {}
+interface dActions extends Partial<typeof _mapDispatch> {}
 interface dPlaybackControl extends dSCR_Player, dState, dActions {
   onNext(): void;
   onBack(): void;

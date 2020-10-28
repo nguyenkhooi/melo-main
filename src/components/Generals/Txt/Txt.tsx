@@ -1,4 +1,6 @@
 import { Text } from "@ui-kitten/components";
+import { CIRCULAR_BOLD } from "assets";
+import { spacing } from "utils";
 // import { scale } from "utils";
 import { sstyled } from "../Sstyled/Sstyled";
 const scale = (number: number) => number;
@@ -52,6 +54,12 @@ const C2: typeof Text = sstyled(Text)({
   fontWeight: "800",
 });
 
+const $Title: typeof Text = sstyled(H6)((p) => ({
+  padding: spacing[3],
+  fontFamily: CIRCULAR_BOLD,
+  color: p.C.dim,
+}));
+
 /**
  * A text component of the project,
  * depending on ui-kitten's Text
@@ -75,5 +83,6 @@ export const Txt = {
   P2,
   C1,
   C2,
+  $Title,
 };
 // export const Txt = Text;

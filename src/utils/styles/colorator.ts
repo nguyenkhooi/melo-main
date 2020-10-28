@@ -1,7 +1,7 @@
 import { evaDark } from "./eva-dark";
 import { evaLight } from "./eva-light";
 
-export const themeLight = {
+export const LIGHTEE = {
   /**
    * The colors is available to use, but prefer using the name.
    */
@@ -97,7 +97,7 @@ export const themeLight = {
   storybookTextColor: evaLight["color-basic-1000"],
 };
 
-export const themeDark = {
+export const DARKEE = {
   /**
    * The colors is available to use, but prefer using the name.
    */
@@ -200,4 +200,4 @@ export const themeDark = {
  * If you have a specific use-case, like a spinner colors.  It makes more sense to
  * put that in the <Spinner /> component.
  */
-export const C = themeLight;
+export const C = LIGHTEE;

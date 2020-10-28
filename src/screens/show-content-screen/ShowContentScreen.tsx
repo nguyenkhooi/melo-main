@@ -1,4 +1,4 @@
-import { OptionsModal, RenderTrack, Buttoon, TrackPlaya } from "components";
+import { Buttoon, OptionsModal, TrackItem, TrackPlaya } from "components";
 import { connector, dRedux, fn, playlistShuffle } from "engines";
 import React, { useState } from "react";
 import { FlatList, View } from "react-native";
@@ -8,7 +8,7 @@ import {
   flatListItemLayout,
   scale,
   spacing,
-  TrackProps,
+  TrackProps
 } from "utils";
 
 interface dSCR_ShowFolder extends dSCR, dRedux {
@@ -36,7 +36,7 @@ function ShowFolderScreen(props: dSCR_ShowFolder) {
       <FlatList
         keyExtractor={(asset) => asset.id.toString()}
         renderItem={({ item }) => (
-          <RenderTrack
+          <TrackItem
             {...props}
             parent="contents-scr"
             item={item}

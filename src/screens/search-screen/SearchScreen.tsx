@@ -1,32 +1,34 @@
-import { CIRCULAR_BOLD } from "assets";
+import { CIRCULAR, CIRCULAR_BOLD } from "assets";
 import {
+  Kitt,
   OptionsModal,
   PlayerFooter,
-  RenderTrack,
-  ScreenTitle,
+
+  sstyled, TrackItem
 } from "components";
 import Icon from "components/Icon";
 import SearchInput from "components/SearchInput";
-import { connector, dRedux, ReduxActions, ReduxStates } from "engines";
+import { ReduxStates } from "engines";
 import React, { useEffect, useRef, useState } from "react";
-import { FlatList, View } from "react-native";
+import { FlatList } from "react-native";
+import { View } from "react-native-animatable";
 import { connect } from "react-redux";
 import styled from "styled-components/native";
 import {
   backgroundColor,
   contrastColor,
-  contrastTransColor,
+  contrastTransColor
 } from "themes/styles";
-import { dSCR, getStatusBarHeight } from "utils";
+import { dSCR, scale, spacing } from "utils";
 
-const mapStates = (state: ReduxStates) => {
+const _mapStates = (state: ReduxStates) => {
   const {
     media: { mediaLoaded, mediaFiles },
   } = state;
   return { mediaLoaded, mediaFiles };
 };
 
-interface dState extends ReturnType<typeof mapStates> {}
+interface dState extends ReturnType<typeof _mapStates> {}
 
 interface dSCR_Search extends dSCR, dState {}
 function SearchScreen(props: dSCR_Search) {
@@ -70,12 +72,14 @@ function SearchScreen(props: dSCR_Search) {
       <FlatList
         data={listFilter()}
         renderItem={({ item }) => (
-          <RenderTrack
-            {...props}
-            parent="search-scr"
-            item={item}
-            setOptions={setModal}
-          />
+          <View animation={"fadeIn"}>
+            <TrackItem
+              {...props}
+              parent="search-scr"
+              item={item}
+              setOptions={setModal}
+            />
+          </View>
         )}
         // ListHeaderComponent={() => (
         //   <SearchWrapper onPress={() => inputRef.current.focus()}>
@@ -96,7 +100,7 @@ function SearchScreen(props: dSCR_Search) {
     //   <FlatList
     //     data={listFilter()}
     //     renderItem={({ item }) => (
-    //       <RenderTrack parent="search-scr" item={item} setOptions={setModal} />
+    //       <TrackItem parent="search-scr" item={item} setOptions={setModal} />
     //     )}
     //     keyExtractor={(asset) => asset.id.toString()}
     //     style={[styles.resultsWrapper, renderMargin]}
@@ -134,13 +138,35 @@ function SearchScreen(props: dSCR_Search) {
   );
 }
 
-export default connect(mapStates)(SearchScreen);
+export default connect(_mapStates)(SearchScreen);
+
+const SearchInputt = sstyled(Kitt.Input)({
+  // flex: 1;
+  // font-family: ${CIRCULAR};
+  // font-size: 16px;
+  // color: ${contrastColor};
+  // padding-right: 30px;
+  // align-items: center;
+  // background-color: transparent;
+  // align-items: center;
+  flex: 1,
+  fontFamily: CIRCULAR,
+  fontSize: scale(16),
+  paddingRight: spacing[3],
+  alignItems: "center",
+  backgroundColor: "transparent",
+});
 
 const Wrapper = styled.View`
   flex: 1;
   background-color: ${backgroundColor};
-  padding-top: ${getStatusBarHeight("safe")}px;
 `;
+
+// const Ctnr = sstyled(View)((p) => ({
+//   flex: 1,
+//   backgroundColor: backgroundColor(p),
+//   paddingTop: getStatusBarHeight("safe"),
+// }));
 
 // const TitleWrapper = styled.View`
 //   align-items: center;

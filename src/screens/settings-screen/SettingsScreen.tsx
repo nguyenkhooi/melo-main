@@ -1,16 +1,9 @@
 import { IconPrimr } from "assets";
-import {
-  InputDialog,
-  PlayerFooter,
-  PROPS_Icon,
-  RenderToast,
-  ScreenTitle,
-  Toasty,
-} from "components";
+import { InputDialog, PlayerFooter, PROPS_Icon, Toasty } from "components";
 import ConfirmDialog from "components/ConfirmDialog";
 import ListItem from "components/ListItem";
 import { settings } from "constants";
-import { connector, dRedux } from "engines";
+import { connector, dRedux, THEME } from "engines";
 import React, { useEffect, useState } from "react";
 import { Linking, ScrollView, Switch } from "react-native";
 import Share from "react-native-share";
@@ -73,7 +66,7 @@ function SettingsScreen(props: dSCR_Settings) {
   }
 
   const { current, elevatedBG, foreground, fgTrans } = theme;
-  const darkModeThumbColor = current === "light" ? elevatedBG : foreground;
+  const darkModeThumbColor = current === THEME.LIGHT ? elevatedBG : foreground;
   const skippedFolders = foldersToSkip.join(", ");
   return (
     <ScrollView style={{ flex: 1, paddingTop: getStatusBarHeight("safe") }}>
@@ -85,7 +78,7 @@ function SettingsScreen(props: dSCR_Settings) {
             icon: "loading",
           });
           setTimeout(() => {
-            setTheme(current === "dark" ? "light" : "dark");
+            setTheme(current === THEME.DARK ? THEME.LIGHT : THEME.DARK);
             !!__toast &&
               Toasty.update(__toast, "Theme set", {
                 type: "success",
@@ -113,9 +106,9 @@ function SettingsScreen(props: dSCR_Settings) {
           <Switch
             disabled={true}
             thumbColor={darkModeThumbColor}
-            value={current === "dark"}
+            value={current === THEME.DARK}
             trackColor={{ true: `${fgTrans}0.5)` }}
-            onValueChange={(val) => setTheme(val ? "dark" : "light")}
+            onValueChange={(val) => setTheme(val ? THEME.DARK : THEME.LIGHT)}
           />
         }
       />

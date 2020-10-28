@@ -14,7 +14,7 @@ import { S_PlaybackControl } from "./s-playback-control";
 import S_ProgressSlider from "./s-progress-slider";
 
 const PlayerWidth = Dimensions.get("window").width * 0.82;
-const mapStates = (state: ReduxStates) => {
+const _mapStates = (state: ReduxStates) => {
   const {
     playback: { currentTrack },
   } = state;
@@ -31,7 +31,7 @@ const mapStates = (state: ReduxStates) => {
  * @author nguyenkhooi
  */
 export function PlayerScreen(p: dSCR_Player) {
-  const Render = connect(mapStates)(
+  const Render = connect(_mapStates)(
     withTheme((rx: dState & dSCR) => {
       const { theme, currentTrack } = rx;
       const { navigation } = p;
@@ -101,7 +101,7 @@ const $_ProgressSlider = S_ProgressSlider;
 
 const $_CoversCarousel = S_CoversCarousel;
 
-// export default connect(mapStates)(withTheme(PlayerScreen));
+// export default connect(_mapStates)(withTheme(PlayerScreen));
 
 const CtnrGradient = sstyled(LinearGradient)({
   flex: 1,
@@ -151,5 +151,5 @@ const Artist = sstyled(Text)((p) => ({
   textAlign: "center",
 }));
 
-interface dState extends ReturnType<typeof mapStates> {}
+interface dState extends ReturnType<typeof _mapStates> {}
 export interface dSCR_Player extends dSCR, dState {}

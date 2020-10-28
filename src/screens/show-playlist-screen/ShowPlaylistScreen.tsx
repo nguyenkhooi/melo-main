@@ -1,5 +1,5 @@
 import { CIRCULAR } from "assets";
-import { Buttoon, OptionsModal, RenderTrack, TrackPlaya } from "components";
+import { Buttoon, OptionsModal, TrackItem, TrackPlaya } from "components";
 import { connector, dRedux, playlistShuffle } from "engines";
 import React, { useState } from "react";
 import { FlatList, View } from "react-native";
@@ -25,7 +25,7 @@ function ShowPlaylistScreen(props: dSCR_ShowPlaylist) {
         data={givenTracks}
         keyExtractor={(asset) => asset.id.toString()}
         renderItem={({ item }) => (
-          <RenderTrack
+          <TrackItem
             {...props}
             parent="playlist-scr"
             item={item}

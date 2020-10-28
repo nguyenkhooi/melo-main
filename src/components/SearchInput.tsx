@@ -1,13 +1,11 @@
+import { CIRCULAR } from "assets";
 import React from "react";
 import { Dimensions } from "react-native";
 import styled, { withTheme } from "styled-components/native";
-import Icon from "./Icon";
 import {
-  contrastColor,
-  contrastTransColor,
-  bgTransColor,
+  bgTransColor, contrastColor
 } from "../themes/styles";
-import { CIRCULAR } from "assets";
+import Icon from "./Icon";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
@@ -15,7 +13,6 @@ function SearchInput(props) {
   const { theme, onFocus, onBlur, value, setSearchInput } = props;
   return (
     <Wrapper>
-      <StyledIcon {...searchIcon} />
       <Input
         placeholder="Artists, songs, or albums"
         allowFontScaling={false}

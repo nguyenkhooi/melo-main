@@ -1,3 +1,4 @@
+import { THEME } from "engines/providers";
 import { enum_LibrariesTopTab } from "navigation/libraries.navigator";
 
 export const setSkipFolders = (folders) => {
@@ -8,7 +9,7 @@ export const setSkipFolders = (folders) => {
   return { type: "add_folders_to_skip", payload: [] };
 };
 
-export const setTheme = (theme) => {
+export const setTheme = (theme: THEME) => {
   return { type: "set_theme", payload: theme };
 };
 

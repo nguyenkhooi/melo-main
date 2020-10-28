@@ -1,3 +1,4 @@
+import { THEME } from "engines";
 import { dTheme } from "themes";
 import { evaDark } from "utils";
 
@@ -9,7 +10,7 @@ export const dark: dTheme = {
   contrastTrans: evaDark["color-basic-transparent-600"],
   fgTrans: evaDark["color-primary-transparent-500"],
   bgTrans: "rgba(18, 18, 18, ",
-  current: "dark",
+  current: THEME.DARK,
   /**
    * The colors is available to use, but prefer using the name.
    */

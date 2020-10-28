@@ -1,10 +1,10 @@
 import { CIRCULAR, IconPrimr } from "assets";
-import { OptionsModal, RenderTrack, sstyled } from "components";
+import { OptionsModal, sstyled, TrackItem } from "components";
 import {
   connector,
   dRedux,
-  SetCurrentTrackAction,
-  SetNowPlayingTracksAction,
+
+  SetNowPlayingTracksAction
 } from "engines";
 import R from "ramda";
 import React, { useState } from "react";
@@ -104,7 +104,7 @@ function NowPlayingScreen(props: dSCR_Tracks) {
         data={_queue}
         onDragEnd={({ data }) => setQueue(data)}
         renderItem={({ item, drag }) => (
-          <RenderTrack
+          <TrackItem
             {...props}
             parent="now-playing-scr"
             item={item}

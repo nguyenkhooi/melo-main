@@ -1,37 +1,48 @@
-import React from "react";
-import { connect } from "react-redux";
-import { dSCR } from "utils";
+import { useAppContext } from "engines";
+import React, { ReactNode } from "react";
+import { dColors, dDime, dSCR } from "utils";
 
 /**
  * "Super" styled component. 
- * Mimicking `styled-components`, with RN props (and Typescript)
+ * Mimicking `styled-components`, 
+ * with RN props (and Typescript),
+ * now including dynamic dimension for rn-web
+ * ---
  * 
  * @example
+ * ```
  * const RoundedButton = sstyled(Button)((p)=> {
-    marginTop: 8,
-    borderRadius: 10,
-    borderWidth: 0,
-    backgroundColor: contrastColor(p),
+    borderRadius: p.ms(10),
+    backgroundColor: p.C.primary,
     });
- *
- * @version 1.10.3
- * @param WrappedComponent 
+  ```
+ * ---
+ * @version 1.10.20
+ * - *Add dynamic dimension support - `useDimension()`*
+ * - *Clean up*
+ * @author nguyenkhooi
  */
 export function sstyled<Component extends React.ElementType>(
-  WrappedComponent: Component
+  GivenComp: Component
 ) {
+  /**
+   * Props of GivenComp will be combined with CustomProps
+   * to create TargetedCompStyle
+   */
   return (
-    style:
-      | React.ComponentProps<Component>["style"]
-      | ((
-          props: React.ComponentProps<Component> & Props
-        ) => React.ComponentProps<Component>["style"])
-  ): React.FC<React.ComponentProps<Component> & Props> => {
-    return (props: dSstyled) => {
-      return React.createElement(WrappedComponent, {
+    style: dTargetedCompStyle<Component, Props>
+  ): React.FC<React.ComponentProps<typeof GivenComp>> => {
+    /**
+     * Return targeted component
+     */
+    return function TargetedComp(props) {
+      // const dim = useDimension();
+      const { C } = useAppContext();
+      return React.createElement(GivenComp, {
         ...props,
+        // ...dim,
         style: {
-          ...(typeof style === "function" ? style(props) : style),
+          ...(typeof style === "function" ? style({ ...props, C }) : style),
           ...props.style,
         },
       });
@@ -39,18 +50,22 @@ export function sstyled<Component extends React.ElementType>(
   };
 }
 
+interface Props extends dDime {
+  children: ReactNode | Element;
+  C: dColors;
+}
+
+type dTargetedComp<C, P> = React.ComponentProps<C> & P;
+
+type dTargetedCompStyle<C, P> =
+  | (React.ComponentProps<C> & P)
+  | React.ComponentProps<C>["style"]
+  | ((props: dTargetedComp<C, P>) => React.ComponentProps<C>["style"]);
+
 /**
  * Ideally, sstyled() component will inherit screen props,
  * so if we have universal screen props, extend dSstyled with it
  */
 interface dSstyled extends dSCR {
   style: any;
-}
-
-function SCR(props) {
-  return connect(mapStates)((rxProps) => {
-    const {} = rxProps;
-    const {} = props;
-    return <Comp {...rxS} />;
-  });
 }
