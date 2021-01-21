@@ -43,3 +43,14 @@ console.warn(
       "Consider refactoring to remove the need for a cycle."
   );
 ```
+
+
+### IOS: OpenSSL for arm64 error
+
+If you get into this error:
+
+```
+Pods/OpenSSL-Universal/ios/lib/libcrypto.a(cryptlib.o), building for iOS Simulator, but linking in object file built for iOS, file '/Users/khoitran/Pictures/_WORKS/melo-main/ios/Pods/OpenSSL-Universal/ios/lib/libcrypto.a' for architecture arm64
+```
+---> Check this solution:
+https://github.com/facebook/react-native/issues/29984#issuecomment-696328815
