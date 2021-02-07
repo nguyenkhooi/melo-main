@@ -155,12 +155,19 @@ export class TrackPlaya extends React.Component {
     indexedTracks: TrackProps[],
     currentTrack: TrackProps
   ) {
+    var t0 = new Date().getTime();
+
     const _queue = await TrackPlayer.getQueue();
     // let queueTracks = [..._queue];
     const currentPos = R.indexOf(currentTrack.id, R.pluck("id")(indexedTracks));
     const tracksWoCurrent = R.pluck("id")(
       R.reject((track) => track.id === currentTrack.id, indexedTracks)
     ) as trackID[];
+
+    var t1 = new Date().getTime();
+    console.log("Duration (toggleShuffle - pluck): " + (t1 - t0));
+
+    
 
     let targetedTracks: TrackProps[];
 
@@ -212,6 +219,9 @@ export class TrackPlaya extends React.Component {
       targetedTracks = shuffledTrackswoCurrent;
     }
 
+    var t2 = new Date().getTime();
+    console.log("Duration (toggleShuffle - shuffle): " + (t2 - t1));
+
     /**
      *  Since `currentTrack` maybe NOT on top of the queue
      *  (there're probably tracks before it),
@@ -221,7 +231,15 @@ export class TrackPlaya extends React.Component {
      */
 
     await TrackPlayer.remove(tracksWoCurrent);
+    // await TrackPlayer.removeUpcomingTracks(); // possible improvement, but will not remove previous tracks
+
+    var t3 = new Date().getTime();
+    console.log("Duration (toggleShuffle - remove): " + (t3 - t2));
+
     await TrackPlayer.add(targetedTracks);
+
+    var t4 = new Date().getTime();
+    console.log("Duration (toggleShuffle - add): " + (t4 - t3));
 
     const nowPlayingTracks = [currentTrack, ...targetedTracks];
     return nowPlayingTracks;

@@ -79,6 +79,7 @@ export const sethPlayback = ({ type }: dSethPlayback) => async () => {
         await thisTrackPlaya.pause();
         break;
       case "fwd":
+       
         await thisTrackPlaya.next().catch((error) => {
           error.message.includes("There is no tracks left to play") &&
             RenderToast({ title: "You've reached the end of list!" });
@@ -127,8 +128,23 @@ export const sethPlayback = ({ type }: dSethPlayback) => async () => {
   }
 };
 
-export const setLoop = (isLoop: boolean): ToggleLoopAction => {
-  return { type: "set_loop", payload: isLoop };
+export const setLoop = (loop_type: "off" | "track" | "playlist"): ToggleLoopAction => {
+  console.log("loop: ", loop_type);
+  switch (loop_type) {
+    case "off":
+      loop_type = "track";
+      break;
+    case "track":
+      loop_type = "playlist";
+      break;
+    case "playlist":
+      loop_type = "off";
+      break;
+    default:
+      loop_type = "off";
+  }
+  console.log("loop: ", loop_type);
+  return { type: "set_loop", payload: loop_type };
 };
 
 /**
@@ -176,7 +192,6 @@ export const setShuffle = (
       !!currentTrack && currentTrack.id == "000"
         ? indexedTracks[0]
         : currentTrack;
-    var _t = new Date().getTime();
     const targetedTracks = await thisTrackPlaya.toggleShuffle(
       shouldShuffle,
       indexedTracks,
@@ -184,8 +199,6 @@ export const setShuffle = (
     );
     console.info("SHOULD SHUFFLE: ", shouldShuffle);
     //* modify indicator
-    var t = new Date().getTime();
-    console.log("Duration (toggleShuffle, excluding shuffle): " + (t - _t));
 
     dispatch({ type: current_track, payload: _currentTrack });
     dispatch({ type: set_shuffle, payload: shouldShuffle });

@@ -37,10 +37,15 @@ async function bgService() {
 
   thisTrackPlaya.core.addEventListener("remote-next", async () => {
     console.log("remote-next...");
-    // let {
-    //   playback: { currentTrack, shuffle },
-    //   media: { mediaFiles },
-    // }: dRedux = store.getState();
+    let {
+      playback: { loop },
+      media: { mediaFiles },
+    }: dRedux = store.getState();
+
+    if (loop == "track") {
+      thisTrackPlaya.core.seekTo(0);
+      await thisTrackPlaya.core.play();
+    } else await store.dispatch(sethPlayback({ type: "fwd" }));
     // let { currentTrack, shuffle } = playback;
     // let { mediaFiles } = media;
     // backgroundPlayback(
@@ -50,7 +55,6 @@ async function bgService() {
     //     ? mediaFiles[0]
     //     : mediaFiles[currentTrack.index + 1]
     // );
-    await store.dispatch(sethPlayback({ type: "fwd" }));
   });
 
   thisTrackPlaya.core.addEventListener("playback-track-changed", async (e) => {
@@ -112,22 +116,25 @@ async function bgService() {
       // console.log("current state: ", playback);
       // console.warn("current media: ", mediaFiles.length);
       if (position > 0) {
-        // if (1 == 1) {
-        if (loop) {
-          // backgroundPlayback(currentTrack);
-          await store.dispatch(setCurrentTrackk(currentTrack));
-          await store.dispatch(sethPlayback({ type: "play" }));
-        } else {
-          Alert.alert("Done!!");
-          await store.dispatch(sethPlayback({ type: "fwd" }));
-          // backgroundPlayback(
-          //   shuffle
-          //     ? nowPlayingTracks[getRandomNumber(0, nowPlayingTracks.length)]
-          //     : currentTrack.index === nowPlayingTracks.length - 1
-          //     ? nowPlayingTracks[0]
-          //     : nowPlayingTracks[currentTrack.index + 1]
-          // );
+        switch (loop) {
+          case "playlist":
+            await store.dispatch(setCurrentTrackk(currentTrack));
+            await store.dispatch(sethPlayback({ type: "play" }));
+            break;
+          case "off":
+            Alert.alert("Done!!");
+            await store.dispatch(sethPlayback({ type: "fwd" }));
+            break;
         }
+        // if (1 == 1) {
+        // if (loop) {
+        //   // backgroundPlayback(currentTrack);
+        //   await store.dispatch(setCurrentTrackk(currentTrack));
+        //   await store.dispatch(sethPlayback({ type: "play" }));
+        // } else {
+        //   Alert.alert("Done!!");
+        //   await store.dispatch(sethPlayback({ type: "fwd" }));
+        // }
       }
     }
   );

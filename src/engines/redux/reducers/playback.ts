@@ -19,7 +19,7 @@ const INITIAL_STATE: dPlaybackState = {
     artwork: null,
     url: "",
   },
-  loop: false,
+  loop: "off",
   shuffle: false,
 };
 

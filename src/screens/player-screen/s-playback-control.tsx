@@ -61,6 +61,7 @@ export function S_PlaybackControl(p: dPlaybackControl) {
     const _shuffle = useSelector(
       (state: ReduxStates) => state.playback.shuffle
     );
+    const _loop = useSelector((state: ReduxStates) => state.playback.loop);
 
     return (
       <CtnrMain {...props}>
@@ -105,9 +106,9 @@ export function S_PlaybackControl(p: dPlaybackControl) {
         <ActionIcon
           {...props}
           type="sub"
-          name={loop ? "loop_one" : "loop"}
-          onPress={() => setLoop(!loop)}
-          color={foregroundColor(props)}
+          name={_loop == "track" ? "loop_one" : "loop"}
+          onPress={() => setLoop(_loop)}
+          color={_loop == "off" ? contrastTransColor(0.35)(props) : foregroundColor(props)}
         />
       </CtnrMain>
     );

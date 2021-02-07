@@ -11,7 +11,7 @@ export interface SetCurrentTrackAction {
 
 export interface ToggleLoopAction {
   type: typeof set_loop;
-  payload: boolean;
+  payload: "off" | "track" | "playlist";
 }
 
 export interface ToggleShuffleAction {
@@ -28,7 +28,7 @@ export interface dPlaybackState {
   /**
    * Is the playback in loop?
    */
-  loop: boolean;
+  loop: "off" | "track" | "playlist";
 
   /**
    * Is the playback in shuffle
