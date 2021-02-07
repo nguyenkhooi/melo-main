@@ -5,6 +5,8 @@ import { dSCR_Player } from "./PlayerScreen";
 import { IconPrimr, img } from "assets";
 import { OptionsMenu } from "components";
 import { Dimensions, Image, View } from "react-native";
+import { useSelector } from "react-redux";
+import { ReduxStates } from "engines";
 
 const ImageSize = Dimensions.get("window").width * 0.82;
 
@@ -12,10 +14,13 @@ interface d$_CoversCarousel extends dSCR_Player {}
 
 export const S_CoversCarousel = React.forwardRef((props: d$_CoversCarousel) => {
   const { currentTrack } = props;
+  const _currentTrack = useSelector(
+    (state: ReduxStates) => state.playback.currentTrack
+  );
 
   return (
     <View style={{ flex: 1 }}>
-      <$_CoverArt {...props} artwork={currentTrack.artwork} />
+      <$_CoverArt {...props} artwork={_currentTrack.artwork} />
     </View>
   );
 

@@ -86,7 +86,7 @@ function TestScreen(props: dSCR_Tracks) {
   const playAllTracks = async () => {
     if (USE_REDUX) {
       const targetedPlaylist = _isShuffled
-        ? playlistShuffle(mediaFiles, "normal")
+        ? playlistShuffle(mediaFiles)
         : mediaFiles;
 
       buildNowPlayingTracks(targetedPlaylist, mediaFiles);
@@ -97,7 +97,7 @@ function TestScreen(props: dSCR_Tracks) {
       }, 500);
     } else {
       const targetedPlaylist = _isShuffled
-        ? playlistShuffle(mediaFiles, "normal")
+        ? playlistShuffle(mediaFiles)
         : mediaFiles;
       thisTrackPlaya.setPlaylist(targetedPlaylist);
       setNPTracks(targetedPlaylist);
@@ -112,7 +112,7 @@ function TestScreen(props: dSCR_Tracks) {
   const playCustomTracks = async (givenTracks: TrackProps[]) => {
     if (USE_REDUX) {
       const targetedPlaylist = _isShuffled
-        ? playlistShuffle(givenTracks, "normal")
+        ? playlistShuffle(givenTracks)
         : givenTracks;
 
       buildNowPlayingTracks(targetedPlaylist, givenTracks);
@@ -122,7 +122,7 @@ function TestScreen(props: dSCR_Tracks) {
       }, 500);
     } else {
       const targetedPlaylist = _isShuffled
-        ? playlistShuffle(givenTracks, "normal")
+        ? playlistShuffle(givenTracks)
         : givenTracks;
       thisTrackPlaya.setPlaylist(targetedPlaylist);
       setNPTracks(targetedPlaylist);

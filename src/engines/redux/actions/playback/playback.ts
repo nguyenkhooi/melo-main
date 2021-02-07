@@ -14,7 +14,7 @@ import {
   set_np_tracks,
   set_shuffle,
   ToggleLoopAction,
-  ToggleShuffleAction
+  ToggleShuffleAction,
 } from "../../types";
 
 /**
@@ -176,12 +176,17 @@ export const setShuffle = (
       !!currentTrack && currentTrack.id == "000"
         ? indexedTracks[0]
         : currentTrack;
+    var _t = new Date().getTime();
     const targetedTracks = await thisTrackPlaya.toggleShuffle(
       shouldShuffle,
       indexedTracks,
       _currentTrack
     );
+    console.info("SHOULD SHUFFLE: ", shouldShuffle);
     //* modify indicator
+    var t = new Date().getTime();
+    console.log("Duration (toggleShuffle, excluding shuffle): " + (t - _t));
+
     dispatch({ type: current_track, payload: _currentTrack });
     dispatch({ type: set_shuffle, payload: shouldShuffle });
     dispatch({ type: set_indexed_tracks, payload: indexedTracks });
@@ -199,20 +204,13 @@ export function playlistShuffle(
   try {
     switch (type) {
       case "knuth":
-        var currentIndex = array.length,
-          temporaryValue,
-          randomIndex;
-
         // While there remain elements to shuffle...
-        while (0 !== currentIndex) {
-          // Pick a remaining element...
-          randomIndex = Math.floor(Math.random() * currentIndex);
-          currentIndex -= 1;
+        for (var i = array.length - 1; i >= 1; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
 
-          // And swap it with the current element.
-          temporaryValue = array[currentIndex];
-          array[currentIndex] = array[randomIndex];
-          array[randomIndex] = temporaryValue;
+          var temp = array[i];
+          array[i] = array[j];
+          array[j] = temp;
         }
         return array;
         break;

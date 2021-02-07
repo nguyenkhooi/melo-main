@@ -63,7 +63,7 @@ function ShowFolderScreen(props: dSCR_ShowFolder) {
           onPress={(xong) => {
             const givenTracks = _queue;
             const targetedPlaylist = shuffle
-              ? playlistShuffle(givenTracks, "normal")
+              ? playlistShuffle(givenTracks)
               : givenTracks;
 
             buildNowPlayingTracks(targetedPlaylist, givenTracks);

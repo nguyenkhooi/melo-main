@@ -203,7 +203,7 @@ export class TrackPlaya extends React.Component {
     }
 
     if (U_TURN_ON_SHUFFLE) {
-      const shuffledTracks = playlistShuffle([..._queue], "normal");
+      const shuffledTracks = playlistShuffle([..._queue]);
       const shuffledTrackswoCurrent = R.reject(
         (track) => track.id === currentTrack.id,
         shuffledTracks
@@ -219,8 +219,10 @@ export class TrackPlaya extends React.Component {
      *  then add the `targetedTracks` after it.
      *  -> `currentTrack` back on top
      */
+
     await TrackPlayer.remove(tracksWoCurrent);
     await TrackPlayer.add(targetedTracks);
+
     const nowPlayingTracks = [currentTrack, ...targetedTracks];
     return nowPlayingTracks;
   }
@@ -235,10 +237,7 @@ export class TrackPlaya extends React.Component {
     const U_SHUFFLE_w_CURRENT = isShuffle && currentTrack.id !== "000";
     if (U_SHUFFLE_wo_CURRENT) {
       try {
-        const targetedTracks: TrackProps[] = playlistShuffle(
-          givenTracks,
-          "normal"
-        );
+        const targetedTracks: TrackProps[] = playlistShuffle(givenTracks);
         await TrackPlayer.reset();
         await TrackPlayer.add(targetedTracks);
       } catch (error) {
@@ -248,10 +247,7 @@ export class TrackPlaya extends React.Component {
 
     if (U_SHUFFLE_w_CURRENT) {
       try {
-        const targetedTracks: TrackProps[] = playlistShuffle(
-          givenTracks,
-          "normal"
-        );
+        const targetedTracks: TrackProps[] = playlistShuffle(givenTracks);
         const queueTracks = await TrackPlayer.getQueue();
         const playedTracks = R.reject((track: Track) => {
           return queueTracks.includes(track) || track === currentTrack;

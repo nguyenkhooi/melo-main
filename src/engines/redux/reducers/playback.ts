@@ -29,11 +29,17 @@ export function playback(
 ) {
   switch (action.type) {
     case current_track:
-      return { ...state, currentTrack: action.payload };
+      state.currentTrack = action.payload;
+      return state;
+    // return { ...state, currentTrack: action.payload };
     case set_loop:
-      return { ...state, loop: action.payload };
+      state.loop = action.payload;
+      return state;
+    //return { ...state, loop: action.payload };
     case set_shuffle:
-      return { ...state, shuffle: action.payload };
+      state.shuffle = action.payload;
+      return state;
+    // return { ...state, shuffle: action.payload };
     default:
       return state;
   }

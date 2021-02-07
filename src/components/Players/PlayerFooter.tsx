@@ -3,9 +3,9 @@ import {
   CIRCULAR_LIGHT,
   dIconPrimr,
   IconPrimr,
-  img
+  img,
 } from "assets";
-import { ReduxStates, sethPlayback } from "engines";
+import { ReduxStates, sethPlayback, setShuffle } from "engines";
 import { navigate } from "navigation";
 import React from "react";
 import { Image, TouchableOpacity, View } from "react-native";
@@ -14,7 +14,7 @@ import { Modalize } from "react-native-modalize";
 import TrackPlayer from "react-native-track-player";
 import {
   usePlaybackState,
-  useTrackPlayerProgress
+  useTrackPlayerProgress,
 } from "react-native-track-player/lib/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import styled, { withTheme } from "styled-components/native";
@@ -25,7 +25,7 @@ import {
   getBottomSpace,
   IS_ANDROID,
   scale,
-  spacing
+  spacing,
 } from "utils";
 import { sstyled, Txt } from "../Generals";
 import ProgressBar from "../ProgressBar";
@@ -242,7 +242,7 @@ function $_FooterActions(props: dCOMP_PlayerFooter) {
         onPress={() => dispatch(sethPlayback({ type: "fwd" }))}
         // onPress={() => TrackPlayer.skipToNext()}
       />
-      {/* <ActionIcon
+      <ActionIcon
         {...props}
         name="backward"
         onPress={() => dispatch(sethPlayback({ type: "bwd" }))}
@@ -253,7 +253,7 @@ function $_FooterActions(props: dCOMP_PlayerFooter) {
         name="shuffle"
         color={isShuffled ? "dodgerblue" : "grey"}
         onPress={() => dispatch(setShuffle(!isShuffled, indexedTracks))}
-      /> */}
+      />
     </View>
   );
 }

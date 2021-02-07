@@ -5,7 +5,7 @@ import React from "react";
 import { Dimensions, ImageBackground, Text, View } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import Carousel from "react-native-snap-carousel";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import { withTheme } from "styled-components/native";
 import { contrastColor, contrastTransColor } from "themes";
 import { dSCR, spacing, TrackProps } from "utils";
@@ -33,6 +33,11 @@ export function PlayerScreen(p: dSCR_Player) {
   const Render = connect(mapStates)(
     withTheme((rx: dState & dSCR) => {
       const { theme, currentTrack } = rx;
+
+      const _currentTrack = useSelector(
+        (state: ReduxStates) => state.playback.currentTrack
+      );
+
       const { navigation } = p;
       const props = { ...p, ...rx };
       const refCarou = React.useRef<Carousel<TrackProps>>();
@@ -69,10 +74,10 @@ export function PlayerScreen(p: dSCR_Player) {
 
               <CtnrTxt {...props}>
                 <Title {...props} numberOfLines={1}>
-                  {currentTrack.title || "unknown"}
+                  {_currentTrack.title || "unknown"}
                 </Title>
                 <Artist {...props} numberOfLines={1}>
-                  {currentTrack.artist}
+                  {_currentTrack.artist}
                 </Artist>
               </CtnrTxt>
               <$_ProgressSlider {...props} />

@@ -13,7 +13,7 @@ import React from "react";
 import { View } from "react-native";
 import TrackPlayer from "react-native-track-player";
 import { usePlaybackState } from "react-native-track-player/lib/hooks";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import { contrastColor, contrastTransColor, foregroundColor } from "themes";
 import { DEVICE_WIDTH, scale } from "utils";
 import { dSCR_Player } from "./PlayerScreen";
@@ -58,6 +58,9 @@ export function S_PlaybackControl(p: dPlaybackControl) {
     const props = { ...p, ...rx };
 
     const playbackState = usePlaybackState();
+    const _shuffle = useSelector(
+      (state: ReduxStates) => state.playback.shuffle
+    );
 
     return (
       <CtnrMain {...props}>
@@ -65,9 +68,9 @@ export function S_PlaybackControl(p: dPlaybackControl) {
           {...props}
           type="sub"
           name="shuffle"
-          onPress={() => setShuffle(!shuffle, indexedTracks)}
+          onPress={() => setShuffle(!_shuffle, indexedTracks)}
           color={
-            shuffle ? foregroundColor(props) : contrastTransColor(0.35)(props)
+            _shuffle ? foregroundColor(props) : contrastTransColor(0.35)(props)
           }
         />
         <ActionIcon
